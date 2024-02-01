@@ -11,11 +11,13 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -27,9 +29,10 @@ import com.pathplanner.lib.util.ReplanningConfig;
 
 public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
+    public SwerveDrivePoseEstimator SwerveDrivePoseEstimator;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
-
+    public Field2d m_field;
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.pigeonID, "rio");
         gyro.getConfigurator().apply(new Pigeon2Configuration());
@@ -42,8 +45,8 @@ public class Swerve extends SubsystemBase {
                 this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
                                                  // Constants class
-                        new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-                        new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+                        new PIDConstants(3.0, 0.0, 0.0), // Translation PID constants
+                        new PIDConstants(0.1, 0.0, 0.0), // Rotation PID constants
                         4.5, // Max module speed, in m/s
                         0.4, // Drive base radius in meters. Distance from robot center to furthest module.
                         new ReplanningConfig() // Default path replanning config. See the API for the options here
@@ -71,6 +74,8 @@ public class Swerve extends SubsystemBase {
         };
 
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions());
+        m_field = new Field2d();
+        SmartDashboard.putData("Field",m_field);
     }
 
     public void drive(Translation2d translation, double rotation, boolean fieldRelative, boolean isOpenLoop) {
@@ -162,7 +167,7 @@ public class Swerve extends SubsystemBase {
     @Override
     public void periodic() {
         swerveOdometry.update(getGyroYaw(), getModulePositions());
-        m_field.setRobotPose(swerveOdometry.getPoseMeters())
+        m_field.setRobotPose(swerveOdometry.getPoseMeters());
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
