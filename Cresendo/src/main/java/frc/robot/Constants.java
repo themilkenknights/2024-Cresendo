@@ -15,6 +15,12 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
     public static final double stickDeadband = 0.1;
 
+        // intakes
+        public static final int topLeftIntakeCANID = 57;
+        public static final int topRightIntakeCANID = 62;
+        public static final int bottomLeftIntakeCANID = 60;
+        public static final int bottomRightIntakeCANID = 61;
+        
     public static final class Swerve {
         public static final int pigeonID = 30;
 

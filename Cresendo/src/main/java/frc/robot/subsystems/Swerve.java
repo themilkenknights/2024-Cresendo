@@ -94,6 +94,7 @@ public class Swerve extends SubsystemBase {
         };
 
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions());
+        SwerveDrivePoseEstimator = new SwerveDrivePoseEstimator(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions(), getPose());
         field = new Field2d();
         SmartDashboard.putData("Field",field);
     }
@@ -186,7 +187,8 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
-        swerveOdometry.update(getGyroYaw(), getModulePositions());
+        SwerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
+        swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(), SwerveDrivePoseEstimator.getEstimatedPosition()); //PathPlanner uses swerveOdometry class for things, so I set swerveOdometry to SwerveDrivePoseEstimator's pose
         field.setRobotPose(swerveOdometry.getPoseMeters());
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
