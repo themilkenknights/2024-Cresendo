@@ -2,7 +2,7 @@ package frc.robot.subsystems;
 
 import frc.robot.SwerveModule;
 import frc.robot.Constants;
-
+import frc.robot.LimelightHelpers;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
@@ -10,6 +10,7 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 
 import com.ctre.phoenix6.configs.Pigeon2Configuration;
 import com.ctre.phoenix6.hardware.Pigeon2;
+
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -33,11 +34,13 @@ public class Swerve extends SubsystemBase {
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
     public Field2d m_field;
+    double tx = LimelightHelpers.getTX("");
+    
     public Swerve() {
         gyro = new Pigeon2(Constants.Swerve.pigeonID, "rio");
         gyro.getConfigurator().apply(new Pigeon2Configuration());
         gyro.setYaw(0);
-
+        
         AutoBuilder.configureHolonomic(
                 this::getPose, // Robot pose supplier
                 this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
