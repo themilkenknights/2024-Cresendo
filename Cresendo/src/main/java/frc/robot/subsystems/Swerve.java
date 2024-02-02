@@ -66,7 +66,7 @@ public class Swerve extends SubsystemBase {
                 new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your
                                                  // Constants class
                         new PIDConstants(3.0, 0.0, 0.0), // Translation PID constants
-                        new PIDConstants(0.1, 0.0, 0.0), // Rotation PID constants
+                        new PIDConstants(3, 0.1, 0.0), // Rotation PID constants
                         4.5, // Max module speed, in m/s
                         0.4, // Drive base radius in meters. Distance from robot center to furthest module.
                         new ReplanningConfig() // Default path replanning config. See the API for the options here
@@ -117,8 +117,9 @@ public class Swerve extends SubsystemBase {
         }
     }
     public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
+        robotRelativeSpeeds.omegaRadiansPerSecond = -robotRelativeSpeeds.omegaRadiansPerSecond;
         ChassisSpeeds targetSpeeds = ChassisSpeeds.discretize(robotRelativeSpeeds, 0.02);
-    
+        
         SwerveModuleState[] targetStates = Constants.Swerve.swerveKinematics.toSwerveModuleStates(targetSpeeds);
         setModuleStates(targetStates);
       }
@@ -187,8 +188,8 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
-        SwerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
-        swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(), SwerveDrivePoseEstimator.getEstimatedPosition()); //PathPlanner uses swerveOdometry class for things, so I set swerveOdometry to SwerveDrivePoseEstimator's pose
+        //SwerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
+        swerveOdometry.update(getGyroYaw(), getModulePositions());//resetPosition(getGyroYaw(), getModulePositions(), SwerveDrivePoseEstimator.getEstimatedPosition()); //PathPlanner uses swerveOdometry class for things, so I set swerveOdometry to SwerveDrivePoseEstimator's pose
         field.setRobotPose(swerveOdometry.getPoseMeters());
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());

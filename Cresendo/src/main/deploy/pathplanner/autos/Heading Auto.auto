@@ -16,6 +16,12 @@
           "data": {
             "pathName": "Heading Path"
           }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
+          }
         }
       ]
     }
