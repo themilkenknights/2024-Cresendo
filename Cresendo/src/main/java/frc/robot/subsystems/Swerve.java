@@ -93,8 +93,8 @@ public class Swerve extends SubsystemBase {
                 new SwerveModule(3, Constants.Swerve.Mod3.constants)
         };
 
-        swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions());
-        SwerveDrivePoseEstimator = new SwerveDrivePoseEstimator(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions(), getPose());
+       // swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions());
+        SwerveDrivePoseEstimator = new SwerveDrivePoseEstimator(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions(), new Pose2d());
         field = new Field2d();
         SmartDashboard.putData("Field",field);
     }
@@ -149,14 +149,14 @@ public class Swerve extends SubsystemBase {
     }
 
     public Pose2d getPose() {
-        return swerveOdometry.getPoseMeters();
+        return SwerveDrivePoseEstimator.getEstimatedPosition();
     }
 
     public void setPose(Pose2d pose) {
-        swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(), pose);
+        SwerveDrivePoseEstimator.resetPosition(getGyroYaw(), getModulePositions(), pose);
     }
    public void resetPose(Pose2d pose) {
-    swerveOdometry.resetPosition(gyro.getRotation2d(), getModulePositions(), pose);
+    SwerveDrivePoseEstimator.resetPosition(gyro.getRotation2d(), getModulePositions(), pose);
   }
 
     public Rotation2d getHeading() {
@@ -167,12 +167,12 @@ public class Swerve extends SubsystemBase {
         return Constants.Swerve.swerveKinematics.toChassisSpeeds(getModuleStates());
       }
     public void setHeading(Rotation2d heading) {
-        swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(),
+        SwerveDrivePoseEstimator.resetPosition(getGyroYaw(), getModulePositions(),
                 new Pose2d(getPose().getTranslation(), heading));
     }
 
     public void zeroHeading() {
-        swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(),
+        SwerveDrivePoseEstimator.resetPosition(getGyroYaw(), getModulePositions(),
                 new Pose2d(getPose().getTranslation(), new Rotation2d()));
     }
 
@@ -188,9 +188,9 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
-        //SwerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
-        swerveOdometry.update(getGyroYaw(), getModulePositions());//resetPosition(getGyroYaw(), getModulePositions(), SwerveDrivePoseEstimator.getEstimatedPosition()); //PathPlanner uses swerveOdometry class for things, so I set swerveOdometry to SwerveDrivePoseEstimator's pose
-        field.setRobotPose(swerveOdometry.getPoseMeters());
+        SwerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
+    
+        field.setRobotPose(SwerveDrivePoseEstimator.getEstimatedPosition());
         for (SwerveModule mod : mSwerveMods) {
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
