@@ -14,13 +14,18 @@ import com.ctre.phoenix6.hardware.Pigeon2;
 
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 
 
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -188,6 +193,18 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
+        //use network tables to get limelight botpose (array: x,y,z,roll,pitch, yaw, latency)
+        double[] botpose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
+        
+
+            // Compute the robot's field-relative position from botpose
+        Pose3d visionMeasurement3d = new Pose3d(botpose[0],botpose[1],botpose[2], new Rotation3d(botpose[3], botpose[4], botpose[5]));
+
+        // Convert robot pose from Pose3d to Pose2d needed to apply vision measurements.
+        Pose2d visionMeasurement2d = visionMeasurement3d.toPose2d();
+
+
+        SwerveDrivePoseEstimator.addVisionMeasurement(visionMeasurement2d,Timer.getFPGATimestamp() - (botpose[6]/1000.0));
         SwerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
     
         field.setRobotPose(SwerveDrivePoseEstimator.getEstimatedPosition());
