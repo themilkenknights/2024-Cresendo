@@ -40,7 +40,6 @@ public class Swerve extends SubsystemBase {
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
     public Field2d field;
-    double tx = LimelightHelpers.getTX("");
     
     public Swerve() {
          PathPlannerLogging.setLogCurrentPoseCallback((pose) -> {
