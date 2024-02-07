@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import frc.robot.SwerveModule;
+import frc.lib.math.Conversions;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -19,6 +20,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
@@ -192,18 +194,20 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void periodic() {
+        if(NetworkTableInstance.getDefault().getTable("limelight-knights").getEntry("tv").getDouble(0)!=0){
         //use network tables to get limelight botpose (array: x,y,z,roll,pitch, yaw, latency)
-        double[] botpose = NetworkTableInstance.getDefault().getTable("limelight").getEntry("botpose").getDoubleArray(new double[6]);
-        
-
+        double[] botpose = NetworkTableInstance.getDefault().getTable("limelight-knights").getEntry("botpose_wpiblue").getDoubleArray(new double[7]);
+        //Pose3d visionMeasurement3d = new Pose3d();
+        Pose2d visionMeasurement2d = new Pose2d(botpose[0],botpose[1],getGyroYaw());
+        SmartDashboard.putNumberArray("vision", botpose);
             // Compute the robot's field-relative position from botpose
-        Pose3d visionMeasurement3d = new Pose3d(botpose[0],botpose[1],botpose[2], new Rotation3d(botpose[3], botpose[4], botpose[5]));
 
+       // visionMeasurement3d = new Pose3d((botpose[0]),(botpose[1]),(botpose[2]),  new Rotation3d());
         // Convert robot pose from Pose3d to Pose2d needed to apply vision measurements.
-        Pose2d visionMeasurement2d = visionMeasurement3d.toPose2d();
-
+        //visionMeasurement2d = (new Pose2d(0,0,new Rotation2d(getGyroYaw().getDegrees())));
 
         SwerveDrivePoseEstimator.addVisionMeasurement(visionMeasurement2d,Timer.getFPGATimestamp() - (botpose[6]/1000.0));
+        }
         SwerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
     
         field.setRobotPose(SwerveDrivePoseEstimator.getEstimatedPosition());
