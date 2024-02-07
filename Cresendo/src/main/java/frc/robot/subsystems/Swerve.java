@@ -26,6 +26,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 
@@ -192,9 +194,11 @@ public class Swerve extends SubsystemBase {
         }
     }
 
-    @Override
-    public void periodic() {
-        if(NetworkTableInstance.getDefault().getTable("limelight-knights").getEntry("tv").getDouble(0)!=0){
+    public Command UseVision(){
+        return runOnce(
+            () -> {
+              /* one-time action goes here */
+              if(NetworkTableInstance.getDefault().getTable("limelight-knights").getEntry("tv").getDouble(0)!=0){
         //use network tables to get limelight botpose (array: x,y,z,roll,pitch, yaw, latency)
         double[] botpose = NetworkTableInstance.getDefault().getTable("limelight-knights").getEntry("botpose_wpiblue").getDoubleArray(new double[7]);
         //Pose3d visionMeasurement3d = new Pose3d();
@@ -207,7 +211,15 @@ public class Swerve extends SubsystemBase {
         //visionMeasurement2d = (new Pose2d(0,0,new Rotation2d(getGyroYaw().getDegrees())));
 
         SwerveDrivePoseEstimator.addVisionMeasurement(visionMeasurement2d,Timer.getFPGATimestamp() - (botpose[6]/1000.0));
-        }
+        };
+            });
+              
+          
+    }
+
+    @Override
+    public void periodic() {
+
         SwerveDrivePoseEstimator.update(getGyroYaw(), getModulePositions());
     
         field.setRobotPose(SwerveDrivePoseEstimator.getEstimatedPosition());
