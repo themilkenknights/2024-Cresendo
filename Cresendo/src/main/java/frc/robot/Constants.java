@@ -14,12 +14,12 @@ import frc.lib.util.SwerveModuleConstants;
 
 public final class Constants {
     public static final double stickDeadband = 0.1;
-
+    public static final int Beambreakport = 0;
         // intakes
-        public static final int topLeftIntakeCANID = 57;
-        public static final int topRightIntakeCANID = 62;
-        public static final int bottomLeftIntakeCANID = 60;
-        public static final int bottomRightIntakeCANID = 61;
+    public static final int topLeftIntakeCANID = 57;
+    public static final int topRightIntakeCANID = 62;
+    public static final int bottomLeftIntakeCANID = 60;
+    public static final int bottomRightIntakeCANID = 61;
         
     public static final class Swerve {
         public static final int pigeonID = 30;
@@ -68,7 +68,7 @@ public final class Constants {
         public static final double closedLoopRamp = 0.0;
 
         /* Angle Motor PID Values */
-        public static final double angleKP = chosenModule.angleKP-0.1;
+        public static final double angleKP = chosenModule.angleKP-0.25;//MK4i defult is 1, - whatever value added for tuneing
         public static final double angleKI = chosenModule.angleKI;
         public static final double angleKD = chosenModule.angleKD;
 
