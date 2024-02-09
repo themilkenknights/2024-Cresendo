@@ -37,11 +37,14 @@ public class RobotContainer {
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
+    private final beambreak s_beambreak = new beambreak();
+
     //auto
     private final SendableChooser<Command> autoChooser;
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+        s_beambreak.getState();
         s_Swerve.setDefaultCommand(
             new TeleopSwerve(
                 s_Swerve, 
