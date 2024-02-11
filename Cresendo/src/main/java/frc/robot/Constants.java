@@ -1,6 +1,6 @@
 package frc.robot;
 
-import com.ctre.phoenix6.hardware.TalonFX;
+
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
@@ -16,7 +16,9 @@ import frc.lib.util.SwerveModuleConstants;
 public final class Constants {
     public static final double stickDeadband = 0.1;
     public static final int ElevatorLeftCANID = 12;//TODO: set properly
-    public static final int ElevatorRightCANID = 12;//TODO: set properly
+    public static final int ElevatorRightCANID = 13;//TODO: set properly
+        public static final int topIntakeCANID = 15;//TODO: set properly
+    public static final int bottomIntakeIntakeCANID = 16;//TODO: set properly
 
     
     public static final class Swerve {
@@ -93,7 +95,7 @@ public final class Constants {
 
         /* Module Specific Constants */
         /* Front Left Module - Module 0 */
-        public static final class Mod0 { //TODO: This must be tuned to specific robot
+        public static final class Mod0 { // This must be tuned to specific robot
             public static final int driveMotorID = 1;
             public static final int angleMotorID = 2;
             public static final int canCoderID = 3;
@@ -103,7 +105,7 @@ public final class Constants {
         }
 
         /* Front Right Module - Module 1 */
-        public static final class Mod1 { //TODO: This must be tuned to specific robot
+        public static final class Mod1 { // This must be tuned to specific robot
             public static final int driveMotorID = 3;
             public static final int angleMotorID = 4;
             public static final int canCoderID = 5;
@@ -113,7 +115,7 @@ public final class Constants {
         }
         
         /* Back Left Module - Module 2 */
-        public static final class Mod2 { //TODO: This must be tuned to specific robot
+        public static final class Mod2 { //This must be tuned to specific robot
             public static final int driveMotorID = 6;
             public static final int angleMotorID = 7;
             public static final int canCoderID = 8;
@@ -123,7 +125,7 @@ public final class Constants {
         }
 
         /* Back Right Module - Module 3 */
-        public static final class Mod3 { //TODO: This must be tuned to specific robot
+        public static final class Mod3 { //TThis must be tuned to specific robot
             public static final int driveMotorID = 9;
             public static final int angleMotorID = 10;
             public static final int canCoderID = 11;

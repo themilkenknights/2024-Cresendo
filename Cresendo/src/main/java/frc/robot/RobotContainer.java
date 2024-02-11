@@ -20,6 +20,7 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
     /* Controllers */
     private final Joystick driver = new Joystick(0);
+    private final XboxController op = new XboxController(1);
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -32,7 +33,7 @@ public class RobotContainer {
 
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
-
+    private final Intakes s_Intakes = new Intakes();
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -45,7 +46,7 @@ public class RobotContainer {
                 () -> robotCentric.getAsBoolean()
             )
         );
-
+    
         // Configure the button bindings
         configureButtonBindings();
     }
@@ -59,6 +60,9 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
+
+        //op
+        //op.getAButtonPressed().run
     }
 
     /**
