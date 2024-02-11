@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import frc.robot.autos.*;
@@ -20,7 +21,7 @@ import frc.robot.subsystems.*;
 public class RobotContainer {
     /* Controllers */
     private final Joystick driver = new Joystick(0);
-    private final XboxController op = new XboxController(1);
+    private final CommandXboxController op = new CommandXboxController(1);
 
     /* Drive Controls */
     private final int translationAxis = XboxController.Axis.kLeftY.value;
@@ -62,7 +63,11 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
 
         //op
-        //op.getAButtonPressed().run
+        op.a().onTrue(s_Intakes.GroundPickUP());
+        op.b()
+        .onTrue(s_Intakes.setTopIntakeState(Intakes.state.ON))
+        .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
+            
     }
 
     /**

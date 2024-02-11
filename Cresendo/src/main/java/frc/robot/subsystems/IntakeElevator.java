@@ -60,7 +60,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   }
 
   public Command setHeight(Positions height){
-    return runOnce(()->{
+    return run(()->{
       switch (height) {
         case GROUND:
           setGoal(0);
@@ -72,6 +72,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
           setGoal(15); ;//TODO: set properly
           break;
       }
-    });
+    })
+    .until(this::atSetpoint);
   }
 }
