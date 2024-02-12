@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
-
 import static edu.wpi.first.units.Units.*;
 
 import edu.wpi.first.math.controller.ElevatorFeedforward;
@@ -13,23 +12,25 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.Command;
 
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
-
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 
 public class IntakeElevator extends ProfiledPIDSubsystem {
   private final TalonFX LeftElevator = new TalonFX(Constants.ElevatorLeftCANID);
-  private static final TrapezoidProfile.Constraints ProfileConstraints = new TrapezoidProfile.Constraints(MetersPerSecond.of(4),MetersPerSecondPerSecond.of(1));
-  private final ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0,0.43,2.83,0.07);
+  private static final TrapezoidProfile.Constraints ProfileConstraints = new TrapezoidProfile.Constraints(
+      MetersPerSecond.of(4), MetersPerSecondPerSecond.of(1));
+  private final ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
 
   public static enum Positions {
-    GROUND,HP,AMP
+    GROUND, HP, AMP
   }
+
   /**
-  * DO NOT CALL DIRECTLY. Use Intakes subsystem insted
+   * DO NOT CALL DIRECTLY. Use Intakes subsystem insted
    */
   public IntakeElevator() {
-    super(new ProfiledPIDController(0.1, 0, 0,ProfileConstraints));
-  
+    super(new ProfiledPIDController(0.1, 0, 0, ProfileConstraints));
+
     setGoal(0);
   }
 
@@ -41,7 +42,6 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
     LeftElevator.setVoltage(output + feedforward);
   }
 
-
   @Override
   public double getMeasurement() {
     return LeftElevator.getPosition().getValueAsDouble();
@@ -50,29 +50,36 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   public boolean atSetpoint() {
     return m_controller.atSetpoint();
   }
-  public Command setDown(){
-    return runOnce(()->setGoal(0));
+
+  public Command setDown() {
+    return runOnce(() -> setGoal(0));
   }
 
-   public Command setUp(){
-    //TODO: set properly
-    return runOnce(()->setGoal(20));
+  public Command setUp() {
+    // TODO: set properly
+    return runOnce(() -> setGoal(20));
   }
 
-  public Command setHeight(Positions height){
-    return run(()->{
+  public Command setHeight(Positions height) {
+    //sequence: first, set based off of the height param, then only finish when it reaches the setpoint
+    return new SequentialCommandGroup(runOnce(() -> {
       switch (height) {
         case GROUND:
           setGoal(0);
           break;
         case AMP:
-          setGoal(10);//TODO: set properly
+          setGoal(10);// TODO: set properly
           break;
         case HP:
-          setGoal(15); ;//TODO: set properly
+          setGoal(15);
+          // TODO: set properly
           break;
       }
-    })
-    .until(this::atSetpoint);
+    }),
+        run(() -> {
+        }).until(this::atSetpoint)
+
+    );
   }
+
 }

@@ -35,6 +35,7 @@ public class RobotContainer {
     /* Subsystems */
     private final Swerve s_Swerve = new Swerve();
     private final Intakes s_Intakes = new Intakes();
+    private final Climb s_Climb = new Climb();
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -67,6 +68,7 @@ public class RobotContainer {
         op.b()
         .onTrue(s_Intakes.setTopIntakeState(Intakes.state.ON))
         .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
+        op.povUp().onTrue(new ClimbCommand(s_Climb, op.povDown()));
             
     }
 

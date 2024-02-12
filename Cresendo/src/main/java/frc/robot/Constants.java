@@ -12,19 +12,32 @@ import edu.wpi.first.math.util.Units;
 import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
 
+
 public final class Constants {
     public static final double stickDeadband = 0.1;
-    public static final int ElevatorLeftCANID = 12;// TODO: set properly
-    public static final int ElevatorRightCANID = 13;// TODO: set properly
-    public static final int topIntakeCANID = 15;// TODO: set properly
-    public static final int bottomIntakeIntakeCANID = 16;// TODO: set properly
+
+
+    //CANIDs and portsfor intakes
+    public static final int ElevatorLeftCANID = 20;// TODO: set properly
+    public static final int ElevatorRightCANID = 21;// TODO: set properly
+    public static final int topIntakeCANID = 22;// TODO: set properly
+    public static final int bottomIntakeIntakeCANID = 23;// TODO: set properly
+
     public static final int beambreakPORT = 0;// TODO: set properly
 
+
+
+    //CANIDs and ports for Climb
+    public static final int ClimbCANID = 24;
+
+    public static final int ClimbServoPORT = 1;
+
+    
     public static final class Swerve {
         public static final int pigeonID = 25;
 
         public static final COTSTalonFXSwerveConstants chosenModule = // This must be tuned to specific robot
-                COTSTalonFXSwerveConstants.SDS.MK4i.Falcon500(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2);
+                COTSTalonFXSwerveConstants.SDS.MK4i.KrakenX60(COTSTalonFXSwerveConstants.SDS.MK4i.driveRatios.L2);
 
         /* Drivetrain Constants */
         public static final double trackWidth = Units.inchesToMeters(19.75); // This must be tuned to specific robot
