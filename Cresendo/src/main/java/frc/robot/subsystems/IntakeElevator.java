@@ -19,11 +19,23 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   private final TalonFX LeftElevator = new TalonFX(Constants.ElevatorLeftCANID);
   private static final TrapezoidProfile.Constraints ProfileConstraints = new TrapezoidProfile.Constraints(
       MetersPerSecond.of(4), MetersPerSecondPerSecond.of(1));
-  private final ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
+  private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
 
   public static enum Positions {
     GROUND, HP, AMP
   }
+
+  /* 
+    private static class stage {
+      public double kg,ks,kv,setpoint;
+      public stage(double setpoint,double kg,double ks,double kv){
+        this.ks = ks;
+        this.kg = kg;
+        this.kv = kv;
+        this.setpoint = setpoint;
+      }
+    }
+    private static final stage[] feedforwardSteps = {new stage(0, 0, 0, 0)};*/
 
   /**
    * DO NOT CALL DIRECTLY. Use Intakes subsystem insted
@@ -34,9 +46,18 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
     setGoal(0);
   }
 
+
   @Override
   public void useOutput(double output, TrapezoidProfile.State setpoint) {
     // Calculate the feedforward from the sepoint
+    if(getMeasurement()>100){//TODO: set all of the stage encoder poses for feed forward properly, and pust in kv,kg,ks, etc
+      //note: this may need to be moved
+elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
+    }else if(getMeasurement()>50){
+      elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
+    }else{
+      elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
+    }
     double feedforward = elevatorFeedforward.calculate(setpoint.position, setpoint.velocity);
     // Add the feedforward to the PID output to get the motor output
     LeftElevator.setVoltage(output + feedforward);
@@ -57,7 +78,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
 
   public Command setUp() {
     // TODO: set properly
-    return runOnce(() -> setGoal(20));
+    return runOnce(() -> setGoal(10));
   }
 
   public Command setHeight(Positions height) {
