@@ -31,7 +31,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   }
 
 
-  private static final double spoolsize = 1;
+  private static final double spoolsize = 1*Math.PI;
   private static final double reduction = 2;//TODO: when gearbox is chosen, set
   private static double inchestorotations(double inches){return spoolsize*inches*reduction;}
 
