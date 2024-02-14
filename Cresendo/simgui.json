@@ -1,0 +1,68 @@
+{
+  "HALProvider": {
+    "Other Devices": {
+      "Talon FX (v6)[20]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX (v6)[21]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX (v6)[21]/Rotor Sensor": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX (v6)[22]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX (v6)[23]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX (v6)[2]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX (v6)[2]/Rotor Sensor": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX (v6)[3]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Climb/ProfiledPIDController[2]": "ProfiledPIDController",
+      "/Shuffleboard/Climb/bottom": "Command",
+      "/Shuffleboard/Climb/lock": "Command",
+      "/Shuffleboard/Climb/top": "Command",
+      "/Shuffleboard/Climb/unlock": "Command",
+      "/SmartDashboard/DigitalInput[0]": "Digital Input",
+      "/SmartDashboard/Eleator": "Subsystem",
+      "/SmartDashboard/Elevator": "Subsystem",
+      "/SmartDashboard/ElevatorPID": "ProfiledPIDController",
+      "/SmartDashboard/climb": "ProfiledPIDController",
+      "/SmartDashboard/intake": "Subsystem"
+    }
+  },
+  "NetworkTables Info": {
+    "visible": true
+  },
+  "NetworkTables View": {
+    "visible": false
+  }
+}

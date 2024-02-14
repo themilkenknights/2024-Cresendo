@@ -3,6 +3,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -39,6 +40,10 @@ public class RobotContainer {
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+        SmartDashboard.putData("intake",s_Intakes);
+        SmartDashboard.putData("climb",s_Climb);
+
+        
         s_Swerve.setDefaultCommand(
             new TeleopSwerve(
                 s_Swerve, 
@@ -69,6 +74,8 @@ public class RobotContainer {
             .onTrue(s_Intakes.setTopIntakeState(Intakes.state.ON))
             .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
         op.povUp().onTrue(new ClimbCommand(s_Climb, op.povDown()));
+
+
             
     }
 

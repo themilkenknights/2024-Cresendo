@@ -2,16 +2,20 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.DutyCycle;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
+//import edu.wpi.first.wpilibj2.command.button.Trigger;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj.smartdashboard.*;
+
 import frc.robot.Constants;
 
-@SuppressWarnings("unused")
+
+
 public class Intakes extends SubsystemBase {
 
 
@@ -51,7 +55,7 @@ public class Intakes extends SubsystemBase {
   }
   public Command GroundPickUP(){
 
-    return new SequentialCommandGroup(intakeElevator.setHeight(IntakeElevator.Positions.GROUND),
+    return new SequentialCommandGroup(intakeElevator.gotoHeight(IntakeElevator.Positions.GROUND),
     setBottomIntakeState(state.ON),
     Commands.waitSeconds(3),
     setBottomIntakeState(state.OFF));
@@ -64,6 +68,17 @@ public class Intakes extends SubsystemBase {
     setBottomIntakeState(state.OFF));
 
     */
+  }
+  @Override
+  public void initSendable(SendableBuilder builder){
+    SmartDashboard.putData("Elevator",intakeElevator);
+    SmartDashboard.putData(beambreak);
+    super.initSendable(builder);
+    intakeElevator.initSendable(builder);
+    
+    //builder.addDoubleProperty("TopIntake", topIntake::get, topIntake::set);
+    //builder.addDoubleProperty("bottom intake", bottomIntake::get, bottomIntake::set);
+
   }
   
   @Override
