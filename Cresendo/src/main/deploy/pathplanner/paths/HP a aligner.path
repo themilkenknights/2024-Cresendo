@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 14.20364667118223,
+        "y": 1.607475728840347
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 14.284468809678359,
+        "y": 1.5678069643176324
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 14.907945394594494,
+        "y": 0.7879119276757078
+      },
+      "prevControl": {
+        "x": 14.69142995230435,
+        "y": 1.076460620513834
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Right HP"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -60.87160902815429,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": null,
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}

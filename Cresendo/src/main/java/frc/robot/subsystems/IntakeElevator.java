@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import static edu.wpi.first.units.Units.*;
@@ -52,7 +53,10 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
    * DO NOT CALL DIRECTLY. Use Intakes subsystem insted
    */
   public IntakeElevator() {
-    super(new ProfiledPIDController(0.1, 0, 0, ProfileConstraints));
+    super(new ProfiledPIDController(0.5, 0, 0, ProfileConstraints));
+    RightElevator.setInverted(true);
+    RightElevator.setControl(new Follower(LeftElevator.getDeviceID(), false));
+    LeftElevator.setPosition(0);
 
     setGoal(0);
   }
@@ -79,7 +83,6 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
     double feedforward = elevatorFeedforward.calculate(setpoint.position, setpoint.velocity);
     // Add the feedforward to the PID output to get the motor output
     LeftElevator.setVoltage(output + feedforward);
-    RightElevator.setVoltage(output + feedforward);
   
   }
 

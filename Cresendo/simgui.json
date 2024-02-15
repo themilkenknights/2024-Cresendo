@@ -51,15 +51,18 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Climb/PID Controller": "PIDController",
       "/Shuffleboard/Climb/ProfiledPIDController[2]": "ProfiledPIDController",
       "/Shuffleboard/Climb/bottom": "Command",
       "/Shuffleboard/Climb/lock": "Command",
       "/Shuffleboard/Climb/top": "Command",
       "/Shuffleboard/Climb/unlock": "Command",
+      "/SmartDashboard/Auto Chooser": "String Chooser",
       "/SmartDashboard/DigitalInput[0]": "Digital Input",
       "/SmartDashboard/Eleator": "Subsystem",
       "/SmartDashboard/Elevator": "Subsystem",
       "/SmartDashboard/ElevatorPID": "ProfiledPIDController",
+      "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/climb": "ProfiledPIDController",
       "/SmartDashboard/intake": "Subsystem"
     }

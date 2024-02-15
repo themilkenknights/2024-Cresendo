@@ -1,0 +1,31 @@
+{
+  "version": 1.0,
+  "startingPose": null,
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": " Apriltags"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "HP a aligner"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Cycle a"
+          }
+        }
+      ]
+    }
+  },
+  "folder": null,
+  "choreoAuto": false
+}
