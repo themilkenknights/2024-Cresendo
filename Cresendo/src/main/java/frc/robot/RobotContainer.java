@@ -75,7 +75,7 @@ public class RobotContainer {
             .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
         op.povUp().onTrue(new ClimbCommand(s_Climb, op.povDown()));
 
-
+      // op.leftTrigger().whileTrue(s_Climb.manualDown(op::getLeftTriggerAxis));
             
     }
 

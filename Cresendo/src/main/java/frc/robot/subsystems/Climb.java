@@ -1,5 +1,9 @@
 package frc.robot.subsystems;
 
+import java.util.function.DoubleSupplier;
+
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
+import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.CANcoderSimState;
@@ -7,9 +11,11 @@ import com.ctre.phoenix6.sim.TalonFXSimState;
 
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.ElevatorFeedforward;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.networktables.DoubleSubscriber;
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.Servo;
@@ -24,16 +30,16 @@ import edu.wpi.first.wpilibj.simulation.EncoderSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
+import edu.wpi.first.wpilibj2.command.PIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.subsystems.Intakes.state;
 
-public class Climb extends ProfiledPIDSubsystem {
+public class Climb extends PIDSubsystem {
     private static final double spoolsize = 1 * Math.PI;
     private static final double reduction = 15.34;
-
+    private double encoderOffset = 0;
     public static enum Positions {
         TOP, BOTTOM
     }
@@ -41,8 +47,9 @@ public class Climb extends ProfiledPIDSubsystem {
     private static double inchestorotations(double inches) {
         return spoolsize * inches * reduction;
     }
-
-    private TalonFX climber = new TalonFX(Constants.ClimbCANID);
+    //private final TalonFXConfigurator config = new TalonFXConfigurator(climb);
+    private TalonFX climber = new TalonFX(Constants.ClimbCANID,"rio");
+    
     private TalonFXSimState motorSim =climber.getSimState();
     //private final CANcoder sensor = new CANcoder(Constants.ClimbCANID);
    // private final CANcoderSimState sensorSim = sensor.getSimState();
@@ -54,17 +61,20 @@ public class Climb extends ProfiledPIDSubsystem {
     private Servo locker = new Servo(Constants.ClimbServoPORT);
 
     public Climb() {
-        super(new ProfiledPIDController(0.1, 0, 0, new TrapezoidProfile.Constraints(0.55, 0.55)));
+        super(new PIDController(3, 0, 1));
+        climber.setPosition(0);
+        locker.set(0.3);
+        enable();
     }
 
     @Override
-    public void useOutput(double output, TrapezoidProfile.State state) {
-        climber.setVoltage(output + m_feedforward.calculate(state.velocity));
+    public void useOutput(double output, double setpoint) {
+        climber.setVoltage(output);// + m_feedforward.calculate(state.velocity));
     }
 
     @Override
     public double getMeasurement() {
-        return climber.getPosition().getValueAsDouble();
+        return climber.getPosition().getValueAsDouble()+encoderOffset;
     }
 
     public boolean atSetpoint() {
@@ -94,10 +104,11 @@ public class Climb extends ProfiledPIDSubsystem {
         return new SequentialCommandGroup(runOnce(() -> {
             switch (state) {
                 case TOP:
-                    setGoal(inchestorotations(20));
+                    setSetpoint(80);//inchestorotations(20));
+                    locker.set(0.3);
                     break;
                 case BOTTOM:
-                    setGoal(0);
+                    setSetpoint(0);
                     break;
 
             }
@@ -108,11 +119,17 @@ public class Climb extends ProfiledPIDSubsystem {
 
     public Command lockClimb() {
         return runOnce(() -> {
-            disable();
+            //disable();
             locker.set(0.6);
         });
     }
+    public Command manualDown(DoubleSupplier sup){
+        return runOnce(()->{climber.set(-sup.getAsDouble());});
+    }
 
+    public Command manualUp(DoubleSupplier sup){
+        return runOnce(()->{climber.set(sup.getAsDouble());});
+    }
     public void initSendable(SendableBuilder builder) {
         Shuffleboard.getTab("Climb")
                 .add(m_controller);
@@ -133,8 +150,8 @@ public class Climb extends ProfiledPIDSubsystem {
     public Command unlockClimb() {
         return runOnce(() -> {
 
-            locker.set(0.4);
-            enable();
+            locker.set(0.3);
+            //enable();
         });
     }
 

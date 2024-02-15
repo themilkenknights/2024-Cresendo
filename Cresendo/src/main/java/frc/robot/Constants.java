@@ -30,7 +30,7 @@ public final class Constants {
     //CANIDs and ports for Climb
     public static final int ClimbCANID = 24;
 
-    public static final int ClimbServoPORT = 1;
+    public static final int ClimbServoPORT = 0;
 
     
     public static final class Swerve {
