@@ -16,32 +16,32 @@
     },
     {
       "anchor": {
-        "x": 10.297461053262234,
-        "y": 2.0475139700333918
+        "x": 10.525615833639074,
+        "y": 1.9397907082851211
       },
       "prevControl": {
-        "x": 11.632169487725823,
-        "y": 0.8508705029620764
+        "x": 11.723458122842171,
+        "y": 1.4230872350633594
       },
       "nextControl": {
-        "x": 8.962752618798644,
-        "y": 3.2441574371046986
+        "x": 9.430895117371245,
+        "y": 2.4120114683984726
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.4332601905944555,
-        "y": 6.055128105626582
+        "x": 5.323128627738737,
+        "y": 4.9747481161629
       },
       "prevControl": {
-        "x": 8.971636963053207,
-        "y": 4.885059731372522
+        "x": 5.800044567681728,
+        "y": 4.71143778398668
       },
       "nextControl": {
-        "x": 4.1999918860948835,
-        "y": 7.0845562987422275
+        "x": 4.4135082713895635,
+        "y": 5.476959130986986
       },
       "isLocked": false,
       "linkedName": null
@@ -102,8 +102,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -115,5 +115,5 @@
   "reversed": false,
   "folder": null,
   "previewStartingState": null,
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

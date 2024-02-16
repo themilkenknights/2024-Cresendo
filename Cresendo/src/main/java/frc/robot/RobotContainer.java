@@ -17,6 +17,7 @@ import frc.robot.autos.*;
 import frc.robot.commands.*;
 import frc.robot.subsystems.*;
 
+
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -65,7 +66,8 @@ public class RobotContainer {
         configureButtonBindings();
 
         //named commands
-    NamedCommands.registerCommand("AprilTags", s_Swerve.UseVision());
+    NamedCommands.registerCommand("Apriltags",AprilTagCommand.UpdateVision(s_Swerve));
+
             // Build an auto chooser. This will use Commands.none() as the default option.
             
     autoChooser = AutoBuilder.buildAutoChooser();
@@ -89,7 +91,7 @@ public class RobotContainer {
         //op
         op.a().onTrue(s_Intakes.GroundPickUP());
         op.b()
-            .onTrue(s_Intakes.setTopIntakeState(Intakes.state.ON))
+            .onTrue(s_Intakes.setTopIntakeState(Intakes.state.FWD))
             .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
         op.povUp().onTrue(new ClimbCommand(s_Climb, op.povDown()));
 
@@ -104,6 +106,6 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return new exampleAuto(s_Swerve);
+        return autoChooser.getSelected();
     }
 }

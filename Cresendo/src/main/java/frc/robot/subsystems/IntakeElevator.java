@@ -11,6 +11,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -61,7 +62,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
     setGoal(0);
   }
   public void initSendable(SendableBuilder builder){
-    SmartDashboard.putData("ElevatorPID",m_controller);
+    //Shuffleboard.getTab("intakes").add("ElevatorPID",m_controller);
   }
   @Override
   public void useOutput(double output, TrapezoidProfile.State setpoint) {
