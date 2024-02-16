@@ -160,6 +160,10 @@ public class Swerve extends SubsystemBase {
 
     @Override
     public void initSendable(SendableBuilder builder){
+        ShuffleboardTab tab = Shuffleboard.getTab("swerve");
+        for (SwerveModule mod : mSwerveMods) {
+        tab.add("Mod "+mod.moduleNumber,mod);
+        }
         /*for (SwerveModule mod : mSwerveMods) {
             ShuffleboardLayout layout0 = tab.getLayout("Mod " + mod.moduleNumber, BuiltInLayouts.kList);
             builder.addDoubleProperty("Mod " + (mod.moduleNumber) + " CANcoder", new DoubleSupplier(){

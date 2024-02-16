@@ -16,6 +16,7 @@ public class ClimbCommand extends SequentialCommandGroup {
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
+   * @param goDown suplier for going down
    */
   public ClimbCommand(Climb subsystem,BooleanSupplier goDown) {
     m_subsystem = subsystem;

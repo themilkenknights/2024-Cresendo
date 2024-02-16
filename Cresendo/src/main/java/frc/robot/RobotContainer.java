@@ -3,6 +3,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
@@ -50,8 +51,7 @@ public class RobotContainer {
     public RobotContainer() {
         SmartDashboard.putData("intake",s_Intakes);
         SmartDashboard.putData("climb",s_Climb);
-
-        
+        SmartDashboard.putData("swerve",s_Swerve);
         s_Swerve.setDefaultCommand(
             new TeleopSwerve(
                 s_Swerve, 

@@ -1,5 +1,7 @@
 package frc.robot;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.controls.DutyCycleOut;
 import com.ctre.phoenix6.controls.PositionVoltage;
 import com.ctre.phoenix6.controls.VelocityVoltage;
@@ -10,10 +12,11 @@ import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.lib.math.Conversions;
 import frc.lib.util.SwerveModuleConstants;
-
-public class SwerveModule {
+public class SwerveModule extends SubsystemBase{
     public int moduleNumber;
     private Rotation2d angleOffset;
 
@@ -88,5 +91,18 @@ public class SwerveModule {
             Conversions.rotationsToMeters(mDriveMotor.getPosition().getValue(), Constants.Swerve.wheelCircumference), 
             Rotation2d.fromRotations(mAngleMotor.getPosition().getValue())
         );
+    }
+    private DoubleSupplier Velecity(){
+        return ()->getState().speedMetersPerSecond;
+    }
+    private DoubleSupplier Angle(){
+        return ()->getState().angle.getDegrees();
+    }
+    @Override
+    public void initSendable(SendableBuilder builder){
+        
+        builder.addDoubleProperty("Velecity",Velecity() , null);
+        builder.addDoubleProperty("Angle",Angle() , null);
+        
     }
 }

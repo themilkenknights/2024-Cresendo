@@ -6,7 +6,17 @@
       }
     },
     "Other Devices": {
+      "Pigeon 2 (v6)[25]": {
+        "header": {
+          "open": true
+        }
+      },
       "Talon FX (v6)[20]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX (v6)[20]/Rotor Sensor": {
         "header": {
           "open": true
         }
@@ -72,6 +82,7 @@
       "/Shuffleboard/intakes/DigitalInput[1]": "Digital Input",
       "/Shuffleboard/intakes/ElevatorPID": "ProfiledPIDController",
       "/Shuffleboard/intakes/IntakeCommands/Ground": "Command",
+      "/Shuffleboard/intakes/IntakeCommands/HP": "Command",
       "/Shuffleboard/intakes/IntakeCommands/in": "Command",
       "/Shuffleboard/intakes/IntakeCommands/out": "Command",
       "/Shuffleboard/intakes/TopIntake": "Motor Controller",
@@ -94,8 +105,7 @@
         "open": true
       },
       "open": true
-    },
-    "visible": true
+    }
   },
   "NetworkTables View": {
     "visible": false
