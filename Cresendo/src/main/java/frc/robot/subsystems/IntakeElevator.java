@@ -23,8 +23,8 @@ import frc.robot.Constants;
 
 public class IntakeElevator extends ProfiledPIDSubsystem {
 
-  private static final double spoolsize = 1 * Math.PI;
-  private static final double reduction = 2;// TODO: when gearbox is chosen, set
+  private static final double spoolsize = 0.5 * Math.PI;
+  private static final double reduction = 9;
 
   private static double inchestorotations(double inches) {
     return spoolsize * inches * reduction;
