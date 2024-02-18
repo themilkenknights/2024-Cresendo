@@ -6,26 +6,20 @@
     "data": {
       "commands": [
         {
-          "type": "named",
+          "type": "path",
           "data": {
-            "name": "Apriltags"
+            "pathName": "AutoScoreInAmpFromLeft"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "Cycleback"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Cycle a"
+            "pathName": "AutoGetNote"
           }
         }
       ]
     }
   },
-  "folder": "teleop",
+  "folder": null,
   "choreoAuto": false
 }

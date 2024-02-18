@@ -6,27 +6,12 @@
       }
     },
     "Other Devices": {
-      "Pigeon 2 (v6)[25]": {
-        "header": {
-          "open": true
-        }
-      },
       "Talon FX (v6)[20]": {
         "header": {
           "open": true
         }
       },
-      "Talon FX (v6)[20]/Rotor Sensor": {
-        "header": {
-          "open": true
-        }
-      },
       "Talon FX (v6)[21]": {
-        "header": {
-          "open": true
-        }
-      },
-      "Talon FX (v6)[21]/Rotor Sensor": {
         "header": {
           "open": true
         }
@@ -37,31 +22,6 @@
         }
       },
       "Talon FX (v6)[23]": {
-        "header": {
-          "open": true
-        }
-      },
-      "Talon FX (v6)[24]": {
-        "header": {
-          "open": true
-        }
-      },
-      "Talon FX (v6)[24]/Rotor Sensor": {
-        "header": {
-          "open": true
-        }
-      },
-      "Talon FX (v6)[2]": {
-        "header": {
-          "open": true
-        }
-      },
-      "Talon FX (v6)[2]/Rotor Sensor": {
-        "header": {
-          "open": true
-        }
-      },
-      "Talon FX (v6)[3]": {
         "header": {
           "open": true
         }
@@ -105,7 +65,8 @@
         "open": true
       },
       "open": true
-    }
+    },
+    "visible": true
   },
   "NetworkTables View": {
     "visible": false

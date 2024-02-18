@@ -9,7 +9,7 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-//import edu.wpi.first.wpilibj2.command.button.Trigger;
+
 import edu.wpi.first.wpilibj2.command.Command;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
@@ -81,6 +81,8 @@ public class Intakes extends SubsystemBase {
     return new SequentialCommandGroup(setTopIntakeState(state.FWD), waitUntil(this::getNotFrontIR), waitSeconds(0.25),
         setTopIntakeState(state.OFF));
   }
+
+ 
 
   public Command GroundPickUP() {
     return new SequentialCommandGroup(intakeElevator.gotoHeight(IntakeElevator.Positions.GROUND),

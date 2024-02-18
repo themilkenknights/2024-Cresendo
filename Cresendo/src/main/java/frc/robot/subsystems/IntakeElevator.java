@@ -37,7 +37,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   private static final TrapezoidProfile.Constraints ProfileConstraints = new TrapezoidProfile.Constraints(
       MetersPerSecond.of(4), MetersPerSecondPerSecond.of(1));
   private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
-  private static final ElevatorSim sim = new ElevatorSim(DCMotor.getFalcon500(1), reduction, 6, spoolsize/37, 0, 3, false, 0);
+ // private static final ElevatorSim sim = new ElevatorSim(DCMotor.getFalcon500(1), reduction, 6, spoolsize/37, 0, 3, false, 0);
   public static enum Positions {
     GROUND, HP, AMP
   }
@@ -117,10 +117,10 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
 
   @Override
   public void simulationPeriodic() {
-    sim.setInput((LeftElevator.getMotorVoltage().getValueAsDouble()));
+   // sim.setInput((LeftElevator.getMotorVoltage().getValueAsDouble()));
 
-    sim.update(0.02);
-    LeftElevator.getSimState().addRotorPosition(sim.getPositionMeters());
+   // sim.update(0.02);
+    LeftElevator.getSimState().addRotorPosition(this.m_controller.getSetpoint().position);
   }
 
   public Command gotoHeight(Positions height) {

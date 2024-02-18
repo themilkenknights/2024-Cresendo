@@ -29,6 +29,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardContainer;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -158,13 +159,34 @@ public class Swerve extends SubsystemBase {
         }
     }
 
+    private DoubleSupplier Velecity(SwerveModule module){
+        return ()->module.getState().speedMetersPerSecond;
+    }
+    private DoubleSupplier Angle(SwerveModule module){
+        return ()->module.getState().angle.getDegrees();
+    }
     @Override
     public void initSendable(SendableBuilder builder){
         ShuffleboardTab tab = Shuffleboard.getTab("swerve");
-        for (SwerveModule mod : mSwerveMods) {
-        tab.add("Mod "+mod.moduleNumber,mod);
-        }
-        /*for (SwerveModule mod : mSwerveMods) {
+
+        ShuffleboardLayout lay0 = tab.getLayout("Module "+mSwerveMods[0].moduleNumber, BuiltInLayouts.kGrid);
+        lay0.addDouble("Mod 0 Angle",Angle(mSwerveMods[0]));
+        lay0.addDouble("Mod 0  Velocity",Velecity(mSwerveMods[0]));
+
+
+        ShuffleboardLayout lay1 = tab.getLayout("Module "+mSwerveMods[1].moduleNumber, BuiltInLayouts.kGrid);
+        lay1.addDouble("Mod 1 Angle",Angle(mSwerveMods[1]));
+        lay1.addDouble("Mod 1 Velocity",Velecity(mSwerveMods[1]));
+
+        ShuffleboardLayout lay2 = tab.getLayout("Module "+mSwerveMods[2].moduleNumber, BuiltInLayouts.kGrid);
+        lay2.addDouble("Mod 2 Angle",Angle(mSwerveMods[2]));
+        lay2.addDouble("Mod 2nVelocity",Velecity(mSwerveMods[2]));
+
+        ShuffleboardLayout lay3 = tab.getLayout("Module "+mSwerveMods[1].moduleNumber, BuiltInLayouts.kGrid);
+        lay3.addDouble("Mod 3 Angle",Angle(mSwerveMods[3]));
+        lay3.addDouble("Mod 3 Velocity",Velecity(mSwerveMods[3]));
+
+     }        /*for (SwerveModule mod : mSwerveMods) {
             ShuffleboardLayout layout0 = tab.getLayout("Mod " + mod.moduleNumber, BuiltInLayouts.kList);
             builder.addDoubleProperty("Mod " + (mod.moduleNumber) + " CANcoder", new DoubleSupplier(){
                 @Override
@@ -176,7 +198,7 @@ public class Swerve extends SubsystemBase {
             layout0.add("Mod " + (mod.moduleNumber) + " Angle", mod.getPosition().angle.getDegrees());
             layout0.add("Mod " + (mod.moduleNumber) + " Velocity", mod.getState().speedMetersPerSecond);
         }*/
-    }
+    
 
     public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds) {
         robotRelativeSpeeds.omegaRadiansPerSecond = -robotRelativeSpeeds.omegaRadiansPerSecond;
