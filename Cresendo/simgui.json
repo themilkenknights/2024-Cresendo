@@ -1,38 +1,9 @@
 {
-  "HALProvider": {
-    "DIO": {
-      "window": {
-        "visible": true
-      }
-    },
-    "Other Devices": {
-      "Talon FX (v6)[20]": {
-        "header": {
-          "open": true
-        }
-      },
-      "Talon FX (v6)[21]": {
-        "header": {
-          "open": true
-        }
-      },
-      "Talon FX (v6)[22]": {
-        "header": {
-          "open": true
-        }
-      },
-      "Talon FX (v6)[23]": {
-        "header": {
-          "open": true
-        }
-      }
-    }
-  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Pose": "Field2d",
       "/Shuffleboard/Climb/PID Controller": "PIDController",
-      "/Shuffleboard/Climb/ProfiledPIDController[2]": "ProfiledPIDController",
       "/Shuffleboard/Climb/bottom": "Command",
       "/Shuffleboard/Climb/lock": "Command",
       "/Shuffleboard/Climb/top": "Command",
@@ -47,28 +18,14 @@
       "/Shuffleboard/intakes/IntakeCommands/out": "Command",
       "/Shuffleboard/intakes/TopIntake": "Motor Controller",
       "/SmartDashboard/Auto Chooser": "String Chooser",
-      "/SmartDashboard/DigitalInput[0]": "Digital Input",
-      "/SmartDashboard/Eleator": "Subsystem",
-      "/SmartDashboard/Elevator": "Subsystem",
-      "/SmartDashboard/ElevatorPID": "ProfiledPIDController",
-      "/SmartDashboard/Field": "Field2d",
-      "/SmartDashboard/climb": "ProfiledPIDController",
+      "/SmartDashboard/Module 0": "Mechanism2d",
+      "/SmartDashboard/Module 1": "Mechanism2d",
+      "/SmartDashboard/Module 2": "Mechanism2d",
+      "/SmartDashboard/Module 3": "Mechanism2d",
       "/SmartDashboard/intake": "Subsystem"
     }
   },
   "NetworkTables Info": {
-    "Connections": {
-      "open": true
-    },
-    "Server": {
-      "Publishers": {
-        "open": true
-      },
-      "open": true
-    },
     "visible": true
-  },
-  "NetworkTables View": {
-    "visible": false
   }
 }
