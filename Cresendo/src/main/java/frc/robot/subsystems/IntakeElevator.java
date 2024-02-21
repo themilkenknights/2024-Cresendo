@@ -34,13 +34,12 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   private final TalonFX LeftElevator = new TalonFX(Constants.ElevatorLeftCANID);
   private final TalonFX RightElevator = new TalonFX(Constants.ElevatorRightCANID);
 
-  private static final TrapezoidProfile.Constraints ProfileConstraints = new TrapezoidProfile.Constraints(
-      MetersPerSecond.of(4), MetersPerSecondPerSecond.of(1));
+  private static final TrapezoidProfile.Constraints ProfileConstraints = new TrapezoidProfile.Constraints(inchestorotations(4), (inchestorotations(1)));
   private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
 
-  // private static final ElevatorSim sim = new
-  // ElevatorSim(DCMotor.getFalcon500(1), reduction, 6, spoolsize/37, 0, 3, false,
-  // 0);
+  private static final ElevatorSim sim = new
+  ElevatorSim(DCMotor.getFalcon500(1), reduction, 6, spoolsize/37, 0, 3, false,
+   0);
   public static enum Positions {
     GROUND, HP, AMP
   }
@@ -118,10 +117,10 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
 
   @Override
   public void simulationPeriodic() {
-    // sim.setInput((LeftElevator.getMotorVoltage().getValueAsDouble()));
+    sim.setInput((LeftElevator.getMotorVoltage().getValueAsDouble()));
 
-    // sim.update(0.02);
-    LeftElevator.getSimState().addRotorPosition(this.m_controller.getSetpoint().position);
+    sim.update(0.02);
+    LeftElevator.setPosition(inchestorotations(sim.getPositionMeters()));
   }
 
   public Command gotoHeight(Positions height) {
@@ -129,11 +128,11 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
     // reaches the setpoint
     switch (height) {
       case GROUND:
-      return new ProfiledPIDCommand(m_controller, this::getMeasurement, 0, this::useOutput,this);
+      return new ProfiledPIDCommand(m_controller, this::getMeasurement, 0, this::useOutput,this).until(this.m_controller::atGoal);
       case AMP:
-        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(20), this::useOutput,this);
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(20), this::useOutput,this).until(this.m_controller::atGoal);
       case HP:
-       return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(25), this::useOutput,this);
+       return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(25), this::useOutput,this).until(this.m_controller::atGoal);
        default:
        return new ProfiledPIDCommand(m_controller, this::getMeasurement, 0, this::useOutput,this);
 

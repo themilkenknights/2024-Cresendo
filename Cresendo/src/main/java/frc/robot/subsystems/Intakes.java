@@ -89,7 +89,7 @@ public class Intakes extends SubsystemBase {
 
  
 public Command AmpOuttake(){
-  return new ParallelCommandGroup(intakeElevator.gotoHeight(IntakeElevator.Positions.AMP),TopIntakeByBeambreak());
+  return new SequentialCommandGroup(intakeElevator.gotoHeight(IntakeElevator.Positions.AMP),TopIntakeByBeambreak());
 }
 public IntakeElevator getElevator(){
   return this.intakeElevator;
@@ -145,7 +145,7 @@ public Command GoDown(){
   public void periodic() {
     // This method will be called once per scheduler run
     intakeElevator.periodic();
-    mech.getRoot("root",0,0).setPosition(0, intakeElevator.getMeasurement());
+    mech.getRoot("root",0,0).setPosition(0, (intakeElevator.getMeasurement()/9)/(Math.PI*0.5));
   }
 
   @Override
