@@ -16,7 +16,8 @@ import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
-
+import edu.wpi.first.wpilibj2.command.PIDCommand;
+import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
@@ -30,19 +31,19 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
     return spoolsize * inches * reduction;
   }
 
-
   private final TalonFX LeftElevator = new TalonFX(Constants.ElevatorLeftCANID);
   private final TalonFX RightElevator = new TalonFX(Constants.ElevatorRightCANID);
 
   private static final TrapezoidProfile.Constraints ProfileConstraints = new TrapezoidProfile.Constraints(
       MetersPerSecond.of(4), MetersPerSecondPerSecond.of(1));
   private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
- // private static final ElevatorSim sim = new ElevatorSim(DCMotor.getFalcon500(1), reduction, 6, spoolsize/37, 0, 3, false, 0);
+
+  // private static final ElevatorSim sim = new
+  // ElevatorSim(DCMotor.getFalcon500(1), reduction, 6, spoolsize/37, 0, 3, false,
+  // 0);
   public static enum Positions {
     GROUND, HP, AMP
   }
-
-
 
   /*
    * private static class stage {
@@ -117,33 +118,26 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
 
   @Override
   public void simulationPeriodic() {
-   // sim.setInput((LeftElevator.getMotorVoltage().getValueAsDouble()));
+    // sim.setInput((LeftElevator.getMotorVoltage().getValueAsDouble()));
 
-   // sim.update(0.02);
+    // sim.update(0.02);
     LeftElevator.getSimState().addRotorPosition(this.m_controller.getSetpoint().position);
   }
 
   public Command gotoHeight(Positions height) {
     // sequence: first, set based off of the height param, then only finish when it
     // reaches the setpoint
-    return new SequentialCommandGroup(runOnce(() -> {
-      switch (height) {
-        case GROUND:
-          setGoal(0);
-          break;
-        case AMP:
-          setGoal(inchestorotations(20));// TODO: set properly
-          break;
-        case HP:
-          setGoal(inchestorotations(25));// MAX 26
-          // TODO: set properly
-          break;
-      }
-    }),
-        run(() -> {
-        }).until(this::atSetpoint)
+    switch (height) {
+      case GROUND:
+      return new ProfiledPIDCommand(m_controller, this::getMeasurement, 0, this::useOutput,this);
+      case AMP:
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(20), this::useOutput,this);
+      case HP:
+       return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(25), this::useOutput,this);
+       default:
+       return new ProfiledPIDCommand(m_controller, this::getMeasurement, 0, this::useOutput,this);
 
-    );
   }
 
+}
 }

@@ -1,4 +1,28 @@
 {
+  "HALProvider": {
+    "DIO": {
+      "window": {
+        "visible": true
+      }
+    },
+    "Other Devices": {
+      "Talon FX (v6)[20]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX (v6)[20]/Rotor Sensor": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX (v6)[23]": {
+        "header": {
+          "open": true
+        }
+      }
+    }
+  },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
@@ -11,11 +35,13 @@
       "/Shuffleboard/intakes/BottomIntake": "Motor Controller",
       "/Shuffleboard/intakes/DigitalInput[0]": "Digital Input",
       "/Shuffleboard/intakes/DigitalInput[1]": "Digital Input",
+      "/Shuffleboard/intakes/ElevatorMotor": "Motor Controller",
       "/Shuffleboard/intakes/ElevatorPID": "ProfiledPIDController",
       "/Shuffleboard/intakes/IntakeCommands/Ground": "Command",
       "/Shuffleboard/intakes/IntakeCommands/HP": "Command",
       "/Shuffleboard/intakes/IntakeCommands/in": "Command",
       "/Shuffleboard/intakes/IntakeCommands/out": "Command",
+      "/Shuffleboard/intakes/Mech": "Mechanism2d",
       "/Shuffleboard/intakes/TopIntake": "Motor Controller",
       "/SmartDashboard/Auto Chooser": "String Chooser",
       "/SmartDashboard/Module 0": "Mechanism2d",
@@ -23,6 +49,27 @@
       "/SmartDashboard/Module 2": "Mechanism2d",
       "/SmartDashboard/Module 3": "Mechanism2d",
       "/SmartDashboard/intake": "Subsystem"
+    }
+  },
+  "NetworkTables": {
+    "Persistent Values": {
+      "open": false
+    },
+    "retained": {
+      "SmartDashboard": {
+        "Auto Chooser": {
+          "open": true
+        },
+        "open": true
+      }
+    },
+    "transitory": {
+      "SmartDashboard": {
+        "Auto Chooser": {
+          "open": true
+        },
+        "open": true
+      }
     }
   },
   "NetworkTables Info": {

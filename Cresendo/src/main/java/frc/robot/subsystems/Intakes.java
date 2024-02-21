@@ -8,9 +8,13 @@ import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
@@ -25,6 +29,7 @@ public class Intakes extends SubsystemBase {
     FWD, REV, SLOW, OFF
   }
 
+  private Mechanism2d mech = new Mechanism2d(18,10,new Color8Bit(Color.kBlueViolet));
   private final IntakeElevator intakeElevator;
   private TalonFX topIntake = new TalonFX(Constants.topIntakeCANID);
   private TalonFX bottomIntake = new TalonFX(Constants.bottomIntakeIntakeCANID);
@@ -32,8 +37,8 @@ public class Intakes extends SubsystemBase {
   private DigitalInput frontIR = new DigitalInput(Constants.frontIRPORT);
 
   /** Setup the Intakes. */
-  public Intakes() {
-    intakeElevator = new IntakeElevator();
+  public Intakes(IntakeElevator elevator) {
+    this.intakeElevator = elevator;
   }
 
   public Command setTopIntakeState(Intakes.state intakeState) {
@@ -83,7 +88,15 @@ public class Intakes extends SubsystemBase {
   }
 
  
-
+public Command AmpOuttake(){
+  return new ParallelCommandGroup(intakeElevator.gotoHeight(IntakeElevator.Positions.AMP),TopIntakeByBeambreak());
+}
+public IntakeElevator getElevator(){
+  return this.intakeElevator;
+}
+public Command GoDown(){
+  return new ParallelCommandGroup(intakeElevator.gotoHeight(IntakeElevator.Positions.GROUND));
+}
   public Command GroundPickUP() {
     return new SequentialCommandGroup(intakeElevator.gotoHeight(IntakeElevator.Positions.GROUND),
         setBottomIntakeState(state.FWD),
@@ -110,9 +123,11 @@ public class Intakes extends SubsystemBase {
     tab.add("Elevator", intakeElevator);
     tab.add(frontIR);
     tab.add(backIR);
+    tab.add("Mech",mech);
     super.initSendable(builder);
     intakeElevator.initSendable(builder);
 
+  
     tab.add("TopIntake", topIntake);
     tab.add("BottomIntake", bottomIntake);
 
@@ -125,9 +140,12 @@ public class Intakes extends SubsystemBase {
 
   }
 
+
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+    intakeElevator.periodic();
+    mech.getRoot("root",0,0).setPosition(0, intakeElevator.getMeasurement());
   }
 
   @Override
