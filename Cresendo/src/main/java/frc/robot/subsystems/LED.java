@@ -13,6 +13,7 @@ public class LED extends SubsystemBase {
     // PWM port 2
     // Must be a PWM header, not MXP or DIO
     private AddressableLED led = new AddressableLED(2);
+    // Making the buffer with length 60
     private AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(60);
 
 
@@ -33,7 +34,7 @@ public class LED extends SubsystemBase {
      *
      * @return a command
      */
-    public Command set_go_out() {
+    public Command set_go_red() {
         // Inline construction of command goes here.
         // Subsystem::RunOnce implicitly requires `this` subsystem.
         return runOnce(
@@ -47,6 +48,19 @@ public class LED extends SubsystemBase {
      * @return a command
      */
     public Command set_go_green() {
+        // Inline construction of command goes here.
+        // Subsystem::RunOnce implicitly requires `this` subsystem.
+        return runOnce(
+            () -> {
+            /* one-time action goes here */
+            });
+    }
+    /**
+     * Make the leds go neutral
+     * Have go orange when robot signal light indicator is on. 
+     * @return a command
+     */
+    public Command set_go_neutral() {
         // Inline construction of command goes here.
         // Subsystem::RunOnce implicitly requires `this` subsystem.
         return runOnce(
