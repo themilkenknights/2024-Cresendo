@@ -15,7 +15,7 @@ import frc.robot.subsystems.Intakes.state;
 public class LED extends SubsystemBase {
     /** Creates a new ExampleSubsystem. */
 
-    // ! Creating the AddressableLED object as "m_led"
+    // ! Creating the AddressableLED object as "led"
     // PWM port 2
     // Must be a PWM header, not MXP or DIO
     private AddressableLED led = new AddressableLED(2);
@@ -29,8 +29,8 @@ public class LED extends SubsystemBase {
 
     /* The Led states
      * 0:Neutral - orange, same state as robot signal light
-     * 1:Taking piece in - green, color going down
-     * 2:Spitting piece out - red, color going up
+     * 1:Taking piece in - green, color going Up
+     * 2:Spitting piece out - red, color going Down
      */
     //! ********Constructor********
     public LED() {
@@ -113,6 +113,7 @@ public class LED extends SubsystemBase {
             }
             ledBuffer.setLED(ledBuffer.getLength()-1,first_color);
         }
+        led.setData(ledBuffer);
     }
 
     // TODO: Learn what it means by simulation
