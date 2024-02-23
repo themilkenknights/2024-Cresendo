@@ -20,6 +20,7 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.IntakeElevator;
 import frc.robot.subsystems.Intakes;
+import frc.robot.subsystems.LED;
 //import frc.robot.subsystems.Swerve;
 
 
@@ -72,6 +73,9 @@ public class RobotContainer {
     private final IntakeElevator elevator = new IntakeElevator();
     private final Intakes s_Intakes = new Intakes(elevator);
     private final Climb s_Climb = new Climb();
+
+    private final LED led = new LED();
+
     //auto
     private final SendableChooser<Command> autoChooser;
 
