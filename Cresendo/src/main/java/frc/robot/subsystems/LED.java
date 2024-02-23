@@ -1,16 +1,13 @@
 
 package frc.robot.subsystems;
 
-
-
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.util.Color;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.subsystems.Intakes.state;
 
 public class LED extends SubsystemBase {
     /** Creates a new ExampleSubsystem. */
@@ -21,18 +18,21 @@ public class LED extends SubsystemBase {
     private AddressableLED led = new AddressableLED(2);
     // Making the buffer with length 60
     private AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(60);
-    private static enum LEDStates{
-        IN,OUT,NEUTRAL;
+
+    private static enum LEDStates {
+        IN, OUT, NEUTRAL, ALLINCE;
     }
+
     // the of the led to display
     private LEDStates led_state = LEDStates.NEUTRAL;
 
-    /* The Led states
+    /*
+     * The Led states
      * 0:Neutral - orange, same state as robot signal light
      * 1:Taking piece in - green, color going Up
      * 2:Spitting piece out - red, color going Down
      */
-    //! ********Constructor********
+    // ! ********Constructor********
     public LED() {
         // Reuse buffer
         // Default to a length of 60, start empty output
@@ -43,75 +43,85 @@ public class LED extends SubsystemBase {
         led.setData(ledBuffer);
         led.start();
     }
-    
+
     /**
      * Make the leds go red
      *
      */
     public void set_go_outtake() {
-        led_state=LEDStates.OUT;
-        for (int i=0; i<ledBuffer.getLength(); i++){
-            if (i%4==0){
-                ledBuffer.setRGB(i,255, 0, 0);
-            }
-            else {
-                ledBuffer.setRGB(i,0,0,0);
+        led_state = LEDStates.OUT;
+        for (int i = 0; i < ledBuffer.getLength(); i++) {
+            if (i % 4 == 0) {
+                ledBuffer.setRGB(i, 255, 0, 0);
+            } else {
+                ledBuffer.setRGB(i, 0, 0, 0);
             }
         }
     }
+
     /**
      * Make the leds go green
      */
     public void set_go_intake() {
-        led_state=LEDStates.IN;
-        for (int i=0; i<ledBuffer.getLength(); i++){
-            if (i%4==0){
-                ledBuffer.setRGB(i,2, 222, 94);
-            }
-            else {
-                ledBuffer.setRGB(i,0,0,0);
+        led_state = LEDStates.IN;
+        for (int i = 0; i < ledBuffer.getLength(); i++) {
+            if (i % 4 == 0) {
+                ledBuffer.setRGB(i, 2, 222, 94);
+            } else {
+                ledBuffer.setRGB(i, 0, 0, 0);
             }
         }
     }
+
     /**
      * Make the leds go neutral
-     * Have go orange when robot signal light indicator is on. 
+     * Have go orange when robot signal light indicator is on.
      */
     public void set_go_neutral() {
-        led_state=LEDStates.NEUTRAL;
+        led_state = LEDStates.NEUTRAL;
     }
 
-    //! ****Code to be run during the robot loop****
+    // ! ****Code to be run during the robot loop****
     @Override
     public void periodic() {
 
         // * NEUTRAL STATE
-        if (led_state==LEDStates.NEUTRAL){
+        if (led_state == LEDStates.NEUTRAL) {
             //
-            if (RobotController.getRSLState()){
-                for (int i=0; i<ledBuffer.getLength(); i++){
-                    ledBuffer.setRGB(i,255, 106, 0);
+            if (RobotController.getRSLState()) {
+                for (int i = 0; i < ledBuffer.getLength(); i++) {
+                    ledBuffer.setRGB(i, 255, 106, 0);
+                }
+            } else {
+                for (int i = 0; i < ledBuffer.getLength(); i++) {
+                    ledBuffer.setRGB(i, 0, 0, 0);
                 }
             }
-            else{
-                for (int i=0; i<ledBuffer.getLength(); i++){
-                    ledBuffer.setRGB(i,0,0,0);
-                }
+        } else if (led_state == LEDStates.IN) {
+            Color last_color = ledBuffer.getLED(ledBuffer.getLength() - 1);
+            for (int i = 59; i > 0; i--) {
+                ledBuffer.setLED(i, ledBuffer.getLED(i - 1));
             }
-        }
-        else if (led_state==LEDStates.IN){
-            Color last_color = ledBuffer.getLED(ledBuffer.getLength()-1);
-            for (int i=59; i>0; i--){
-                ledBuffer.setLED(i,ledBuffer.getLED(i-1));
-            }
-            ledBuffer.setLED(0,last_color);
-        }
-        else if (led_state==LEDStates.OUT){
+            ledBuffer.setLED(0, last_color);
+        } else if (led_state == LEDStates.OUT) {
             Color first_color = ledBuffer.getLED(0);
-            for (int i=0; i<60; i++){
-                ledBuffer.setLED(i,ledBuffer.getLED(i-1));
+            for (int i = 0; i < 60; i++) {
+                ledBuffer.setLED(i, ledBuffer.getLED(i - 1));
             }
-            ledBuffer.setLED(ledBuffer.getLength()-1,first_color);
+            ledBuffer.setLED(ledBuffer.getLength() - 1, first_color);
+        } else if (led_state == LEDStates.ALLINCE) {
+            if (DriverStation.getAlliance().get() == Alliance.Red) {
+                for (int i = 0; i < 60; i++) {
+
+                    ledBuffer.setLED(i, Color.kRed);
+                }
+
+            }else{
+                for (int i = 0; i < 60; i++) {
+
+                    ledBuffer.setLED(i, Color.kBlue);
+                }
+            }
         }
         led.setData(ledBuffer);
     }
