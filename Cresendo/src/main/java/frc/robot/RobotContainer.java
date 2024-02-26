@@ -147,6 +147,7 @@ public class RobotContainer {
         op.x()
             .onTrue(s_Intakes.AmpOuttake());
         op.povUp().onTrue(new ClimbCommand(s_Climb, op.povDown()));
+        op.povLeft().onTrue(s_Climb.AutoZero());
 
       // op.leftTrigger().whileTrue(s_Climb.manualDown(op::getLeftTriggerAxis));
             

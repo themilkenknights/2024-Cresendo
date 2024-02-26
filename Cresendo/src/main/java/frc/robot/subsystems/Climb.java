@@ -1,5 +1,8 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.wpilibj2.command.Commands.waitUntil;
+
+import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -16,6 +19,7 @@ import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.PIDSubsystem;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 
@@ -112,6 +116,18 @@ public class Climb extends PIDSubsystem {
 
     public Command manualUp(DoubleSupplier sup){
         return runOnce(()->{climber.set(sup.getAsDouble());});
+    }
+    public Command AutoZero(){
+        return new ParallelCommandGroup(runOnce(()->{
+            climber.set(0.025);
+        }),waitUntil(this::isHighCurrent),runOnce(()->climber.set(0)));
+    };
+    private boolean isHighCurrent(){
+        if((climber.getTorqueCurrent().asSupplier().get())>5){
+            return true;
+        }else 
+        {return false;
+        }
     }
     public void initSendable(SendableBuilder builder) {
         Shuffleboard.getTab("Climb")
