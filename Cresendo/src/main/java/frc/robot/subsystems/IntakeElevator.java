@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
+import frc.robot.Robot;
 
 public class IntakeElevator extends ProfiledPIDSubsystem {
 
@@ -38,7 +39,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
 
   private static final ElevatorSim sim = new
-  ElevatorSim(DCMotor.getFalcon500(1), reduction, 6, spoolsize/37, 0, 3, false,
+  ElevatorSim(DCMotor.getFalcon500(1), reduction, 6, spoolsize/37, 0, 500, false,
    0);
   public static enum Positions {
     GROUND, HP, AMP
@@ -99,7 +100,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
 
   @Override
   public double getMeasurement() {
-    return LeftElevator.getPosition().getValueAsDouble();
+    return (Robot.isReal())?LeftElevator.getPosition().getValueAsDouble():m_controller.getSetpoint().position;
   }
 
   public boolean atSetpoint() {
@@ -120,7 +121,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
     sim.setInput((LeftElevator.getMotorVoltage().getValueAsDouble()));
 
     sim.update(0.02);
-    LeftElevator.setPosition(inchestorotations(sim.getPositionMeters()));
+    LeftElevator.setPosition(sim.getPositionMeters());
   }
 
   public Command gotoHeight(Positions height) {

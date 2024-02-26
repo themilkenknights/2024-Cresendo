@@ -21,6 +21,7 @@ public final class Constants {
     public static final int ElevatorLeftCANID = 20;// TODO: set properly
     public static final int ElevatorRightCANID = 21;// TODO: set properly
     public static final int topIntakeCANID = 22;// TODO: set properly
+    public static final int midIntakeCANID = 27;// TODO: set properly
     public static final int bottomIntakeIntakeCANID = 23;// TODO: set properly
 
     public static final int backIRPORT = 0;// TODO: set properly

@@ -143,8 +143,9 @@ public class RobotContainer {
         //op
         op.a().onTrue(s_Intakes.GroundPickUP());
         op.b()
-            .onTrue(s_Intakes.setTopIntakeState(Intakes.state.FWD))
-            .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
+            .onTrue(s_Intakes.HPin());
+        op.x()
+            .onTrue(s_Intakes.AmpOuttake());
         op.povUp().onTrue(new ClimbCommand(s_Climb, op.povDown()));
 
       // op.leftTrigger().whileTrue(s_Climb.manualDown(op::getLeftTriggerAxis));
