@@ -75,6 +75,9 @@
     "Persistent Values": {
       "open": false
     },
+    "Transitory Values": {
+      "open": false
+    },
     "retained": {
       "SmartDashboard": {
         "Auto Chooser": {

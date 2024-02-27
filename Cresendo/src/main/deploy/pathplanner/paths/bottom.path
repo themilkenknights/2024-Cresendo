@@ -3,45 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 14.912577376082709,
-        "y": 0.7094057799176865
+        "x": 0.38977142306136486,
+        "y": 2.2066641031430216
       },
       "prevControl": null,
       "nextControl": {
-        "x": 12.46807883894428,
-        "y": 1.1053214282359156
-      },
-      "isLocked": false,
-      "linkedName": "Right HP"
-    },
-    {
-      "anchor": {
-        "x": 10.297461053262234,
-        "y": 2.0475139700333918
-      },
-      "prevControl": {
-        "x": 11.632169487725823,
-        "y": 0.8508705029620764
-      },
-      "nextControl": {
-        "x": 8.962752618798644,
-        "y": 3.2441574371046986
+        "x": 1.6942680552027807,
+        "y": 2.66695241723817
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.4332601905944555,
-        "y": 6.055128105626582
+        "x": 2.0132215495912473,
+        "y": 4.8300283869086265
       },
       "prevControl": {
-        "x": 8.971636963053207,
-        "y": 4.885059731372522
+        "x": 1.8009696885891135,
+        "y": 3.6789345482433973
       },
       "nextControl": {
-        "x": 4.1999918860948835,
-        "y": 7.0845562987422275
+        "x": 2.2170881193614234,
+        "y": 5.935646737034215
       },
       "isLocked": false,
       "linkedName": null
@@ -52,20 +36,26 @@
         "y": 7.602803765794452
       },
       "prevControl": {
-        "x": 2.4567634690951525,
-        "y": 6.869466081531942
+        "x": 1.875568561328173,
+        "y": 7.240855981713698
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Amp"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.1,
+      "rotationDegrees": 2.37794928278232,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "Tag1",
-      "waypointRelativePos": 1.35,
+      "name": "New Event Marker",
+      "waypointRelativePos": 0,
       "command": {
         "type": "parallel",
         "data": {
@@ -81,8 +71,8 @@
       }
     },
     {
-      "name": "Tag2",
-      "waypointRelativePos": 2.6,
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.6,
       "command": {
         "type": "parallel",
         "data": {
@@ -91,12 +81,19 @@
       }
     },
     {
-      "name": "ScoreWIP",
-      "waypointRelativePos": 3.0,
+      "name": "New Event Marker",
+      "waypointRelativePos": 1.6,
       "command": {
-        "type": "sequential",
+        "type": "parallel",
         "data": {
-          "commands": []
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Apriltags"
+              }
+            }
+          ]
         }
       }
     }
@@ -109,11 +106,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 90.36964506184702,
-    "rotateFast": false
+    "rotation": 90.0,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": "teleop",
+  "folder": "Auto start paths",
   "previewStartingState": null,
   "useDefaultConstraints": true
 }

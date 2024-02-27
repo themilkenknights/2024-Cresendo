@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 7.0
+        "x": 3.3515672772086287,
+        "y": 5.548044901645358
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0,
-        "y": 7.484684447646731
+        "x": 4.440023542089986,
+        "y": 6.057681633883521
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "MidNoteAuto"
     },
     {
       "anchor": {
@@ -20,30 +20,39 @@
         "y": 7.602803765794452
       },
       "prevControl": {
-        "x": 1.7827675090066022,
-        "y": 7.490361286413653
+        "x": 4.8128980517278945,
+        "y": 7.806551566808572
       },
       "nextControl": null,
       "isLocked": false,
       "linkedName": "Amp"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 88.49840984644851,
+      "rotateFast": false
+    }
+  ],
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 89.92732808524899,
+    "rotation": 89.89372462081225,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
-  "previewStartingState": null,
+  "folder": "Auto aditional note paths",
+  "previewStartingState": {
+    "rotation": 180.0,
+    "velocity": 0
+  },
   "useDefaultConstraints": false
 }

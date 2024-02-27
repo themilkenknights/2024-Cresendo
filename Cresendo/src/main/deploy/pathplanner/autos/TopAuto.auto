@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "AutoScoreInAmpFromLeft"
+            "pathName": "Top"
           }
         },
         {
@@ -31,12 +31,6 @@
                 "type": "named",
                 "data": {
                   "name": "GoDown"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "AutoGetNote"
                 }
               }
             ]

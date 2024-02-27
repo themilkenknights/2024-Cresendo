@@ -3,9 +3,12 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
+    "Auto start paths",
+    "Auto aditional note paths",
     "teleop"
   ],
   "autoFolders": [
+    "SingleActionAuto",
     "teleop"
   ],
   "defaultMaxVel": 4.0,

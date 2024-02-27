@@ -3,34 +3,39 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.8509834288187097,
-        "y": 7.5811284678124915
+        "x": 1.828654902686041,
+        "y": 7.602803765794452
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2066364688284934,
-        "y": 7.3266664079624455
+        "x": 5.194858371198224,
+        "y": 7.860888272702472
       },
       "isLocked": false,
       "linkedName": "Amp"
     },
     {
       "anchor": {
-        "x": 2.360620161055137,
-        "y": 6.9978551068213255
+        "x": 3.3515672772086287,
+        "y": 5.548044901645358
       },
       "prevControl": {
-        "x": 1.4946771606484588,
-        "y": 7.537065259309307
+        "x": 4.427077747674014,
+        "y": 6.506271225505414
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "MidNoteAuto"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.1,
+      "waypointRelativePos": 0.5,
+      "rotationDegrees": 112.64122575117571,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 0.2,
       "rotationDegrees": 90.0,
       "rotateFast": false
     }
@@ -45,11 +50,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0,
-    "rotateFast": true
+    "rotation": -179.61842514250972,
+    "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Auto aditional note paths",
   "previewStartingState": {
     "rotation": 90.0,
     "velocity": 0

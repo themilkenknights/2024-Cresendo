@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 7.0
+        "x": 2.360620161055137,
+        "y": 6.9978551068213255
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0,
-        "y": 7.484684447646731
+        "x": 2.292684432591088,
+        "y": 7.212113942746404
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "TopAutoNote"
     },
     {
       "anchor": {
@@ -20,8 +20,8 @@
         "y": 7.602803765794452
       },
       "prevControl": {
-        "x": 1.7827675090066022,
-        "y": 7.490361286413653
+        "x": 1.9619134469809072,
+        "y": 7.587660749397307
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,18 +32,18 @@
   "constraintZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
-    "maxAcceleration": 3.0,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 89.92732808524899,
+    "rotation": 90.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Auto aditional note paths",
   "previewStartingState": null,
   "useDefaultConstraints": false
 }
