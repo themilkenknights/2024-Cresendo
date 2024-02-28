@@ -6,12 +6,6 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "Apriltags"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Cycleback"

@@ -11,6 +11,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
+import frc.robot.subsystems.Intakes.state;
 
 
 public final class Constants {
@@ -27,6 +28,7 @@ public final class Constants {
     public static final int backIRPORT = 0;// TODO: set properly
     public static final int frontIRPORT = 1;// TODO: set properly
     public static final int ledPORT = 2;// TODO: set properly
+    public static final int blinkenPWMPORT = 3;//TODO: set
 
 
 

@@ -6,6 +6,7 @@ import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
@@ -17,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -43,7 +45,7 @@ public class RobotContainer {
 
   /* Setting up bindings for necessary control of the swerve drive platform */
   private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
-  public final CommandSwerveDrivetrain drivetrain = TunerConstants.DriveTrain; // My drivetrain
+  public final CommandSwerveDrivetrain drivetrain; // My drivetrain
 
   private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
       .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
@@ -85,22 +87,31 @@ public class RobotContainer {
     //auto
     private final SendableChooser<Command> autoChooser;
 
-    
+    public AprilTagCommand getTagCommand(){
+        return new AprilTagCommand(drivetrain);
+    }
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+        
         //field.setRobotPose(drivetrain)
         SmartDashboard.putData("intake",s_Intakes);
         SmartDashboard.putData("climb",s_Climb);
         //SmartDashboard.putData("swerve",s_Swerve);
-
+        CommandScheduler.getInstance().schedule(led.setAllianceColorLed());
         //limelight periodic
         
-        CommandScheduler.getInstance().schedule(Commands.repeatingSequence(new AprilTagCommand(drivetrain),waitSeconds(5)));
-        // Configure the button bindings
-        configureButtonBindings();
+       
+       
 
         //named commands
-        //NamedCommands.registerCommand("Apriltags",AprilTagCommand.UpdateVision(s_Swerve));
+        NamedCommands.registerCommand("Apriltags",getTagCommand());
+        NamedCommands.registerCommand("Outtake", new ParallelCommandGroup(s_Intakes.AmpOuttake()));
+        NamedCommands.registerCommand("GoDown", s_Intakes.GoDown());
+        drivetrain = TunerConstants.DriveTrain;
+
+        CommandScheduler.getInstance().schedule(Commands.repeatingSequence(new AprilTagCommand(drivetrain),waitSeconds(5)));
+         // Configure the button bindings
+         configureButtonBindings();
 
         // Build an auto chooser. This will use Commands.none() as the default option.
             

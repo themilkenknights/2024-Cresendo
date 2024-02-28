@@ -1,13 +1,20 @@
 
 package frc.robot.subsystems;
 
+import java.util.Optional;
+
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.util.Color;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
+import frc.robot.Constants.*;
 
 public class LED extends SubsystemBase {
     /** Creates a new ExampleSubsystem. */
@@ -15,7 +22,7 @@ public class LED extends SubsystemBase {
     // ! Creating the AddressableLED object as "led"
     // PWM port 2
     // Must be a PWM header, not MXP or DIO
-    private AddressableLED led = new AddressableLED(2);
+    private AddressableLED led = new AddressableLED(Constants.ledPORT);
     // Making the buffer with length 60
     private AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(60);
 
@@ -25,6 +32,27 @@ public class LED extends SubsystemBase {
 
     // the of the led to display
     private LEDStates led_state = LEDStates.NEUTRAL;
+
+    //! Alliance color leds (Blinkin)
+    // Will be set up as a spark motor
+    // reasons: page 8, https://www.revrobotics.com/content/docs/REV-11-1105-UM.pdf
+    private Optional<Alliance> alliance_getter = DriverStation.getAlliance();
+    private Spark ACLed = new Spark(Constants.blinkenPWMPORT);
+    
+    /**
+     * There are 3 dials on the blinkin, and each dial controls something. 
+     * The brightness dial controls brightness on normal operation mode. 
+     * In setup mode the color dials control color one and color two. 
+    */
+    public Command setAllianceColorLed(){
+        return new InstantCommand(()->{
+        if (alliance_getter.get()==Alliance.Blue){
+            ACLed.set(-0.75);
+        } else{
+            ACLed.set(-0.73);
+        }}
+        );
+    }
 
     /*
      * The Led states
