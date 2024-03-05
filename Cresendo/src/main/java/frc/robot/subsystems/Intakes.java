@@ -9,16 +9,17 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-
 
 import frc.robot.Constants;
 import frc.robot.subsystems.IntakeElevator.Positions;
@@ -26,10 +27,12 @@ import frc.robot.subsystems.IntakeElevator.Positions;
 public class Intakes extends SubsystemBase {
 
   public static enum state {
-    GROUND, HP, OUT,OFF
+    GROUND, HP, OUT, OFF
   }
 
-  private Mechanism2d mech = new Mechanism2d(18,10,new Color8Bit(Color.kBlueViolet));
+  private Mechanism2d mech = new Mechanism2d(18 / 39.37, 30 / 39.37);// ,new Color8Bit(Color.kBlueViolet));
+  private MechanismLigament2d stage = mech.getRoot("Elevator", 18 / 39.37, 0.1)
+      .append(new MechanismLigament2d("Stage", 10 / 39.37, 90));
   private final IntakeElevator intakeElevator;
   private TalonFX topIntake = new TalonFX(Constants.topIntakeCANID);
   private TalonFX midIntake = new TalonFX(Constants.midIntakeCANID);
@@ -40,6 +43,12 @@ public class Intakes extends SubsystemBase {
   /** Setup the Intakes. */
   public Intakes(IntakeElevator elevator) {
     this.intakeElevator = elevator;
+    final ParallelCommandGroup defultCommandGroup = new ParallelCommandGroup(setBottomIntakeState(state.OFF),
+        setTopIntakeState(state.OFF));
+    defultCommandGroup.addRequirements(this);
+    setDefaultCommand(defultCommandGroup);
+    stage.setColor(new Color8Bit(Color.kSilver));
+    stage.append(new MechanismLigament2d("Intake", -0.31, 90));
   }
 
   public Command setTopIntakeState(Intakes.state intakeState) {
@@ -54,14 +63,16 @@ public class Intakes extends SubsystemBase {
         topIntake.set(-1);
         midIntake.set(-1);
       });
-    }
-    else if (intakeState == state.HP) {
+    } else if (intakeState == state.HP) {
       return runOnce(() -> {
         topIntake.set(1);
         midIntake.set(1);
       });
     } else {
-      return runOnce(() -> topIntake.set(0));
+      return new InstantCommand(() -> {
+        topIntake.set(0);
+        midIntake.set(0);
+      });
     }
   }
 
@@ -70,7 +81,7 @@ public class Intakes extends SubsystemBase {
     if (intakeState == state.GROUND) {
       return runOnce(() -> bottomIntake.set(1));
     } else {
-      return runOnce(() -> bottomIntake.set(0));
+      return new InstantCommand(() -> bottomIntake.set(0));
     }
   }
 
@@ -87,7 +98,8 @@ public class Intakes extends SubsystemBase {
   }
 
   public Command HPin() {
-    return new SequentialCommandGroup(intakeElevator.gotoHeight(Positions.HP),TopIntakeByBeambreak(),intakeElevator.gotoHeight(Positions.GROUND));
+    return new SequentialCommandGroup(intakeElevator.gotoHeight(Positions.HP), TopIntakeByBeambreak(),
+        intakeElevator.gotoHeight(Positions.GROUND)).withName("HP");
   }
 
   public Command TopIntakeByBeambreak() {
@@ -100,21 +112,28 @@ public class Intakes extends SubsystemBase {
         setTopIntakeState(state.OFF));
   }
 
- 
-public Command AmpOuttake(){
-  return new SequentialCommandGroup(intakeElevator.gotoHeight(IntakeElevator.Positions.AMP),TopIntakeByBeambreak());
-}
-public IntakeElevator getElevator(){
-  return this.intakeElevator;
-}
-public Command GoDown(){
-  return new ParallelCommandGroup(intakeElevator.gotoHeight(IntakeElevator.Positions.GROUND));
-}
+  public Command AmpOuttake() {
+    return new SequentialCommandGroup(intakeElevator.gotoHeight(IntakeElevator.Positions.AMP), TopIntakeByBeambreak())
+        .withName("Amp Outtake");
+  }
+
+  public Command goUp() {
+    return new ParallelCommandGroup(intakeElevator.gotoHeight(IntakeElevator.Positions.AMP));
+  }
+
+  public IntakeElevator getElevator() {
+    return this.intakeElevator;
+  }
+
+  public Command GoDown() {
+    return new ParallelCommandGroup(intakeElevator.gotoHeight(IntakeElevator.Positions.GROUND));
+  }
+
   public Command GroundPickUP() {
     return new SequentialCommandGroup(intakeElevator.gotoHeight(IntakeElevator.Positions.GROUND),
-        setBottomIntakeState(state.GROUND),setTopIntakeState(state.GROUND),
+        setBottomIntakeState(state.GROUND), setTopIntakeState(state.GROUND),
         waitUntil(this::getFrontIR),
-        setBottomIntakeState(state.OFF));
+        setBottomIntakeState(state.OFF)).withName("GroundPickup");
     // TODO: integrate sensor(some code writen in comment bellow, trigger still
     // needs to be implemented/added)
 
@@ -136,12 +155,12 @@ public Command GoDown(){
     tab.add("Elevator", intakeElevator);
     tab.add(frontIR);
     tab.add(backIR);
-    tab.add("Mech",mech);
+    tab.add("Mech", mech);
     super.initSendable(builder);
     intakeElevator.initSendable(builder);
 
-  
     tab.add("TopIntake", topIntake);
+    tab.add("other", midIntake);
     tab.add("BottomIntake", bottomIntake);
 
     ShuffleboardLayout commandlLayout = tab.getLayout("IntakeCommands", BuiltInLayouts.kGrid);
@@ -153,12 +172,11 @@ public Command GoDown(){
 
   }
 
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
     intakeElevator.periodic();
-    mech.getRoot("root",0,0).setPosition(0, (intakeElevator.getMeasurement()/9)/(Math.PI*0.5));
+    stage.setLength((((intakeElevator.getMeasurement() / 18) / (Math.PI * 0.5)) / 40));// +0.3);
   }
 
   @Override

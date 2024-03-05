@@ -1,27 +1,23 @@
 package frc.robot;
 
-import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
-
 import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
 
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
-import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AprilTagCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.generated.TunerConstants;
@@ -30,6 +26,7 @@ import frc.robot.subsystems.IntakeElevator;
 import frc.robot.subsystems.Intakes;
 import frc.robot.subsystems.LED;
 //import frc.robot.subsystems.Swerve;
+import frc.robot.subsystems.Climb.Positions;
 
 
 /**
@@ -39,7 +36,7 @@ import frc.robot.subsystems.LED;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-    private Field2d field = new Field2d();
+  //private Field2d field = new Field2d();
   private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
   private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
@@ -64,7 +61,7 @@ public class RobotContainer {
    // }
 
     /* Controllers */
-    private final Joystick driver = new Joystick(0);
+   //private final Joystick driver = new Joystick(0);
     private final CommandXboxController op = new CommandXboxController(1);
 
    // /* Drive Controls */
@@ -107,6 +104,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("Apriltags",getTagCommand());
         NamedCommands.registerCommand("Outtake", new ParallelCommandGroup(s_Intakes.AmpOuttake()));
         NamedCommands.registerCommand("GoDown", s_Intakes.GoDown());
+        NamedCommands.registerCommand("HPInktake",s_Intakes.HPin());
+        NamedCommands.registerCommand("GoUp", s_Intakes.goUp());
         drivetrain = TunerConstants.DriveTrain;
 
         CommandScheduler.getInstance().schedule(Commands.repeatingSequence(new AprilTagCommand(drivetrain),waitSeconds(5)));
@@ -160,12 +159,26 @@ public class RobotContainer {
     joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));*/
 
         //op
-        op.a().onTrue(s_Intakes.GroundPickUP());
+        op.a()
+            .onTrue(s_Intakes.GroundPickUP());
         op.b()
             .onTrue(s_Intakes.HPin());
         op.x()
             .onTrue(s_Intakes.AmpOuttake());
-        op.povUp().onTrue(new ClimbCommand(s_Climb, op.povDown()));
+        if(Robot.isSimulation()){
+            op.button(5)
+            .onTrue(s_Intakes.goUp());
+            op.button(6)
+            .onTrue(s_Intakes.GoDown());
+        }
+        op.rightBumper()
+            .onTrue(s_Intakes.goUp());
+        op.rightTrigger()
+            .onTrue(s_Intakes.GoDown());
+        
+        op.povUp().onTrue(s_Climb.goToClimberPosition(Positions.TOP));
+        op.pov(90).onTrue(new SequentialCommandGroup(s_Climb.unlockClimb(),s_Climb.goToClimberPosition(Positions.TOP)));
+        op.povDown().onTrue(new SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM),s_Climb.lockClimb()));
         op.povLeft().onTrue(s_Climb.AutoZero());
 
       // op.leftTrigger().whileTrue(s_Climb.manualDown(op::getLeftTriggerAxis));

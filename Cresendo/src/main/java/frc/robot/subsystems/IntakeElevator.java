@@ -3,30 +3,23 @@ package frc.robot.subsystems;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import static edu.wpi.first.units.Units.*;
-
 import edu.wpi.first.math.controller.ElevatorFeedforward;
-
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 //import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 import frc.robot.Robot;
 
 public class IntakeElevator extends ProfiledPIDSubsystem {
 
   private static final double spoolsize = 0.5 * Math.PI;
-  private static final double reduction = 9;
+  private static final double reduction = 25;
 
   private static double inchestorotations(double inches) {
     return spoolsize * inches * reduction;
@@ -35,12 +28,14 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   private final TalonFX LeftElevator = new TalonFX(Constants.ElevatorLeftCANID);
   private final TalonFX RightElevator = new TalonFX(Constants.ElevatorRightCANID);
 
-  private static final TrapezoidProfile.Constraints ProfileConstraints = new TrapezoidProfile.Constraints(inchestorotations(4), (inchestorotations(1)));
+  private static final TrapezoidProfile.Constraints ProfileConstraints = new TrapezoidProfile.Constraints(
+      inchestorotations(30), (inchestorotations(30)));
   private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
 
-  private static final ElevatorSim sim = new
-  ElevatorSim(DCMotor.getFalcon500(1), reduction, 6, spoolsize/37, 0, 500, false,
-   0);
+  private static final ElevatorSim sim = new ElevatorSim(DCMotor.getFalcon500(1), reduction, 6, spoolsize, 0, 500,
+      false,
+      0);
+
   public static enum Positions {
     GROUND, HP, AMP
   }
@@ -63,10 +58,11 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
    */
   public IntakeElevator() {
     super(new ProfiledPIDController(0.5, 0, 0, ProfileConstraints));
-    RightElevator.setInverted(true);
+
     RightElevator.setControl(new Follower(LeftElevator.getDeviceID(), false));
     LeftElevator.setPosition(0);
-
+  
+    setDefaultCommand(new ProfiledPIDCommand(m_controller, this::getMeasurement, m_controller::getGoal, this::useOutput, this));
     setGoal(0);
   }
 
@@ -100,7 +96,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
 
   @Override
   public double getMeasurement() {
-    return (Robot.isReal())?LeftElevator.getPosition().getValueAsDouble():m_controller.getSetpoint().position;
+    return (Robot.isReal()) ? LeftElevator.getPosition().getValueAsDouble() : m_controller.getSetpoint().position;
   }
 
   public boolean atSetpoint() {
@@ -129,15 +125,18 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
     // reaches the setpoint
     switch (height) {
       case GROUND:
-      return new ProfiledPIDCommand(m_controller, this::getMeasurement, 0, this::useOutput,this).until(this.m_controller::atGoal);
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, 0, this::useOutput, this)
+            .until(this.m_controller::atGoal);
       case AMP:
-        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(20), this::useOutput,this).until(this.m_controller::atGoal);
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(20), this::useOutput, this)
+            .until(this.m_controller::atGoal);
       case HP:
-       return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(25), this::useOutput,this).until(this.m_controller::atGoal);
-       default:
-       return new ProfiledPIDCommand(m_controller, this::getMeasurement, 0, this::useOutput,this);
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(25), this::useOutput, this)
+            .until(this.m_controller::atGoal);
+      default:
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, 0, this::useOutput, this);
+
+    }
 
   }
-
-}
 }

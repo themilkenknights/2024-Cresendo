@@ -6,12 +6,12 @@
       }
     },
     "Other Devices": {
-      "Pigeon 2 (v6)[0]": {
+      "Talon FX (v6)[20]": {
         "header": {
           "open": true
         }
       },
-      "Talon FX (v6)[20]": {
+      "Talon FX (v6)[20]/Fwd Limit": {
         "header": {
           "open": true
         }
@@ -31,7 +31,12 @@
           "open": true
         }
       },
-      "Talon FX (v6)[23]": {
+      "Talon FX (v6)[24]": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX (v6)[24]/Rotor Sensor": {
         "header": {
           "open": true
         }
@@ -63,19 +68,13 @@
       "/Shuffleboard/intakes/IntakeCommands/out": "Command",
       "/Shuffleboard/intakes/Mech": "Mechanism2d",
       "/Shuffleboard/intakes/TopIntake": "Motor Controller",
+      "/Shuffleboard/intakes/other": "Motor Controller",
       "/SmartDashboard/Auto Chooser": "String Chooser",
       "/SmartDashboard/Module 0": "Mechanism2d",
       "/SmartDashboard/Module 1": "Mechanism2d",
       "/SmartDashboard/Module 2": "Mechanism2d",
       "/SmartDashboard/Module 3": "Mechanism2d",
       "/SmartDashboard/intake": "Subsystem"
-    },
-    "windows": {
-      "/FMSInfo": {
-        "window": {
-          "visible": true
-        }
-      }
     }
   },
   "NetworkTables": {
@@ -99,5 +98,23 @@
       "open": true
     },
     "visible": true
+  },
+  "Plot": {
+    "Plot <0>": {
+      "plots": [
+        {
+          "backgroundColor": [
+            0.0,
+            0.0,
+            0.0,
+            0.8500000238418579
+          ],
+          "height": 338
+        }
+      ],
+      "window": {
+        "visible": false
+      }
+    }
   }
 }

@@ -1,5 +1,6 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
 import static edu.wpi.first.wpilibj2.command.Commands.waitUntil;
 
 import java.util.function.BooleanSupplier;
@@ -45,13 +46,13 @@ public class Climb extends PIDSubsystem {
     // private final CANcoderSimState sensorSim = sensor.getSimState();
 
     private final ElevatorSim m_elevatorSim = new ElevatorSim(0.4, 0.2,
-            DCMotor.getFalcon500(1).withReduction(reduction), -3, 3, true, 0);
+            DCMotor.getFalcon500(1).withReduction(reduction), 0, inchestorotations(3*4000), false, 0);
 
-    private ElevatorFeedforward m_feedforward = new ElevatorFeedforward(1.1, 0.14, 2.83, 0.01);
+   // private ElevatorFeedforward m_feedforward = new ElevatorFeedforward(1.1, 0.14, 2.83, 0.01);
     private Servo locker = new Servo(Constants.ClimbServoPORT);
 
     public Climb() {
-        super(new PIDController(3, 0, 1));
+        super(new PIDController(0.3, 0, 0.1));
         climber.setPosition(0);
         locker.set(0.3);
         enable();
@@ -64,7 +65,7 @@ public class Climb extends PIDSubsystem {
 
     @Override
     public double getMeasurement() {
-        return climber.getPosition().getValueAsDouble() + encoderOffset;
+        return climber.getPosition().getValueAsDouble();
     }
 
     public boolean atSetpoint() {
@@ -75,7 +76,7 @@ public class Climb extends PIDSubsystem {
     public void simulationPeriodic() {
         // In this method, we update our simulation of what our elevator is doing
         // First, we set our "inputs" (voltages)
-        m_elevatorSim.setInput((climber.getMotorVoltage().getValueAsDouble()));
+        m_elevatorSim.setInput(m_controller.calculate(this.getMeasurement(), this.getSetpoint()));
 
         // Next, we update it. The standard loop time is 20ms.
         m_elevatorSim.update(0.020);
@@ -83,7 +84,7 @@ public class Climb extends PIDSubsystem {
         // Finally, we set our simulated encoder's readings and simulated battery
         // voltage
         // sensorSim.setRawPosition(m_elevatorSim.getPositionMeters());
-        motorSim.addRotorPosition(m_elevatorSim.getPositionMeters());
+        motorSim.setRawRotorPosition(m_elevatorSim.getPositionMeters());
         // SimBattery estimates loaded battery voltages
         RoboRioSim.setVInVoltage(
                 BatterySim.calculateDefaultBatteryLoadedVoltage(m_elevatorSim.getCurrentDrawAmps()));
@@ -114,7 +115,7 @@ public class Climb extends PIDSubsystem {
         });
     }
 
-    public Command manualDown(DoubleSupplier sup) {
+   /*  public Command manualDown(DoubleSupplier sup) {
         return runOnce(() -> {
             climber.set(-sup.getAsDouble());
         });
@@ -124,7 +125,7 @@ public class Climb extends PIDSubsystem {
         return runOnce(() -> {
             climber.set(sup.getAsDouble());
         });
-    }
+    }*/
 
     public Command AutoZero() {
         final ParallelCommandGroup zCommand = new ParallelCommandGroup(new InstantCommand(() -> disable()), new InstantCommand(() -> {
@@ -166,11 +167,11 @@ public class Climb extends PIDSubsystem {
     }
 
     public Command unlockClimb() {
-        return runOnce(() -> {
+        return new ParallelCommandGroup(runOnce(() -> {
 
             locker.set(0.3);
             // enable();
-        });
+        }),waitSeconds(0.1));
     }
 
 }

@@ -12,6 +12,12 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "HPInktake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Cycle a"

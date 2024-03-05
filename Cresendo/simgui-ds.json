@@ -27,23 +27,24 @@
         }
       ],
       "axisCount": 3,
-      "buttonCount": 4,
+      "buttonCount": 6,
       "buttonKeys": [
         90,
         88,
         67,
-        86
+        86,
+        53,
+        54
       ],
       "povConfig": [
         {
           "key0": 328,
           "key135": 323,
-          "key180": 322,
+          "key180": 50,
           "key225": 321,
           "key270": 324,
           "key315": 327,
-          "key45": 329,
-          "key90": 54
+          "key90": 57
         }
       ],
       "povCount": 1
@@ -99,6 +100,7 @@
     }
   ],
   "robotJoysticks": [
+    {},
     {
       "guid": "Keyboard0"
     }

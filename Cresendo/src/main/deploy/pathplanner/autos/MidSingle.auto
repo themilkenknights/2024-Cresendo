@@ -3,7 +3,7 @@
   "startingPose": {
     "position": {
       "x": 0.5,
-      "y": 7.0
+      "y": 3.5
     },
     "rotation": 0
   },
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Top"
+            "pathName": "Mid Avoider"
           }
         },
         {
@@ -39,6 +39,6 @@
       ]
     }
   },
-  "folder": null,
+  "folder": "SingleActionAuto",
   "choreoAuto": false
 }
