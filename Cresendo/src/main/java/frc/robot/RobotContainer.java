@@ -175,7 +175,12 @@ public class RobotContainer {
             .onTrue(s_Intakes.goUp());
         op.rightTrigger()
             .onTrue(s_Intakes.GoDown());
-        
+
+        op.leftTrigger().and(op.y()).onTrue(s_Intakes.goUp());
+        op.leftTrigger().and(op.x()).onTrue(s_Intakes.GoDown());
+        op.leftTrigger().and(op.x()).onTrue(s_Intakes.setTopIntakeState(Intakes.state.HP)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
+        op.leftTrigger().and(op.x()).onTrue(s_Intakes.setTopIntakeState(Intakes.state.OUT)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
+
         op.povUp().onTrue(s_Climb.goToClimberPosition(Positions.TOP));
         op.pov(90).onTrue(new SequentialCommandGroup(s_Climb.unlockClimb(),s_Climb.goToClimberPosition(Positions.TOP)));
         op.povDown().onTrue(new SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM),s_Climb.lockClimb()));
