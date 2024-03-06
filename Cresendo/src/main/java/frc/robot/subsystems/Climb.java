@@ -6,6 +6,7 @@ import static edu.wpi.first.wpilibj2.command.Commands.waitUntil;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
+
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 
@@ -18,6 +19,8 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.simulation.BatterySim;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 import edu.wpi.first.wpilibj.simulation.RoboRioSim;
+import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
+import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -27,9 +30,11 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 
 public class Climb extends PIDSubsystem {
+    private Mechanism2d mech = new Mechanism2d(1, 2);
+    private MechanismLigament2d rooLigament2d = mech.getRoot("root", 0.4, 0.1).append(new MechanismLigament2d("climb",160,90));
     private static final double spoolsize = 1 * Math.PI;
     private static final double reduction = 15.34;
-    private double encoderOffset = 0;
+
 
     public static enum Positions {
         TOP, BOTTOM
@@ -41,13 +46,12 @@ public class Climb extends PIDSubsystem {
 
     // private final TalonFXConfigurator config = new TalonFXConfigurator(climb);
     private TalonFX climber = new TalonFX(Constants.ClimbCANID, "rio");
-
     private TalonFXSimState motorSim = climber.getSimState();
     // private final CANcoder sensor = new CANcoder(Constants.ClimbCANID);
     // private final CANcoderSimState sensorSim = sensor.getSimState();
 
-    private final ElevatorSim m_elevatorSim = new ElevatorSim(0.4, 0.2,
-            DCMotor.getFalcon500(1).withReduction(reduction), 0, inchestorotations(3*4000), false, 0);
+    private final ElevatorSim m_elevatorSim = new ElevatorSim(0.02, 0.8,
+            DCMotor.getFalcon500(1).withReduction(reduction), 0, 80, true, 0);
 
    // private ElevatorFeedforward m_feedforward = new ElevatorFeedforward(1.1, 0.14, 2.83, 0.01);
     private Servo locker = new Servo(Constants.ClimbServoPORT);
@@ -77,10 +81,10 @@ public class Climb extends PIDSubsystem {
     public void simulationPeriodic() {
         // In this method, we update our simulation of what our elevator is doing
         // First, we set our "inputs" (voltages)
-        m_elevatorSim.setInput(m_controller.calculate(this.getMeasurement(), this.getSetpoint()));
+        m_elevatorSim.setInput(climber.getMotorVoltage().getValue());
 
         // Next, we update it. The standard loop time is 20ms.
-        m_elevatorSim.update(0.020);
+        m_elevatorSim.update(0.02);
 
         // Finally, we set our simulated encoder's readings and simulated battery
         // voltage
@@ -89,6 +93,8 @@ public class Climb extends PIDSubsystem {
         // SimBattery estimates loaded battery voltages
         RoboRioSim.setVInVoltage(
                 BatterySim.calculateDefaultBatteryLoadedVoltage(m_elevatorSim.getCurrentDrawAmps()));
+      rooLigament2d.setLength((m_elevatorSim.getPositionMeters()/80)+0.5287690974);
+        
     }
 
     public Command goToClimberPosition(Positions state) {
@@ -105,8 +111,7 @@ public class Climb extends PIDSubsystem {
 
             }
         }),
-                run(() -> {
-                }).until(this::atSetpoint));
+        waitUntil(this::atSetpoint));
     }
 
     public Command lockClimb() {
@@ -164,7 +169,10 @@ public class Climb extends PIDSubsystem {
                 .add("top", goToClimberPosition(Positions.TOP));
         Shuffleboard.getTab("Climb")
                 .add("bottom", goToClimberPosition(Positions.BOTTOM));
-       SmartDashboard.putData(climber);
+        Shuffleboard.getTab("Climb")
+                .add("Motor",climber);
+        Shuffleboard.getTab("Climb")
+                .add("Climb",mech);
 
     }
     public Command unlockClimb() {
