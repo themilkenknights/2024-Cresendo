@@ -1,31 +1,34 @@
 package frc.robot.commands;
 
-import frc.robot.subsystems.Intakes;
-
-import java.util.function.BooleanSupplier;
-
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.Intakes;
+import java.util.function.BooleanSupplier;
 
 /** An example command that uses an example subsystem. */
 @SuppressWarnings("unused")
 public class TestIntakeTeleop extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final Intakes m_intakes;
-    private BooleanSupplier pickUpGround;
-    private BooleanSupplier turnOnTop;
-    private BooleanSupplier turnOffTop;
+
+  private BooleanSupplier pickUpGround;
+  private BooleanSupplier turnOnTop;
+  private BooleanSupplier turnOffTop;
+
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public TestIntakeTeleop(Intakes subsystem, BooleanSupplier groundPickUp,BooleanSupplier TurnOnTop, BooleanSupplier TurnOfftop) {
+  public TestIntakeTeleop(
+      Intakes subsystem,
+      BooleanSupplier groundPickUp,
+      BooleanSupplier TurnOnTop,
+      BooleanSupplier TurnOfftop) {
     m_intakes = subsystem;
-    pickUpGround=groundPickUp;
+    pickUpGround = groundPickUp;
     turnOnTop = TurnOnTop;
-    turnOffTop=TurnOfftop;
-    
-    
+    turnOffTop = TurnOfftop;
+
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -36,8 +39,7 @@ public class TestIntakeTeleop extends Command {
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {
-  }
+  public void execute() {}
 
   // Called once the command ends or is interrupted.
   @Override

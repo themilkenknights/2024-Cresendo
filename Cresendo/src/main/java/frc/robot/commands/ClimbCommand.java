@@ -1,9 +1,5 @@
 package frc.robot.commands;
 
-import java.util.function.BooleanSupplier;
-
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Climb.Positions;
@@ -15,7 +11,7 @@ public class ClimbCommand extends SequentialCommandGroup {
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
-   * @param goDown    suplier for going down
+   * @param goDown suplier for going down
    */
   public ClimbCommand(Climb subsystem, Boolean goDown) {
     m_subsystem = subsystem;
@@ -27,5 +23,4 @@ public class ClimbCommand extends SequentialCommandGroup {
       addCommands(m_subsystem.goToClimberPosition(Positions.BOTTOM), m_subsystem.lockClimb());
     }
   }
-
 }
