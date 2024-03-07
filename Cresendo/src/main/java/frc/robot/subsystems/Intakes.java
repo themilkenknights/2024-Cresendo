@@ -37,7 +37,6 @@ public class Intakes extends SubsystemBase {
   private TalonFX topIntake = new TalonFX(Constants.topIntakeCANID);
   private TalonFX midIntake = new TalonFX(Constants.midIntakeCANID);
   private TalonFX bottomIntake = new TalonFX(Constants.bottomIntakeIntakeCANID);
-  private DigitalInput backIR = new DigitalInput(Constants.backIRPORT);
   private DigitalInput frontIR = new DigitalInput(Constants.frontIRPORT);
 
   /** Setup the Intakes. */
@@ -85,9 +84,6 @@ public class Intakes extends SubsystemBase {
     }
   }
 
-  public boolean getBackIR() {
-    return !(backIR.get());
-  }
 
   public boolean getFrontIR() {
     return !(frontIR.get());
@@ -103,7 +99,7 @@ public class Intakes extends SubsystemBase {
   }
 
   public Command TopIntakeByBeambreak() {
-    return new SequentialCommandGroup(setTopIntakeState(state.HP), waitUntil(this::getBackIR),
+    return new SequentialCommandGroup(setTopIntakeState(state.HP), waitUntil(this::getFrontIR),waitSeconds(1),
         setTopIntakeState(state.OFF));
   }
 
@@ -132,20 +128,8 @@ public class Intakes extends SubsystemBase {
   public Command GroundPickUP() {
     return new SequentialCommandGroup(intakeElevator.gotoHeight(IntakeElevator.Positions.GROUND),
         setBottomIntakeState(state.GROUND), setTopIntakeState(state.GROUND),
-        waitUntil(this::getFrontIR),
+        waitUntil(this::getFrontIR),waitSeconds(1),
         setBottomIntakeState(state.OFF)).withName("GroundPickup");
-    // TODO: integrate sensor(some code writen in comment bellow, trigger still
-    // needs to be implemented/added)
-
-    /*
-     * return new
-     * SequentialCommandGroup(intakeElevator.setHeight(IntakeElevator.Positions.
-     * GROUND),
-     * setBottomIntakeState(state.ON),
-     * Commands.waitUntil(this::getBeambreak),
-     * setBottomIntakeState(state.OFF));
-     * 
-     */
   }
 
   @Override
@@ -154,7 +138,6 @@ public class Intakes extends SubsystemBase {
     //tab.add("ElevatorPID", intakeElevator.getController());
     //tab.add("Elevator", intakeElevator);
     tab.add(frontIR);
-    tab.add(backIR);
     tab.add("Mech", mech);
     super.initSendable(builder);
     intakeElevator.initSendable(builder);
