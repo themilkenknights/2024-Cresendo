@@ -139,7 +139,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   public void periodic() {
       super.periodic();
       if(RobotState.isDisabled()){
-        setGoal(getMeasurement());
+        LeftElevator.setPosition(0);
       }
   }
 }
