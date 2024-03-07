@@ -99,12 +99,12 @@ public class Intakes extends SubsystemBase {
   }
 
   public Command TopIntakeByBeambreak() {
-    return new SequentialCommandGroup(setTopIntakeState(state.HP), waitUntil(this::getFrontIR),waitSeconds(1),
+    return new SequentialCommandGroup(setTopIntakeState(state.HP), waitUntil(this::getFrontIR),waitSeconds(1),//TODO: tune time
         setTopIntakeState(state.OFF));
   }
 
   public Command TopOutakeByBeambreak() {
-    return new SequentialCommandGroup(setTopIntakeState(state.OUT), waitUntil(this::getNotFrontIR), waitSeconds(0.25),
+    return new SequentialCommandGroup(setTopIntakeState(state.OUT), waitUntil(this::getNotFrontIR), waitSeconds(0.25),//TODO: tune time
         setTopIntakeState(state.OFF));
   }
 
