@@ -27,7 +27,7 @@ import frc.robot.subsystems.IntakeElevator.Positions;
 public class Intakes extends SubsystemBase {
 
   public static enum state {
-    GROUND, HP, OUT, OFF
+    GROUND, HP, OUT, OFF, GROUNDOUT
   }
 
   private Mechanism2d mech = new Mechanism2d(18 / 39.37, 30 / 39.37);// ,new Color8Bit(Color.kBlueViolet));
@@ -79,11 +79,15 @@ public class Intakes extends SubsystemBase {
 
     if (intakeState == state.GROUND) {
       return runOnce(() -> bottomIntake.set(1));
-    } else {
+    }
+else if (intakeState == state.GROUNDOUT) {
+      return runOnce(() -> {
+        bottomIntake.set(-1);
+      });}
+else {
       return new InstantCommand(() -> bottomIntake.set(0));
     }
   }
-
 
   public boolean getFrontIR() {
     return !(frontIR.get());
