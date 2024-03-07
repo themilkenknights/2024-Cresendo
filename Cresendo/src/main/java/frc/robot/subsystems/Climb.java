@@ -57,7 +57,7 @@ public class Climb extends PIDSubsystem {
     private Servo locker = new Servo(Constants.ClimbServoPORT);
 
     public Climb() {
-        super(new PIDController(0.3, 0, 0.1));
+        super(new PIDController(0.9, 0, 0.1));
         m_controller.setTolerance(5);
         climber.setPosition(0);
         locker.set(0.3);
