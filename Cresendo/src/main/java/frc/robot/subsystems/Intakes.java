@@ -151,8 +151,8 @@ public class Intakes extends SubsystemBase {
   @Override
   public void initSendable(SendableBuilder builder) {
     ShuffleboardTab tab = Shuffleboard.getTab("intakes");
-    tab.add("ElevatorPID", intakeElevator.getController());
-    tab.add("Elevator", intakeElevator);
+    //tab.add("ElevatorPID", intakeElevator.getController());
+    //tab.add("Elevator", intakeElevator);
     tab.add(frontIR);
     tab.add(backIR);
     tab.add("Mech", mech);

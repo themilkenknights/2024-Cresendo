@@ -1,5 +1,10 @@
 {
   "HALProvider": {
+    "DIO": {
+      "window": {
+        "visible": true
+      }
+    },
     "Other Devices": {
       "Pigeon 2 (v6)[0]": {
         "header": {
@@ -32,6 +37,7 @@
       "/Shuffleboard/intakes/BottomIntake": "Motor Controller",
       "/Shuffleboard/intakes/DigitalInput[0]": "Digital Input",
       "/Shuffleboard/intakes/DigitalInput[1]": "Digital Input",
+      "/Shuffleboard/intakes/Elevator Motor": "Motor Controller",
       "/Shuffleboard/intakes/ElevatorPID": "ProfiledPIDController",
       "/Shuffleboard/intakes/IntakeCommands/Ground": "Command",
       "/Shuffleboard/intakes/IntakeCommands/HP": "Command",

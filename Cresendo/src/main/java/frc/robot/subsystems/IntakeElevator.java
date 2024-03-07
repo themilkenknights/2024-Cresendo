@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.util.Map;
+
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 
@@ -8,6 +10,9 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.RobotState;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
 //import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -67,26 +72,17 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   }
 
   public void initSendable(SendableBuilder builder) {
-    // Shuffleboard.getTab("intakes").add("ElevatorPID",m_controller);
+    super.initSendable(builder);
+    Shuffleboard.getTab("intakes").add("ElevatorPID",m_controller);
+    Shuffleboard.getTab("intakes").add("Elevator Motor",this.LeftElevator);
+    Shuffleboard.getTab("intakes").addDouble("Encoder", this::getMeasurement).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("min", -10, "max", 1000,"Orientation","VERTICaAl"));
   }
-
   @Override
   public void useOutput(double output, TrapezoidProfile.State setpoint) {
     // Calculate the feedforward from the sepoint
-    if (getMeasurement() > inchestorotations(25.25)) {// TODO: set all of the stage encoder poses for feed forward
-                                                      // properly, and put
-      // in kv,kg,ks, etc
-      // note: this may need to be moved
+
       elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
-    } else if (getMeasurement() > inchestorotations(14)) {
-      // in kv,kg,ks, etc
-      // note: this may need to be moved
-      elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
-    } else if (getMeasurement() > inchestorotations(8)) {
-      elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
-    } else {
-      elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
-    }
+
 
     double feedforward = elevatorFeedforward.calculate(setpoint.position, setpoint.velocity);
     // Add the feedforward to the PID output to get the motor output
@@ -138,5 +134,12 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
 
     }
 
+  }
+  @Override
+  public void periodic() {
+      super.periodic();
+      if(RobotState.isDisabled()){
+        setGoal(getMeasurement());
+      }
   }
 }

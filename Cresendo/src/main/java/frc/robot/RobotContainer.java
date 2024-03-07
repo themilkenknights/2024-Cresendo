@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
+import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AprilTagCommand;
@@ -151,8 +152,8 @@ public class RobotContainer {
 
     joystick.x().onTrue(s_Intakes.setTopIntakeState(Intakes.state.OUT)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
     joystick.b().onTrue(s_Intakes.setTopIntakeState(Intakes.state.HP)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
-    joystick.rightTrigger().onTrue(s_Intakes.setBottomIntakeState(Intakes.state.GROUND)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
-    joystick.rightTrigger().onTrue(s_Intakes.setBottomIntakeState(Intakes.state.OUT)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
+    joystick.rightTrigger().whileTrue(new RepeatCommand(s_Intakes.setBottomIntakeState(Intakes.state.GROUND))).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
+    joystick.rightTrigger().whileFalse(new RepeatCommand(s_Intakes.setBottomIntakeState(Intakes.state.OUT))).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
     /* Bindings for drivetrain characterization */
     /* These bindings require multiple buttons pushed to swap between quastatic and dynamic */
     /* Back/Start select dynamic/quasistatic, Y/X select forward/reverse direction 
@@ -162,22 +163,26 @@ public class RobotContainer {
     joystick.start().and(joystick.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));*/
 
         //op
-        op.a()
-            .onTrue(s_Intakes.GroundPickUP());
-        op.b()
-            .onTrue(s_Intakes.HPin());
+        op.y().onTrue(s_Intakes.AmpOuttake());
+           
         op.x()
-            .onTrue(s_Intakes.AmpOuttake());
+            .onTrue(s_Intakes.HPin());
+        op.b()
+        .onTrue(s_Intakes.GroundPickUP());
+            
         if(Robot.isSimulation()){
             op.button(5)
             .onTrue(s_Intakes.goUp());
             op.button(6)
             .onTrue(s_Intakes.GoDown());
         }
+
         op.rightBumper()
             .onTrue(s_Intakes.goUp());
-        op.rightTrigger()
+        op.leftBumper()
             .onTrue(s_Intakes.GoDown());
+
+        
 
         op.leftTrigger().and(op.y()).onTrue(s_Intakes.goUp());
         op.leftTrigger().and(op.x()).onTrue(s_Intakes.GoDown());
@@ -187,7 +192,7 @@ public class RobotContainer {
        //  op.pov(90).onTrue(s_Climb.goToClimberPosition(Positions.TOP));
         op.pov(0).onTrue(new SequentialCommandGroup(s_Climb.unlockClimb(),s_Climb.goToClimberPosition(Positions.TOP)));
         op.pov(180).onTrue(new SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM),s_Climb.lockClimb()));
-        op.povLeft().onTrue(s_Climb.AutoZero());
+       // op.povLeft().onTrue(s_Climb.AutoZero());
 
       // op.leftTrigger().whileTrue(s_Climb.manualDown(op::getLeftTriggerAxis));
             

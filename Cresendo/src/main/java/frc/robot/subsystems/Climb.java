@@ -6,7 +6,6 @@ import static edu.wpi.first.wpilibj2.command.Commands.waitUntil;
 import java.util.function.BooleanSupplier;
 import java.util.function.DoubleSupplier;
 
-
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.sim.TalonFXSimState;
 
@@ -31,10 +30,10 @@ import frc.robot.Constants;
 
 public class Climb extends PIDSubsystem {
     private Mechanism2d mech = new Mechanism2d(1, 2);
-    private MechanismLigament2d rooLigament2d = mech.getRoot("root", 0.4, 0.1).append(new MechanismLigament2d("climb",160,90));
+    private MechanismLigament2d rooLigament2d = mech.getRoot("root", 0.4, 0.1)
+            .append(new MechanismLigament2d("climb", 160, 90));
     private static final double spoolsize = 1 * Math.PI;
     private static final double reduction = 15.34;
-
 
     public static enum Positions {
         TOP, BOTTOM
@@ -53,11 +52,13 @@ public class Climb extends PIDSubsystem {
     private final ElevatorSim m_elevatorSim = new ElevatorSim(0.02, 0.8,
             DCMotor.getFalcon500(1).withReduction(reduction), 0, 80, true, 0);
 
-   // private ElevatorFeedforward m_feedforward = new ElevatorFeedforward(1.1, 0.14, 2.83, 0.01);
+    // private ElevatorFeedforward m_feedforward = new ElevatorFeedforward(1.1,
+    // 0.14, 2.83, 0.01);
     private Servo locker = new Servo(Constants.ClimbServoPORT);
 
     public Climb() {
         super(new PIDController(0.3, 0, 0.1));
+        m_controller.setTolerance(5);
         climber.setPosition(0);
         locker.set(0.3);
         enable();
@@ -72,7 +73,7 @@ public class Climb extends PIDSubsystem {
     public double getMeasurement() {
         return climber.getPosition().getValueAsDouble();
     }
-
+   
     public boolean atSetpoint() {
         return m_controller.atSetpoint();
     }
@@ -93,8 +94,8 @@ public class Climb extends PIDSubsystem {
         // SimBattery estimates loaded battery voltages
         RoboRioSim.setVInVoltage(
                 BatterySim.calculateDefaultBatteryLoadedVoltage(m_elevatorSim.getCurrentDrawAmps()));
-      rooLigament2d.setLength((m_elevatorSim.getPositionMeters()/80)+0.5287690974);
-        
+        rooLigament2d.setLength((m_elevatorSim.getPositionMeters() / 80) + 0.5287690974);
+
     }
 
     public Command goToClimberPosition(Positions state) {
@@ -106,12 +107,12 @@ public class Climb extends PIDSubsystem {
                     locker.set(0.3);
                     break;
                 case BOTTOM:
-                    setSetpoint(0);
+                    setSetpoint(1);
                     break;
 
             }
         }),
-        waitUntil(this::atSetpoint));
+                waitUntil(this::atSetpoint));
     }
 
     public Command lockClimb() {
@@ -121,31 +122,34 @@ public class Climb extends PIDSubsystem {
         });
     }
 
-   /*  public Command manualDown(DoubleSupplier sup) {
-        return runOnce(() -> {
-            climber.set(-sup.getAsDouble());
-        });
-    }
-
-    public Command manualUp(DoubleSupplier sup) {
-        return runOnce(() -> {
-            climber.set(sup.getAsDouble());
-        });
-    }*/
+    /*
+     * public Command manualDown(DoubleSupplier sup) {
+     * return runOnce(() -> {
+     * climber.set(-sup.getAsDouble());
+     * });
+     * }
+     * 
+     * public Command manualUp(DoubleSupplier sup) {
+     * return runOnce(() -> {
+     * climber.set(sup.getAsDouble());
+     * });
+     * }
+     */
 
     public Command AutoZero() {
-        final ParallelCommandGroup zCommand = new ParallelCommandGroup(new InstantCommand(() -> disable()), new InstantCommand(() -> {
+        final ParallelCommandGroup zCommand = new ParallelCommandGroup(new InstantCommand(() -> disable()),
+                new InstantCommand(() -> {
 
-            climber.set(0.025);
+                    climber.set(0.025);
 
-        }), waitUntil(this::isHighCurrent), runOnce(() -> {
-            climber.set(0);
-            climber.setPosition(-5);
+                }), waitUntil(this::isHighCurrent), runOnce(() -> {
+                    climber.set(0);
+                    climber.setPosition(-5);
 
-        }), new InstantCommand(() -> disable()));
-    zCommand.addRequirements(this);
-    return zCommand;
-}
+                }), new InstantCommand(() -> disable()));
+        zCommand.addRequirements(this);
+        return zCommand;
+    }
 
     private boolean isHighCurrent() {
         if ((climber.getTorqueCurrent().asSupplier().get()) > 5) {
@@ -170,17 +174,18 @@ public class Climb extends PIDSubsystem {
         Shuffleboard.getTab("Climb")
                 .add("bottom", goToClimberPosition(Positions.BOTTOM));
         Shuffleboard.getTab("Climb")
-                .add("Motor",climber);
+                .add("Motor", climber);
         Shuffleboard.getTab("Climb")
-                .add("Climb",mech);
+                .add("Climb", mech);
 
     }
+
     public Command unlockClimb() {
         return new ParallelCommandGroup(runOnce(() -> {
 
             locker.set(0.3);
             // enable();
-        }),waitSeconds(0.1));
+        }), waitSeconds(0.1));
     }
 
 }
