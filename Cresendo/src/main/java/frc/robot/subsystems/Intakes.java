@@ -54,18 +54,18 @@ public class Intakes extends SubsystemBase {
 
     if (intakeState == state.GROUND) {
       return runOnce(() -> {
-        topIntake.set(1);
-        midIntake.set(-1);
+        topIntake.set(.6);
+        midIntake.set(.6);
       });
     } else if (intakeState == state.OUT) {
       return runOnce(() -> {
-        topIntake.set(-1);
-        midIntake.set(-1);
+        topIntake.set(-.6);
+        midIntake.set(-.6);
       });
     } else if (intakeState == state.HP) {
       return runOnce(() -> {
-        topIntake.set(1);
-        midIntake.set(1);
+        topIntake.set(.6);
+        midIntake.set(.6);
       });
     } else {
       return new InstantCommand(() -> {
@@ -78,11 +78,11 @@ public class Intakes extends SubsystemBase {
   public Command setBottomIntakeState(Intakes.state intakeState) {
 
     if (intakeState == state.GROUND) {
-      return runOnce(() -> bottomIntake.set(1));
+      return runOnce(() -> bottomIntake.set(.6));
     }
 else if (intakeState == state.GROUNDOUT) {
       return runOnce(() -> {
-        bottomIntake.set(-1);
+        bottomIntake.set(-.8);
       });}
 else {
       return new InstantCommand(() -> bottomIntake.set(0));

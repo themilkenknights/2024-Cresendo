@@ -147,8 +147,8 @@ public class RobotContainer {
 
     drivetrain.registerTelemetry(logger::telemeterize);
         
-    joystick.pov(0).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0.5).withVelocityY(0)));
-    joystick.pov(180).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
+    joystick.pov(90).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0.5).withVelocityY(0)));
+    joystick.pov(270).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
 
     joystick.x().onTrue(s_Intakes.setTopIntakeState(Intakes.state.OUT)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
     joystick.b().onTrue(s_Intakes.setTopIntakeState(Intakes.state.HP)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
@@ -190,8 +190,8 @@ public class RobotContainer {
         op.leftTrigger().and(op.x()).onTrue(s_Intakes.setTopIntakeState(Intakes.state.OUT)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
 
        //  op.pov(90).onTrue(s_Climb.goToClimberPosition(Positions.TOP));
-        op.pov(0).onTrue(new SequentialCommandGroup(s_Climb.unlockClimb(),s_Climb.goToClimberPosition(Positions.TOP)));
-        op.pov(180).onTrue(new SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM).until(()->s_Climb.getController().getPositionError()<0.5),s_Climb.lockClimb()));
+        joystick.pov(0).onTrue(new SequentialCommandGroup(s_Climb.unlockClimb(),s_Climb.goToClimberPosition(Positions.TOP)));
+        joystick.pov(180).onTrue(new SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM).until(()->s_Climb.getController().getPositionError()<0.5),s_Climb.lockClimb()));
        // op.povLeft().onTrue(s_Climb.AutoZero());
 
       // op.leftTrigger().whileTrue(s_Climb.manualDown(op::getLeftTriggerAxis));
