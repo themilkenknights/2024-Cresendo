@@ -84,9 +84,9 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
       elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
 
 
-    double feedforward = elevatorFeedforward.calculate(setpoint.position, setpoint.velocity);
+   // double feedforward = elevatorFeedforward.calculate(setpoint.position, setpoint.velocity);
     // Add the feedforward to the PID output to get the motor output
-    LeftElevator.setVoltage(output + feedforward);
+    LeftElevator.setVoltage(output);// + feedforward);
 
   }
 
