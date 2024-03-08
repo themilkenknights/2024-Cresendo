@@ -167,6 +167,7 @@ public class RobotContainer {
            
         op.x()
             .onTrue(s_Intakes.HPin());
+    
         op.b()
         .onTrue(s_Intakes.GroundPickUP());
             
@@ -182,12 +183,12 @@ public class RobotContainer {
         op.leftBumper()
             .onTrue(s_Intakes.GoDown());
 
-        
+    
 
-        op.leftTrigger().and(op.y()).onTrue(s_Intakes.goUp());
-        op.leftTrigger().and(op.x()).onTrue(s_Intakes.GoDown());
-        op.leftTrigger().and(op.x()).onTrue(s_Intakes.setTopIntakeState(Intakes.state.HP)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
-        op.leftTrigger().and(op.x()).onTrue(s_Intakes.setTopIntakeState(Intakes.state.OUT)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
+        //op.leftTrigger().and(op.y()).onTrue(s_Intakes.goUp());
+        //op.leftTrigger().and(op.x()).onTrue(s_Intakes.GoDown());
+        //op.leftTrigger().and(op.x()).onTrue(s_Intakes.setTopIntakeState(Intakes.state.HP)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
+        //op.leftTrigger().and(op.x()).onTrue(s_Intakes.setTopIntakeState(Intakes.state.OUT)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
 
        //  op.pov(90).onTrue(s_Climb.goToClimberPosition(Positions.TOP));
         joystick.pov(0).onTrue(new SequentialCommandGroup(s_Climb.unlockClimb(),s_Climb.goToClimberPosition(Positions.TOP)));
