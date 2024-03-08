@@ -104,10 +104,12 @@ public class Climb extends PIDSubsystem {
             switch (state) {
                 case TOP:
                     setSetpoint(80);// inchestorotations(20));
+                    m_controller.setP(0.9);
                     locker.set(0.3);
                     break;
                 case BOTTOM:
                     setSetpoint(1);
+                    m_controller.setP(1.5);
                     break;
 
             }
