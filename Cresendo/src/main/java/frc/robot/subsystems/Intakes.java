@@ -19,6 +19,8 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 
 import static edu.wpi.first.wpilibj2.command.Commands.*;
+
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import frc.robot.Constants;
@@ -162,7 +164,10 @@ else {
     commandlLayout.add("HP", HPin());
 
   }
-
+  public void onReEnable(){
+    setBottomIntakeState(state.OFF).schedule();
+    setTopIntakeState(state.OFF).schedule();
+  }
   @Override
   public void periodic() {
     // This method will be called once per scheduler run

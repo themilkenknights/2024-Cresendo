@@ -64,6 +64,13 @@ public class Climb extends PIDSubsystem {
         enable();
     }
 
+    public void resetMesurement(){
+        climber.setPosition(0);
+        
+        climber.getSimState().setRawRotorPosition(0);
+        m_elevatorSim.setState(0, 0);
+    }
+
     @Override
     public void useOutput(double output, double setpoint) {
         climber.setVoltage(output);// + m_feedforward.calculate(state.velocity));
@@ -139,7 +146,7 @@ public class Climb extends PIDSubsystem {
      */
 
     public Command AutoZero() {
-        final ParallelCommandGroup zCommand = new ParallelCommandGroup(new InstantCommand(() -> disable()),
+        final SequentialCommandGroup zCommand = new SequentialCommandGroup(new InstantCommand(() -> disable()),
                 new InstantCommand(() -> {
 
                     climber.set(0.025);
@@ -183,11 +190,15 @@ public class Climb extends PIDSubsystem {
     }
 
     public Command unlockClimb() {
-        return new ParallelCommandGroup(runOnce(() -> {
+        return new SequentialCommandGroup(runOnce(() -> {
 
             locker.set(0.3);
             // enable();
-        }), waitSeconds(0.1));
+        }), waitSeconds(0.1),runOnce(() -> {
+
+            
+ enable();
+        }));
     }
 
 }
