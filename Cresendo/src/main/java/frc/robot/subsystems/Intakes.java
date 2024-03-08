@@ -162,7 +162,7 @@ else {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
-    intakeElevator.periodic();
+   //intakeElevator.periodic();
     stage.setLength((((intakeElevator.getMeasurement() / 18) / (Math.PI * 0.5)) / 40));// +0.3);
   }
 

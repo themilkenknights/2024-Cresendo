@@ -92,7 +92,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
 
   @Override
   public double getMeasurement() {
-    return (Robot.isReal()) ? LeftElevator.getPosition().getValueAsDouble() : m_controller.getSetpoint().position;
+    return LeftElevator.getPosition().getValueAsDouble();//(Robot.isReal()) ? LeftElevator.getPosition().getValueAsDouble() : m_controller.getSetpoint().position;
   }
 
   public boolean atSetpoint() {
@@ -113,7 +113,8 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
     sim.setInput((LeftElevator.getMotorVoltage().getValueAsDouble()));
 
     sim.update(0.02);
-    LeftElevator.setPosition(sim.getPositionMeters());
+    //LeftElevator.setPosition(sim.getPositionMeters());
+    LeftElevator.setPosition(m_controller.getSetpoint().position);
   }
 
   public Command gotoHeight(Positions height) {
@@ -135,11 +136,17 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
     }
 
   }
+  private boolean beendisabled = false;
   @Override
   public void periodic() {
       super.periodic();
       if(RobotState.isDisabled()){
+        beendisabled=true;
+      }
+      else if(beendisabled){
+        beendisabled=false;
         LeftElevator.setPosition(0);
+        setGoal(0);
       }
   }
 }
