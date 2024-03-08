@@ -50,7 +50,7 @@ public class Climb extends PIDSubsystem {
     // private final CANcoderSimState sensorSim = sensor.getSimState();
 
     private final ElevatorSim m_elevatorSim = new ElevatorSim(0.02, 0.8,
-            DCMotor.getFalcon500(1).withReduction(reduction), 0, 80, true, 0);
+            DCMotor.getFalcon500(1).withReduction(reduction), 0, 80, false, 0);
 
     // private ElevatorFeedforward m_feedforward = new ElevatorFeedforward(1.1,
     // 0.14, 2.83, 0.01);
