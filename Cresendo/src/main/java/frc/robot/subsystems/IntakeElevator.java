@@ -136,17 +136,10 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
     }
 
   }
-  private boolean beendisabled = false;
-  @Override
-  public void periodic() {
-      super.periodic();
-      if(RobotState.isDisabled()){
-        beendisabled=true;
-      }
-      else if(beendisabled){
-        beendisabled=false;
-        LeftElevator.setPosition(0);
-        setGoal(0);
-      }
-  }
+ public void onReEnable(){
+
+    LeftElevator.setPosition(0);
+    setGoal(0);
+
+ }
 }

@@ -15,12 +15,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.commands.AprilTagCommand;
-import frc.robot.commands.ClimbCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.IntakeElevator;
@@ -88,6 +88,7 @@ public class RobotContainer {
     public AprilTagCommand getTagCommand(){
         return new AprilTagCommand(drivetrain);
     }
+
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         
@@ -191,12 +192,18 @@ public class RobotContainer {
         //op.leftTrigger().and(op.x()).onTrue(s_Intakes.setTopIntakeState(Intakes.state.OUT)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
 
        //  op.pov(90).onTrue(s_Climb.goToClimberPosition(Positions.TOP));
-        joystick.pov(0).onTrue(new SequentialCommandGroup(s_Climb.unlockClimb(),s_Climb.goToClimberPosition(Positions.TOP)));
-        joystick.pov(180).onTrue(new SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM).until(()->s_Climb.getController().getPositionError()<0.5),s_Climb.lockClimb()));
+        op.pov(0).onTrue(new SequentialCommandGroup(s_Climb.unlockClimb(),s_Climb.goToClimberPosition(Positions.TOP)));
+        op.pov(180).onTrue(new SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM).until(()->s_Climb.getController().getPositionError()<0.5),s_Climb.lockClimb(),new InstantCommand(()->s_Climb.disable())));
        // op.povLeft().onTrue(s_Climb.AutoZero());
 
       // op.leftTrigger().whileTrue(s_Climb.manualDown(op::getLeftTriggerAxis));
             
+    }
+    public void reEnable(){
+        s_Climb.resetMesurement();
+        s_Climb.setSetpoint(0);
+        s_Intakes.getElevator().onReEnable();
+        CommandScheduler.getInstance().cancelAll();
     }
 
     /**
