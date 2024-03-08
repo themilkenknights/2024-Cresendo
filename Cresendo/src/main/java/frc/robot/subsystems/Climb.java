@@ -58,7 +58,7 @@ public class Climb extends PIDSubsystem {
 
     public Climb() {
         super(new PIDController(0.9, 0, 0.1));
-        m_controller.setTolerance(5);
+        m_controller.setTolerance(0);
         climber.setPosition(0);
         locker.set(0.3);
         enable();
@@ -109,7 +109,7 @@ public class Climb extends PIDSubsystem {
                     break;
                 case BOTTOM:
                     setSetpoint(1);
-                    m_controller.setP(1.5);
+                    m_controller.setP(2.25);
                     break;
 
             }

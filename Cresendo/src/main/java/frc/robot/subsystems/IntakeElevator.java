@@ -125,10 +125,10 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
         return new ProfiledPIDCommand(m_controller, this::getMeasurement, 0, this::useOutput, this)
             .until(this.m_controller::atGoal);
       case AMP:
-        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(20), this::useOutput, this)
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(1), this::useOutput, this)
             .until(this.m_controller::atGoal);
       case HP:
-        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(25), this::useOutput, this)
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(1), this::useOutput, this)
             .until(this.m_controller::atGoal);
       default:
         return new ProfiledPIDCommand(m_controller, this::getMeasurement, 0, this::useOutput, this);

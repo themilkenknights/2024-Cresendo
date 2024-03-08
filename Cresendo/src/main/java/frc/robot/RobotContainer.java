@@ -191,7 +191,7 @@ public class RobotContainer {
 
        //  op.pov(90).onTrue(s_Climb.goToClimberPosition(Positions.TOP));
         op.pov(0).onTrue(new SequentialCommandGroup(s_Climb.unlockClimb(),s_Climb.goToClimberPosition(Positions.TOP)));
-        op.pov(180).onTrue(new SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM).until(()->s_Climb.getController().getPositionError()<5),s_Climb.lockClimb()));
+        op.pov(180).onTrue(new SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM).until(()->s_Climb.getController().getPositionError()<0.5),s_Climb.lockClimb()));
        // op.povLeft().onTrue(s_Climb.AutoZero());
 
       // op.leftTrigger().whileTrue(s_Climb.manualDown(op::getLeftTriggerAxis));
