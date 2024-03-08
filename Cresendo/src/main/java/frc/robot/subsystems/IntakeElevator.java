@@ -66,7 +66,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
 
     RightElevator.setControl(new Follower(LeftElevator.getDeviceID(), false));
     LeftElevator.setPosition(0);
-  
+    m_controller.setTolerance(5);
     setDefaultCommand(new ProfiledPIDCommand(m_controller, this::getMeasurement, m_controller::getGoal, this::useOutput, this));
     setGoal(0);
   }

@@ -49,23 +49,27 @@ public class Intakes extends SubsystemBase {
     stage.setColor(new Color8Bit(Color.kSilver));
     stage.append(new MechanismLigament2d("Intake", -0.31, 90));
   }
+    
+  private final double elevatorspeed = .5;
+  private final double groundspeed = .8;
+
 
   public Command setTopIntakeState(Intakes.state intakeState) {
 
     if (intakeState == state.GROUND) {
       return runOnce(() -> {
-        topIntake.set(.6);
-        midIntake.set(.6);
+        topIntake.set(elevatorspeed);
+        midIntake.set(elevatorspeed);
       });
     } else if (intakeState == state.OUT) {
       return runOnce(() -> {
-        topIntake.set(-.6);
-        midIntake.set(-.6);
+        topIntake.set(-elevatorspeed);
+        midIntake.set(-elevatorspeed);
       });
     } else if (intakeState == state.HP) {
       return runOnce(() -> {
-        topIntake.set(.6);
-        midIntake.set(.6);
+        topIntake.set(elevatorspeed);
+        midIntake.set(elevatorspeed);
       });
     } else {
       return new InstantCommand(() -> {
@@ -78,11 +82,11 @@ public class Intakes extends SubsystemBase {
   public Command setBottomIntakeState(Intakes.state intakeState) {
 
     if (intakeState == state.GROUND) {
-      return runOnce(() -> bottomIntake.set(.6));
+      return runOnce(() -> bottomIntake.set(groundspeed));
     }
 else if (intakeState == state.GROUNDOUT) {
       return runOnce(() -> {
-        bottomIntake.set(-.8);
+        bottomIntake.set(-groundspeed);
       });}
 else {
       return new InstantCommand(() -> bottomIntake.set(0));
@@ -103,12 +107,12 @@ else {
   }
 
   public Command TopIntakeByBeambreak() {
-    return new SequentialCommandGroup(setTopIntakeState(state.HP), waitUntil(this::getFrontIR),waitSeconds(1),//TODO: tune time
+    return new SequentialCommandGroup(setTopIntakeState(state.HP), waitUntil(this::getFrontIR),waitSeconds(0.0),//TODO: tune time
         setTopIntakeState(state.OFF));
   }
 
   public Command TopOutakeByBeambreak() {
-    return new SequentialCommandGroup(setTopIntakeState(state.OUT), waitUntil(this::getNotFrontIR), waitSeconds(0.25),//TODO: tune time
+    return new SequentialCommandGroup(setTopIntakeState(state.OUT), waitUntil(this::getNotFrontIR), waitSeconds(0.0),//TODO: tune time
         setTopIntakeState(state.OFF));
   }
 
@@ -132,7 +136,7 @@ else {
   public Command GroundPickUP() {
     return new SequentialCommandGroup(intakeElevator.gotoHeight(IntakeElevator.Positions.GROUND),
         setBottomIntakeState(state.GROUND), setTopIntakeState(state.GROUND),
-        waitUntil(this::getFrontIR),waitSeconds(1),
+        waitUntil(this::getFrontIR),waitSeconds(.0),//TODO set times
         setBottomIntakeState(state.OFF)).withName("GroundPickup");
   }
 
