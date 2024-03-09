@@ -25,7 +25,12 @@ public final class Constants {
 
     public static final int backIRPORT = 0;// TODO: set properly
     public static final int frontIRPORT = 1;// TODO: set properly
+    // * LEDS
+    // The indicator led strip 
     public static final int ledPORT = 2;// TODO: set properly
+    // The alliance color led strip, in the code it will be set up as a spark motor
+    // Reasons: page 8, https://www.revrobotics.com/content/docs/REV-11-1105-UM.pdf
+    public static final int ACLedPORT = 3;// TODO: set properly + add to robot container
 
 
 

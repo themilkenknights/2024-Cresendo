@@ -114,7 +114,7 @@ public class LED extends SubsystemBase {
     //! ****Code to be run during the robot loop****
     @Override
     public void periodic() {
-
+        setAllianceColorLed();
         // * NEUTRAL STATE
         if (led_state==LEDStates.NEUTRAL){
             //
