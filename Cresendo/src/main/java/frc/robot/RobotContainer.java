@@ -106,7 +106,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Apriltags",getTagCommand());
         NamedCommands.registerCommand("Outtake", new ParallelCommandGroup(s_Intakes.AmpOuttake()));
         NamedCommands.registerCommand("GoDown", s_Intakes.GoDown());
-        NamedCommands.registerCommand("HPInktake",s_Intakes.HPin());
+        NamedCommands.registerCommand("HPInktake",s_Intakes.AutoHPin());
         NamedCommands.registerCommand("GoUp", s_Intakes.goUp());
         drivetrain = TunerConstants.DriveTrain;
 
@@ -151,8 +151,10 @@ public class RobotContainer {
     joystick.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     joystick.pov(90).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0.5).withVelocityY(0)));
     joystick.pov(270).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
-    joystick.x().onTrue(s_Intakes.setTopIntakeState(Intakes.state.OUT)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
-    joystick.b().onTrue(s_Intakes.setTopIntakeState(Intakes.state.HP)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
+
+
+    joystick.x().whileTrue(s_Intakes.setTopIntakeState(Intakes.state.OUT)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
+    joystick.b().whileTrue(s_Intakes.setTopIntakeState(Intakes.state.HP)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
     joystick.rightTrigger().whileTrue(new RepeatCommand(s_Intakes.setBottomIntakeState(Intakes.state.GROUND))).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
     joystick.leftTrigger().whileTrue(new RepeatCommand(s_Intakes.setBottomIntakeState(Intakes.state.GROUNDOUT))).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
    
@@ -163,23 +165,27 @@ public class RobotContainer {
         op.y().onTrue(s_Intakes.goUp());
        // op.leftTrigger().whileTrue(new SequentialCommandGroup(new InstantCommand(()->s_Intakes.getCurrentCommand().cancel()),//s_Intakes.setTopIntakeState(Intakes.state.OUT))).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
 
-         op.rightTrigger().whileTrue(s_Intakes.setTopIntakeState(Intakes.state.HP)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
+         //op.rightTrigger().whileTrue(s_Intakes.setTopIntakeState(Intakes.state.HP)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
         op.x()
-            .onTrue(s_Intakes.HPin());
+        .onTrue(s_Intakes.getElevator().gotoHeight(IntakeElevator.Positions.AMP));
+           // .onTrue(s_Intakes.AutoHPin());
     
         op.b()
-        .onTrue(s_Intakes.GroundPickUP());
+        .onTrue(s_Intakes.AutoGroundPickUP());
+        op.leftTrigger().onTrue(s_Intakes.AutoHPin());
+        op.rightTrigger().onTrue(s_Intakes.AmpOuttake());
             
         if(Robot.isSimulation()){
             op.button(5).onTrue(s_Intakes.goUp()); op.button(6) .onTrue(s_Intakes.GoDown());
         }
 
-        op.rightBumper().onTrue(s_Intakes.goUp());
+       // op.rightBumper().onTrue(s_Intakes.goUp());
         op.leftBumper() .onTrue(s_Intakes.GoDown());
+        op.rightBumper() .onTrue(s_Intakes.goUp());
 
         op.pov(0).onTrue(new SequentialCommandGroup(s_Climb.unlockClimb(),s_Climb.goToClimberPosition(Positions.TOP)));
-        op.pov(180).onTrue(new SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM).until(()->s_Climb.getController().getPositionError()<0.5),s_Climb.lockClimb(),new InstantCommand(()->s_Climb.disable())));
-
+        op.pov(180).onTrue(new SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM),s_Climb.lockClimb(),new InstantCommand(()->s_Climb.disable())));
+        //.until(()->s_Climb.getController().getPositionError()<0.5)
         //op.leftTrigger().and(op.y()).onTrue(s_Intakes.goUp());
         //op.leftTrigger().and(op.x()).onTrue(s_Intakes.GoDown());
         //op.leftTrigger().and(op.x()).onTrue(s_Intakes.setTopIntakeState(Intakes.state.HP)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
@@ -196,7 +202,7 @@ public class RobotContainer {
         s_Climb.resetMesurement();
         s_Climb.setSetpoint(0);
         s_Intakes.getElevator().onReEnable();
-        CommandScheduler.getInstance().cancelAll();
+        //CommandScheduler.getInstance().cancelAll();
     }
 
     /**

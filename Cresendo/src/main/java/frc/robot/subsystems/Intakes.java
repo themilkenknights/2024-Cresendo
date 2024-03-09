@@ -61,7 +61,7 @@ public class Intakes extends SubsystemBase {
     if (intakeState == state.GROUND) {
       return runOnce(() -> {
         topIntake.set(elevatorspeed);
-        midIntake.set(elevatorspeed);
+        midIntake.set(-elevatorspeed);
       });
     } else if (intakeState == state.OUT) {
       return runOnce(() -> {
@@ -95,6 +95,7 @@ else {
     }
   }
 
+
   public boolean getFrontIR() {
     return !(frontIR.get());
   }
@@ -103,8 +104,8 @@ else {
     return (frontIR.get());
   }
 
-  public Command HPin() {
-    return new SequentialCommandGroup(intakeElevator.gotoHeight(Positions.HP), TopIntakeByBeambreak(),
+  public Command AutoHPin() {
+    return new SequentialCommandGroup(setTopIntakeState(state.OFF),setBottomIntakeState(state.OFF),intakeElevator.gotoHeight(Positions.HP), TopIntakeByBeambreak(),
         intakeElevator.gotoHeight(Positions.GROUND)).withName("HP");
   }
 
@@ -119,24 +120,24 @@ else {
   }
 
   public Command AmpOuttake() {
-    return new SequentialCommandGroup(intakeElevator.gotoHeight(IntakeElevator.Positions.AMP), TopIntakeByBeambreak())
+    return new SequentialCommandGroup(setTopIntakeState(state.OFF),setBottomIntakeState(state.OFF),intakeElevator.gotoHeight(IntakeElevator.Positions.AMP), TopOutakeByBeambreak())
         .withName("Amp Outtake");
   }
 
   public Command goUp() {
-    return new ParallelCommandGroup(intakeElevator.gotoHeight(IntakeElevator.Positions.AMP));
-  }
-
-  public IntakeElevator getElevator() {
-    return this.intakeElevator;
-  }
+    return new ParallelCommandGroup(setTopIntakeState(state.OFF),setBottomIntakeState(state.OFF),intakeElevator.gotoHeight(IntakeElevator.Positions.HP));
+  } 
 
   public Command GoDown() {
-    return new ParallelCommandGroup(intakeElevator.gotoHeight(IntakeElevator.Positions.GROUND));
+    return new ParallelCommandGroup(setTopIntakeState(state.OFF),setBottomIntakeState(state.OFF),intakeElevator.gotoHeight(IntakeElevator.Positions.GROUND));
   }
 
-  public Command GroundPickUP() {
-    return new SequentialCommandGroup(intakeElevator.gotoHeight(IntakeElevator.Positions.GROUND),
+
+ public IntakeElevator getElevator() {
+    return this.intakeElevator;
+  }
+  public Command AutoGroundPickUP() {
+    return new SequentialCommandGroup(setTopIntakeState(state.OFF),setBottomIntakeState(state.OFF),intakeElevator.gotoHeight(IntakeElevator.Positions.GROUND),
         setBottomIntakeState(state.GROUND), setTopIntakeState(state.GROUND),
         waitUntil(this::getFrontIR),waitSeconds(waittime),
         setBottomIntakeState(state.OFF)).withName("GroundPickup");
@@ -160,8 +161,8 @@ else {
     commandlLayout.withSize(2, 4);
     commandlLayout.add("out", TopOutakeByBeambreak());
     commandlLayout.add("in", TopIntakeByBeambreak());
-    commandlLayout.add("Ground", GroundPickUP());
-    commandlLayout.add("HP", HPin());
+    commandlLayout.add("Ground", AutoGroundPickUP());
+    commandlLayout.add("HP", AutoHPin());
 
   }
   public void onReEnable(){
@@ -172,7 +173,7 @@ else {
   public void periodic() {
     // This method will be called once per scheduler run
    //intakeElevator.periodic();
-    stage.setLength((((intakeElevator.getMeasurement() / 18) / (Math.PI * 0.5)) / 40));// +0.3);
+    stage.setLength((intakeElevator.getMeasurement() /Math.PI)/40);// +0.3);
   }
 
   @Override

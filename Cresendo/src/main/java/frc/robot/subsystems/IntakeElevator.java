@@ -5,24 +5,28 @@ import java.util.Map;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 //import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants;
-import frc.robot.Robot;
 
 public class IntakeElevator extends ProfiledPIDSubsystem {
+  // intake constants
+  private static final double kP = 0.5;
+  private static final double kI = 0;
+  private static final double kD = 0;
 
+  private static final double HPSetpoint = 3.8;
+  private static final double AMPSetpoint = 3.0;
   private static final double spoolsize = 0.5 * Math.PI;
   private static final double reduction = 25;
 
@@ -35,7 +39,8 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
 
   private static final TrapezoidProfile.Constraints ProfileConstraints = new TrapezoidProfile.Constraints(
       inchestorotations(30), (inchestorotations(30)));
-  private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
+  // private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0,
+  // 0.43, 2.83, 0.07);
 
   private static final ElevatorSim sim = new ElevatorSim(DCMotor.getFalcon500(1), reduction, 6, spoolsize, 0, 500,
       false,
@@ -62,7 +67,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
    * DO NOT CALL DIRECTLY. Use Intakes subsystem insted
    */
   public IntakeElevator() {
-    super(new ProfiledPIDController(0.5, 0, 0, ProfileConstraints));
+    super(new ProfiledPIDController(kP, kI, kD, ProfileConstraints));
 
     RightElevator.setControl(new Follower(LeftElevator.getDeviceID(), false));
     LeftElevator.setPosition(0);
@@ -73,18 +78,20 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
 
   public void initSendable(SendableBuilder builder) {
     super.initSendable(builder);
-    Shuffleboard.getTab("intakes").add("ElevatorPID",m_controller);
-    Shuffleboard.getTab("intakes").add("Elevator Motor",this.LeftElevator);
-    Shuffleboard.getTab("intakes").addDouble("Encoder", this::getMeasurement).withWidget(BuiltInWidgets.kNumberBar).withProperties(Map.of("min", -10, "max", 1000,"Orientation","VERTICaAl"));
+    Shuffleboard.getTab("intakes").add("ElevatorPID", m_controller);
+    Shuffleboard.getTab("intakes").add("Elevator Motor", this.LeftElevator);
+    Shuffleboard.getTab("intakes").addDouble("Encoder", this::getMeasurement).withWidget(BuiltInWidgets.kNumberBar)
+        .withProperties(Map.of("min", -10, "max", 1000, "Orientation", "VERTICAL"));
+    
+    Shuffleboard.getTab("intakes").addDouble("goal",()->m_controller.getSetpoint().position);
   }
+
   @Override
   public void useOutput(double output, TrapezoidProfile.State setpoint) {
     // Calculate the feedforward from the sepoint
 
-      elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
-
-
-   // double feedforward = elevatorFeedforward.calculate(setpoint.position, setpoint.velocity);
+    // double feedforward = elevatorFeedforward.calculate(setpoint.position,
+    // setpoint.velocity);
     // Add the feedforward to the PID output to get the motor output
     LeftElevator.setVoltage(output);// + feedforward);
 
@@ -92,7 +99,9 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
 
   @Override
   public double getMeasurement() {
-    return LeftElevator.getPosition().getValueAsDouble();//(Robot.isReal()) ? LeftElevator.getPosition().getValueAsDouble() : m_controller.getSetpoint().position;
+    return LeftElevator.getPosition().getValueAsDouble();// (Robot.isReal()) ?
+                                                         // LeftElevator.getPosition().getValueAsDouble() :
+                                                         // m_controller.getSetpoint().position;
   }
 
   public boolean atSetpoint() {
@@ -100,11 +109,11 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   }
 
   public Command setDown() {
-    return runOnce(() -> setGoal(1));
+    return runOnce(() -> setGoal(0));
   }
 
-  public Command setUp() {
-    return runOnce(() -> setGoal(inchestorotations(25)));
+  public Command setAMP() {
+    return runOnce(() -> setGoal(inchestorotations(AMPSetpoint)));
   }
 
   @Override
@@ -112,7 +121,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
     sim.setInput((LeftElevator.getMotorVoltage().getValueAsDouble()));
 
     sim.update(0.02);
-    //LeftElevator.setPosition(sim.getPositionMeters());
+    // LeftElevator.setPosition(sim.getPositionMeters());
     LeftElevator.setPosition(m_controller.getSetpoint().position);
   }
 
@@ -124,10 +133,10 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
         return new ProfiledPIDCommand(m_controller, this::getMeasurement, 0, this::useOutput, this)
             .until(this.m_controller::atGoal);
       case AMP:
-        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(3), this::useOutput, this)
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(AMPSetpoint), this::useOutput, this)
             .until(this.m_controller::atGoal);
       case HP:
-        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(3.8), this::useOutput, this)
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(HPSetpoint), this::useOutput, this)
             .until(this.m_controller::atGoal);
       default:
         return new ProfiledPIDCommand(m_controller, this::getMeasurement, 0, this::useOutput, this);
@@ -135,10 +144,11 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
     }
 
   }
- public void onReEnable(){
+
+  public void onReEnable() {
 
     LeftElevator.setPosition(0);
     setGoal(0);
 
- }
+  }
 }
