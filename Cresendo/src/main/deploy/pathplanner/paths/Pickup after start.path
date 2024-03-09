@@ -8,56 +8,40 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.9233200688702548,
-        "y": 7.500603251203253
+        "x": 2.828654902686041,
+        "y": 7.102803765794452
       },
       "isLocked": false,
       "linkedName": "Amp"
     },
     {
       "anchor": {
-        "x": 7.220459505735856,
-        "y": 5.437174267862071
+        "x": 5.003403136435776,
+        "y": 7.036276799402898
       },
       "prevControl": {
-        "x": 5.987996124142426,
-        "y": 6.540120320976399
+        "x": 4.465440055879985,
+        "y": 7.191091872921935
       },
       "nextControl": {
-        "x": 8.21421807837974,
-        "y": 4.547847970776454
+        "x": 6.362459244429135,
+        "y": 6.645167485622269
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 10.427512841138823,
-        "y": 1.9266073763579166
+        "x": 7.833603208872958,
+        "y": 5.766163722139705
       },
       "prevControl": {
-        "x": 9.270157705471057,
-        "y": 2.6986377559182806
-      },
-      "nextControl": {
-        "x": 11.522501387597396,
-        "y": 1.1961795266133284
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 14.912577376082709,
-        "y": 0.7094057799176865
-      },
-      "prevControl": {
-        "x": 14.317902214510164,
-        "y": 0.8952194987673465
+        "x": 7.094861546204448,
+        "y": 6.044973376981238
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Right HP"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -65,7 +49,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 1.75,
       "command": {
         "type": "parallel",
         "data": {
@@ -73,7 +57,7 @@
             {
               "type": "named",
               "data": {
-                "name": "GoDown"
+                "name": "ground"
               }
             }
           ]
@@ -82,21 +66,21 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.5,
-    "maxAcceleration": 3.5,
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
-    "rotation": -57.4940799919239,
+    "velocity": 0.5,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "teleop",
+  "folder": null,
   "previewStartingState": {
-    "rotation": 89.55107065987848,
-    "velocity": 0.0
+    "rotation": 90.0,
+    "velocity": 0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

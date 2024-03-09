@@ -104,10 +104,11 @@ public class RobotContainer {
 ///////////////////////////////////////////////////// 
 
         NamedCommands.registerCommand("Apriltags",getTagCommand());
-        NamedCommands.registerCommand("Outtake", new ParallelCommandGroup(s_Intakes.AmpOuttake()));
+        NamedCommands.registerCommand("Outtake", s_Intakes.AmpOuttake());
         NamedCommands.registerCommand("GoDown", s_Intakes.GoDown());
         NamedCommands.registerCommand("HPInktake",s_Intakes.AutoHPin());
         NamedCommands.registerCommand("GoUp", s_Intakes.goUp());
+        NamedCommands.registerCommand("ground", s_Intakes.AutoGroundPickUP());
         drivetrain = TunerConstants.DriveTrain;
 
         CommandScheduler.getInstance().schedule(Commands.repeatingSequence(new AprilTagCommand(drivetrain),waitSeconds(5)));

@@ -120,12 +120,12 @@ else {
   }
 
   public Command AmpOuttake() {
-    return new SequentialCommandGroup(setTopIntakeState(state.OFF),setBottomIntakeState(state.OFF),intakeElevator.gotoHeight(IntakeElevator.Positions.AMP), TopOutakeByBeambreak())
+    return new SequentialCommandGroup(setTopIntakeState(state.OFF),setBottomIntakeState(state.OFF),intakeElevator.gotoHeight(IntakeElevator.Positions.AMP), TopOutakeByBeambreak(),waitSeconds(0.1))
         .withName("Amp Outtake");
   }
 
   public Command goUp() {
-    return new ParallelCommandGroup(setTopIntakeState(state.OFF),setBottomIntakeState(state.OFF),intakeElevator.gotoHeight(IntakeElevator.Positions.HP));
+    return new ParallelCommandGroup(setTopIntakeState(state.OFF),setBottomIntakeState(state.OFF),intakeElevator.gotoHeight(IntakeElevator.Positions.AMP));
   } 
 
   public Command GoDown() {
