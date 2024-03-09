@@ -151,8 +151,8 @@ public class RobotContainer {
     joystick.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     joystick.pov(90).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0.5).withVelocityY(0)));
     joystick.pov(270).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
-
-
+    joystick.pov(0).onTrue(new SequentialCommandGroup(s_Climb.unlockClimb(),s_Climb.goToClimberPosition(Positions.TOP)));
+    joystick.pov(180).onTrue(new SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM),s_Climb.lockClimb(),new InstantCommand(()->s_Climb.disable())));
     joystick.x().whileTrue(s_Intakes.setTopIntakeState(Intakes.state.OUT)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
     joystick.b().whileTrue(s_Intakes.setTopIntakeState(Intakes.state.HP)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
     joystick.rightTrigger().whileTrue(new RepeatCommand(s_Intakes.setBottomIntakeState(Intakes.state.GROUND))).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
@@ -183,8 +183,7 @@ public class RobotContainer {
         op.leftBumper() .onTrue(s_Intakes.GoDown());
         op.rightBumper() .onTrue(s_Intakes.goUp());
 
-        op.pov(0).onTrue(new SequentialCommandGroup(s_Climb.unlockClimb(),s_Climb.goToClimberPosition(Positions.TOP)));
-        op.pov(180).onTrue(new SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM),s_Climb.lockClimb(),new InstantCommand(()->s_Climb.disable())));
+        
         //.until(()->s_Climb.getController().getPositionError()<0.5)
         //op.leftTrigger().and(op.y()).onTrue(s_Intakes.goUp());
         //op.leftTrigger().and(op.x()).onTrue(s_Intakes.GoDown());
