@@ -51,10 +51,10 @@ public class Intakes extends SubsystemBase {
     stage.setColor(new Color8Bit(Color.kSilver));
     stage.append(new MechanismLigament2d("Intake", -0.31, 90));
   }
-    
+  
   private final double elevatorspeed = .5;
   private final double groundspeed = .8;
-
+  private final double waittime = 0.;
 
   public Command setTopIntakeState(Intakes.state intakeState) {
 
@@ -109,12 +109,12 @@ else {
   }
 
   public Command TopIntakeByBeambreak() {
-    return new SequentialCommandGroup(setTopIntakeState(state.HP), waitUntil(this::getFrontIR),waitSeconds(0.0),//TODO: tune time
+    return new SequentialCommandGroup(setTopIntakeState(state.HP), waitUntil(this::getFrontIR),waitSeconds(waittime),
         setTopIntakeState(state.OFF));
   }
 
   public Command TopOutakeByBeambreak() {
-    return new SequentialCommandGroup(setTopIntakeState(state.OUT), waitUntil(this::getNotFrontIR), waitSeconds(0.0),//TODO: tune time
+    return new SequentialCommandGroup(setTopIntakeState(state.OUT), waitUntil(this::getNotFrontIR), waitSeconds(waittime),
         setTopIntakeState(state.OFF));
   }
 
@@ -138,7 +138,7 @@ else {
   public Command GroundPickUP() {
     return new SequentialCommandGroup(intakeElevator.gotoHeight(IntakeElevator.Positions.GROUND),
         setBottomIntakeState(state.GROUND), setTopIntakeState(state.GROUND),
-        waitUntil(this::getFrontIR),waitSeconds(.0),//TODO set times
+        waitUntil(this::getFrontIR),waitSeconds(waittime),
         setBottomIntakeState(state.OFF)).withName("GroundPickup");
   }
 

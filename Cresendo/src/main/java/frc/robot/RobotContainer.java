@@ -98,11 +98,11 @@ public class RobotContainer {
         //SmartDashboard.putData("swerve",s_Swerve);
         CommandScheduler.getInstance().schedule(led.setAllianceColorLed());
         //limelight periodic
-        
-       
-       
 
-        //named commands
+///////////////////////////////////////////////////// 
+//                  NAMEDCOMMANDS                  //
+///////////////////////////////////////////////////// 
+
         NamedCommands.registerCommand("Apriltags",getTagCommand());
         NamedCommands.registerCommand("Outtake", new ParallelCommandGroup(s_Intakes.AmpOuttake()));
         NamedCommands.registerCommand("GoDown", s_Intakes.GoDown());
@@ -142,21 +142,23 @@ public class RobotContainer {
         joystick.a().whileTrue(drivetrain.applyRequest(() -> brake));
         joystick.b().whileTrue(drivetrain
          .applyRequest(() -> point.withModuleDirection(new Rotation2d(joystick.getLeftY(), joystick.getLeftX()))));
-
-    // reset the field-centric heading on left bumper press
-    joystick.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
-
     drivetrain.registerTelemetry(logger::telemeterize);
-        
+
+///////////////////////////////////////////////////// 
+//                  DRIVER CONTROL                 //
+///////////////////////////////////////////////////// 
+
+    joystick.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
     joystick.pov(90).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(0.5).withVelocityY(0)));
     joystick.pov(270).whileTrue(drivetrain.applyRequest(() -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
-
     joystick.x().onTrue(s_Intakes.setTopIntakeState(Intakes.state.OUT)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
     joystick.b().onTrue(s_Intakes.setTopIntakeState(Intakes.state.HP)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
     joystick.rightTrigger().whileTrue(new RepeatCommand(s_Intakes.setBottomIntakeState(Intakes.state.GROUND))).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
     joystick.leftTrigger().whileTrue(new RepeatCommand(s_Intakes.setBottomIntakeState(Intakes.state.GROUNDOUT))).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
    
-
+/////////////////////////////////////////////////////  
+//                  OP CONTROL                     //
+///////////////////////////////////////////////////// 
         //op
         op.y().onTrue(s_Intakes.goUp());
        // op.leftTrigger().whileTrue(new SequentialCommandGroup(new InstantCommand(()->s_Intakes.getCurrentCommand().cancel()),//s_Intakes.setTopIntakeState(Intakes.state.OUT))).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
@@ -169,18 +171,14 @@ public class RobotContainer {
         .onTrue(s_Intakes.GroundPickUP());
             
         if(Robot.isSimulation()){
-            op.button(5)
-            .onTrue(s_Intakes.goUp());
-            op.button(6)
-            .onTrue(s_Intakes.GoDown());
+            op.button(5).onTrue(s_Intakes.goUp()); op.button(6) .onTrue(s_Intakes.GoDown());
         }
 
-        op.rightBumper()
-            .onTrue(s_Intakes.goUp());
-        op.leftBumper()
-            .onTrue(s_Intakes.GoDown());
+        op.rightBumper().onTrue(s_Intakes.goUp());
+        op.leftBumper() .onTrue(s_Intakes.GoDown());
 
-    
+        op.pov(0).onTrue(new SequentialCommandGroup(s_Climb.unlockClimb(),s_Climb.goToClimberPosition(Positions.TOP)));
+        op.pov(180).onTrue(new SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM).until(()->s_Climb.getController().getPositionError()<0.5),s_Climb.lockClimb(),new InstantCommand(()->s_Climb.disable())));
 
         //op.leftTrigger().and(op.y()).onTrue(s_Intakes.goUp());
         //op.leftTrigger().and(op.x()).onTrue(s_Intakes.GoDown());
@@ -188,8 +186,7 @@ public class RobotContainer {
         //op.leftTrigger().and(op.x()).onTrue(s_Intakes.setTopIntakeState(Intakes.state.OUT)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
 
        //  op.pov(90).onTrue(s_Climb.goToClimberPosition(Positions.TOP));
-        op.pov(0).onTrue(new SequentialCommandGroup(s_Climb.unlockClimb(),s_Climb.goToClimberPosition(Positions.TOP)));
-        op.pov(180).onTrue(new SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM).until(()->s_Climb.getController().getPositionError()<0.5),s_Climb.lockClimb(),new InstantCommand(()->s_Climb.disable())));
+      
        // op.povLeft().onTrue(s_Climb.AutoZero());
 
       // op.leftTrigger().whileTrue(s_Climb.manualDown(op::getLeftTriggerAxis));

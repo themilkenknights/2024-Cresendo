@@ -104,7 +104,6 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   }
 
   public Command setUp() {
-    // TODO: set properly
     return runOnce(() -> setGoal(inchestorotations(25)));
   }
 
