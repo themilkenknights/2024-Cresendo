@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Top"
+            "pathName": "Mid"
           }
         },
         {
@@ -68,6 +68,6 @@
       ]
     }
   },
-  "folder": "TOP+1+Take AUTOs",
+  "folder": "Mid+1+Take AUTOs",
   "choreoAuto": false
 }

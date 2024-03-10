@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Top"
+            "pathName": "bottom avoider"
           }
         },
         {
@@ -32,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "GetBottomNote"
+            "pathName": "GetTopNote"
           }
         },
         {
@@ -44,7 +44,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ScoreBottomNote"
+            "pathName": "ScoreTopNote"
           }
         },
         {
@@ -68,6 +68,6 @@
       ]
     }
   },
-  "folder": "TOP+1+Take AUTOs",
+  "folder": "Bottom+1+Take AUTOs",
   "choreoAuto": false
 }

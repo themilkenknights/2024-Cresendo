@@ -49,7 +49,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 1.75,
+      "waypointRelativePos": 0.05,
       "command": {
         "type": "parallel",
         "data": {
@@ -57,7 +57,7 @@
             {
               "type": "named",
               "data": {
-                "name": "ground"
+                "name": "GoDown"
               }
             }
           ]
