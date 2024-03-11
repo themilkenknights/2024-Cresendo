@@ -29,7 +29,7 @@ import frc.robot.subsystems.IntakeElevator.Positions;
 public class Intakes extends SubsystemBase {
 
   public static enum state {
-    GROUND, HP, OUT, OFF, GROUNDOUT
+    GROUND, OUT, IN, INFORFUCKSSAKE, INHP, HP, GROUNDOUT, OFF
   }
 
   private Mechanism2d mech = new Mechanism2d(18 / 39.37, 30 / 39.37);// ,new Color8Bit(Color.kBlueViolet));
@@ -52,22 +52,39 @@ public class Intakes extends SubsystemBase {
     stage.append(new MechanismLigament2d("Intake", -0.31, 90));
   }
   
-  private final double elevatorspeed = .5;
-  private final double groundspeed = .8;
-  private final double waittime = 0.;
+  private final double elevatorspeed = .69;
+  private final double groundspeed = 1;
+  private final double waittime = 0.05;
 
   public Command setTopIntakeState(Intakes.state intakeState) {
 
     if (intakeState == state.GROUND) {
       return runOnce(() -> {
         topIntake.set(elevatorspeed);
-        midIntake.set(-elevatorspeed);
+        midIntake.set(elevatorspeed);
       });
     } else if (intakeState == state.OUT) {
       return runOnce(() -> {
         topIntake.set(-elevatorspeed);
+        midIntake.set(elevatorspeed);
+      });
+          } else if (intakeState == state.IN) {
+      return runOnce(() -> {
+        topIntake.set(-elevatorspeed);
         midIntake.set(-elevatorspeed);
       });
+       } else if (intakeState == state.INFORFUCKSSAKE) {
+      return runOnce(() -> {
+        topIntake.set(.1);
+        midIntake.set(-.1);
+      });
+
+          } else if (intakeState == state.INHP) {
+      return runOnce(() -> {
+        topIntake.set(elevatorspeed);
+        midIntake.set(-elevatorspeed);
+      });
+
     } else if (intakeState == state.HP) {
       return runOnce(() -> {
         topIntake.set(elevatorspeed);
@@ -105,12 +122,12 @@ else {
   }
 
   public Command AutoHPin() {
-    return new SequentialCommandGroup(setTopIntakeState(state.OFF),setBottomIntakeState(state.OFF),intakeElevator.gotoHeight(Positions.HP), TopIntakeByBeambreak(),
-        intakeElevator.gotoHeight(Positions.GROUND)).withName("HP");
+    return new SequentialCommandGroup(setTopIntakeState(state.INHP),setBottomIntakeState(state.OFF), TopIntakeByBeambreak());
+       // intakeElevator.gotoHeight(Positions.GROUND)).withName("HP");
   }
 
   public Command TopIntakeByBeambreak() {
-    return new SequentialCommandGroup(setTopIntakeState(state.HP), waitUntil(this::getFrontIR),waitSeconds(waittime),
+    return new SequentialCommandGroup(setTopIntakeState(state.INHP), waitUntil(this::getFrontIR),waitSeconds(waittime),
         setTopIntakeState(state.OFF));
   }
 
@@ -120,12 +137,12 @@ else {
   }
 
   public Command AmpOuttake() {
-    return new SequentialCommandGroup(setTopIntakeState(state.OFF),setBottomIntakeState(state.OFF),intakeElevator.gotoHeight(IntakeElevator.Positions.AMP), TopOutakeByBeambreak(),waitSeconds(0.1))
+    return new SequentialCommandGroup(setTopIntakeState(state.OUT),setBottomIntakeState(state.OFF), TopOutakeByBeambreak(),waitSeconds(0.1))
         .withName("Amp Outtake");
   }
 
   public Command goUp() {
-    return new ParallelCommandGroup(setTopIntakeState(state.OFF),setBottomIntakeState(state.OFF),intakeElevator.gotoHeight(IntakeElevator.Positions.AMP));
+    return new ParallelCommandGroup(setTopIntakeState(state.OFF),setBottomIntakeState(state.OFF),intakeElevator.gotoHeight(IntakeElevator.Positions.HP));
   } 
 
   public Command GoDown() {

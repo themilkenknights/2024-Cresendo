@@ -25,8 +25,8 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   private static final double kI = 0;
   private static final double kD = 0;
 
-  private static final double HPSetpoint = 3.8;
-  private static final double AMPSetpoint = 3.0;
+  private static final double HPSetpoint = 3.6;
+  private static final double AMPSetpoint = 3.1;
   private static final double spoolsize = 0.5 * Math.PI;
   private static final double reduction = 25;
 
@@ -47,7 +47,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
       0);
 
   public static enum Positions {
-    GROUND, HP, AMP
+    GROUND, HP, AMP, STOW
   }
 
   /*
@@ -114,6 +114,10 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
 
   public Command setAMP() {
     return runOnce(() -> setGoal(inchestorotations(AMPSetpoint)));
+  }
+
+  public Command STOW() {
+    return runOnce(() -> setGoal(inchestorotations(0)));
   }
 
   @Override

@@ -164,6 +164,7 @@ public class RobotContainer {
 ///////////////////////////////////////////////////// 
         //op
         op.y().onTrue(s_Intakes.goUp());
+        op.a().onTrue(s_Intakes.GoDown());
        // op.leftTrigger().whileTrue(new SequentialCommandGroup(new InstantCommand(()->s_Intakes.getCurrentCommand().cancel()),//s_Intakes.setTopIntakeState(Intakes.state.OUT))).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
 
          //op.rightTrigger().whileTrue(s_Intakes.setTopIntakeState(Intakes.state.HP)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
@@ -173,16 +174,17 @@ public class RobotContainer {
     
         op.b()
         .onTrue(s_Intakes.AutoGroundPickUP());
-        op.leftTrigger().onTrue(s_Intakes.AutoHPin());
-        op.rightTrigger().onTrue(s_Intakes.AmpOuttake());
-            
+        op.leftBumper().onTrue(s_Intakes.AutoHPin());
+        op.rightBumper().onTrue(s_Intakes.AmpOuttake());
+        
+
         if(Robot.isSimulation()){
             op.button(5).onTrue(s_Intakes.goUp()); op.button(6) .onTrue(s_Intakes.GoDown());
         }
 
        // op.rightBumper().onTrue(s_Intakes.goUp());
-        op.leftBumper() .onTrue(s_Intakes.GoDown());
-        op.rightBumper() .onTrue(s_Intakes.goUp());
+       // op.leftBumper() .onTrue(s_Intakes.GoDown());
+        //op.rightBumper() .onTrue(s_Intakes.goUp());
 
         
         //.until(()->s_Climb.getController().getPositionError()<0.5)
