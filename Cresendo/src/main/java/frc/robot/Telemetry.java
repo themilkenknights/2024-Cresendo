@@ -1,16 +1,20 @@
 package frc.robot;
 
-import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain.SwerveDriveState;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.networktables.DoubleArrayPublisher;
-import edu.wpi.first.networktables.DoublePublisher;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.networktables.PubSubOptions;
 import edu.wpi.first.networktables.StringPublisher;
+import edu.wpi.first.networktables.StructArrayPublisher;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -20,6 +24,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 public class Telemetry {
     private final double MaxSpeed;
 
+    private final Field2d field2d = new Field2d();
     /**
      * Construct a telemetry object, with the specified max speed of the robot
      * 
@@ -27,7 +32,7 @@ public class Telemetry {
      */
     public Telemetry(double maxSpeed) {
         MaxSpeed = maxSpeed;
-        SignalLogger.start();
+
     }
 
     /* What to publish over networktables for telemetry */
@@ -35,15 +40,21 @@ public class Telemetry {
 
     /* Robot pose for field positioning */
     private final NetworkTable table = inst.getTable("Pose");
-    private final DoubleArrayPublisher fieldPub = table.getDoubleArrayTopic("robotPose").publish();
-    private final StringPublisher fieldTypePub = table.getStringTopic(".type").publish();
+    //private final DoubleArrayPublisher fieldPub = table.getDoubleArrayTopic("robotPose").publish();
+    //private final StringPublisher fieldTypePub = table.getStringTopic(".type").publish();
+
+    StructArrayPublisher<SwerveModuleState> publisher = NetworkTableInstance.getDefault()
+    .getStructArrayTopic("MyStates", SwerveModuleState.struct).publish();
+
+    ShuffleboardTab swerveShuffleboardTab = Shuffleboard.getTab("swerve");
 
     /* Robot speeds for general checking */
-    private final NetworkTable driveStats = inst.getTable("Drive");
+  /*  private final NetworkTable driveStats = inst.getTable("Drive");
     private final DoublePublisher velocityX = driveStats.getDoubleTopic("Velocity X").publish();
     private final DoublePublisher velocityY = driveStats.getDoubleTopic("Velocity Y").publish();
     private final DoublePublisher speed = driveStats.getDoubleTopic("Speed").publish();
-    private final DoublePublisher odomFreq = driveStats.getDoubleTopic("Odometry Frequency").publish();
+    private final DoublePublisher odomPeriod = driveStats.getDoubleTopic("Odometry Period").publish();
+    */
 
     /* Keep a reference of the last pose to calculate the speeds */
     private Pose2d m_lastPose = new Pose2d();
@@ -77,14 +88,11 @@ public class Telemetry {
 
     /* Accept the swerve drive state and telemeterize it to smartdashboard */
     public void telemeterize(SwerveDriveState state) {
+      
         /* Telemeterize the pose */
         Pose2d pose = state.Pose;
-        fieldTypePub.set("Field2d");
-        fieldPub.set(new double[] {
-            pose.getX(),
-            pose.getY(),
-            pose.getRotation().getDegrees()
-        });
+        field2d.setRobotPose(pose);
+        SmartDashboard.putData(field2d);
 
         /* Telemeterize the robot's general speeds */
         double currentTime = Utils.getCurrentTimeSeconds();
@@ -95,21 +103,29 @@ public class Telemetry {
 
         Translation2d velocities = distanceDiff.div(diffTime);
 
-        speed.set(velocities.getNorm());
-        velocityX.set(velocities.getX());
-        velocityY.set(velocities.getY());
-        odomFreq.set(1.0 / state.OdometryPeriod);
-
+        swerveShuffleboardTab.addDouble("speed",velocities::getNorm);
+        swerveShuffleboardTab.addDouble("velocity x",velocities::getX);
+        swerveShuffleboardTab.addDouble("velocity y",velocities::getY);
+        swerveShuffleboardTab.addDouble("OdometryPeriod",()->{return state.OdometryPeriod;});
+       //swerveShuffleboardTab.addDoubleArray("speeds",()->{return state.ModuleStates[0].;});
         /* Telemeterize the module's states */
-        for (int i = 0; i < 4; ++i) {
+        /*for (int i = 0; i < 4; ++i) {
             m_moduleSpeeds[i].setAngle(state.ModuleStates[i].angle);
             m_moduleDirections[i].setAngle(state.ModuleStates[i].angle);
             m_moduleSpeeds[i].setLength(state.ModuleStates[i].speedMetersPerSecond / (2 * MaxSpeed));
 
-            SmartDashboard.putData("Module " + i, m_moduleMechanisms[i]);
-        }
-
-        SignalLogger.writeDoubleArray("odometry", new double[] {pose.getX(), pose.getY(), pose.getRotation().getDegrees()});
-        SignalLogger.writeDouble("odom period", state.OdometryPeriod, "seconds");
+            swerveShuffleboardTab.addDouble("Module " + i+"Angle", ()->state.ModuleStates[0].angle.getDegrees());
+            swerveShuffleboardTab.addDouble("Module " + i+ "Speed", ()->state.ModuleStates[0].speedMetersPerSecond);
+        }*/
+        swerveShuffleboardTab.addDouble("Module " + 0+"Angle", ()->state.ModuleStates[0].angle.getDegrees());
+        swerveShuffleboardTab.addDouble("Module " + 0+ "Speed", ()->state.ModuleStates[0].speedMetersPerSecond);
+        swerveShuffleboardTab.addDouble("Module " + 1+"Angle", ()->state.ModuleStates[1].angle.getDegrees());
+        swerveShuffleboardTab.addDouble("Module " + 1+ "Speed", ()->state.ModuleStates[1].speedMetersPerSecond);
+        swerveShuffleboardTab.addDouble("Module " + 2+"Angle", ()->state.ModuleStates[2].angle.getDegrees());
+        swerveShuffleboardTab.addDouble("Module " + 2+ "Speed", ()->state.ModuleStates[2].speedMetersPerSecond);
+        swerveShuffleboardTab.addDouble("Module " + 3+"Angle", ()->state.ModuleStates[3].angle.getDegrees());
+        swerveShuffleboardTab.addDouble("Module " + 3+ "Speed", ()->state.ModuleStates[3].speedMetersPerSecond);
+       
+        publisher.set(state.ModuleStates);
     }
 }
