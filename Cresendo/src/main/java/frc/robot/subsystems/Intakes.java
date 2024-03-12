@@ -31,10 +31,13 @@ public class Intakes extends SubsystemBase {
   // Making the buffer with length 60
   private AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(60);
 
+  String ledState = "None";
+
   public static enum state {
     GROUND, OUT, IN, INFORFUCKSSAKE, INHP, HP, GROUNDOUT, OFF
   }
 
+  ShuffleboardTab tab = Shuffleboard.getTab("intakes");
   private Mechanism2d mech = new Mechanism2d(18 / 39.37, 30 / 39.37);// ,new Color8Bit(Color.kBlueViolet));
   private MechanismLigament2d stage = mech.getRoot("Elevator", 18 / 39.37, 0.1)
       .append(new MechanismLigament2d("Stage", 10 / 39.37, 90));
@@ -181,7 +184,7 @@ public class Intakes extends SubsystemBase {
     tab.add("Mech", mech);
     super.initSendable(builder);
     intakeElevator.initSendable(builder);
-
+    tab.addString("LED",  ()->ledState);
     tab.add("TopIntake", topIntake);
     tab.add("other", midIntake);
     tab.add("BottomIntake", bottomIntake);
@@ -204,20 +207,28 @@ public class Intakes extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
     // intakeElevator.periodic();
+
     stage.setLength((intakeElevator.getMeasurement() / Math.PI) / 40);// +0.3);
+
+
     if(getNotFrontIR()){
+
+
     for (var i = 0; i < ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
+      
       ledBuffer.setRGB(i, 255, 0, 0);
+      ledState = "RED";
    }
   }else{
     for (var i = 0; i < ledBuffer.getLength(); i++) {
       // Sets the specified LED to the RGB values for red
       ledBuffer.setRGB(i, 0, 255, 0);
+      ledState = "GREEN";
    }
 
   }
-   
+  
    leds.setData(ledBuffer);
   }
 
