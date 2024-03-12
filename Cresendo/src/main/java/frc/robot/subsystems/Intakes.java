@@ -31,7 +31,7 @@ public class Intakes extends SubsystemBase {
   // leds
   private AddressableLED leds = new AddressableLED(Constants.ledPORT);
   // Making the buffer with length 60
-  private AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(60);
+  private AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(90);
   private boolean ledOveride = false;
   String ledState = "None";
   
@@ -67,14 +67,14 @@ public class Intakes extends SubsystemBase {
     leds.start();
   }
 
-  private final double elevatorspeed = .69;
+  private final double elevatorspeed = .6;
   private final double groundspeed = 1;
   private final double waittime = 0.05;
 
-  public Command FlashPurple(){
+  public Command Flashorange(){
     return new RepeatCommand(new SequentialCommandGroup(new RunCommand(()->{
       ledOveride=true;
-      ledState = "PURPLE";
+      ledState = "orange";
     }).withTimeout(0.25),waitSeconds(0.25)));
   }
 
@@ -247,11 +247,11 @@ public class Intakes extends SubsystemBase {
 
       }
       
-    }else if (ledState == "PURPLE"){
+    }else if (ledState == "orange"){
       ledOveride = false;
       for (var i = 0; i < ledBuffer.getLength(); i++) {
         // Sets the specified LED to the RGB values for red
-        ledBuffer.setRGB(i, 179, 71, 237);
+        ledBuffer.setRGB(i, 255, 165, 0);
       }
     }else{
       for (var i = 0; i < ledBuffer.getLength(); i++) {

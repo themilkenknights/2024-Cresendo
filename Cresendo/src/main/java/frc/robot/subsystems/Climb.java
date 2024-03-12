@@ -31,7 +31,7 @@ import frc.robot.Constants;
 public class Climb extends PIDSubsystem {
     private Mechanism2d mech = new Mechanism2d(1, 2);
     private MechanismLigament2d rooLigament2d = mech.getRoot("root", 0.4, 0.1)
-            .append(new MechanismLigament2d("climb", 160, 90));
+            .append(new MechanismLigament2d("climb", 154, 90));
     private static final double spoolsize = 1 * Math.PI;
     private static final double reduction = 15.34;
 
@@ -110,7 +110,7 @@ public class Climb extends PIDSubsystem {
         return new SequentialCommandGroup(runOnce(() -> {
             switch (state) {
                 case TOP:
-                    setSetpoint(80);// inchestorotations(20));
+                    setSetpoint(72);// inchestorotations(20));
                     m_controller.setP(0.9);
                     locker.set(0.3);
                     break;

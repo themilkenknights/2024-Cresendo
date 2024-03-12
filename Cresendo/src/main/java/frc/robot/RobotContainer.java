@@ -158,7 +158,7 @@ public class RobotContainer {
 
 
 
-    joystick.rightBumper().whileTrue(s_Intakes.FlashPurple());
+    joystick.rightBumper().whileTrue(s_Intakes.Flashorange());
     joystick.leftBumper().whileTrue(s_Intakes.FlashBlue());
    
 /////////////////////////////////////////////////////  
