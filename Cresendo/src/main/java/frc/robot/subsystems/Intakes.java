@@ -61,6 +61,8 @@ public class Intakes extends SubsystemBase {
     //leds
     leds.setLength(ledBuffer.getLength());
     leds.setData(ledBuffer);
+
+    leds.start();
   }
 
   private final double elevatorspeed = .69;
