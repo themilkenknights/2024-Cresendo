@@ -155,6 +155,11 @@ public class RobotContainer {
     joystick.b().whileTrue(s_Intakes.setTopIntakeState(Intakes.state.HP)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
     joystick.rightTrigger().whileTrue(new RepeatCommand(s_Intakes.setBottomIntakeState(Intakes.state.GROUND))).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
     joystick.leftTrigger().whileTrue(new RepeatCommand(s_Intakes.setBottomIntakeState(Intakes.state.GROUNDOUT))).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
+
+
+
+    joystick.rightBumper().whileTrue(s_Intakes.FlashPurple());
+    joystick.leftBumper().whileTrue(s_Intakes.FlashBlue());
    
 /////////////////////////////////////////////////////  
 //                  OP CONTROL                     //

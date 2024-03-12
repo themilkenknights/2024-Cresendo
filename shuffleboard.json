@@ -72,6 +72,58 @@
               "Visuals/Robot Icon Size": 30.0,
               "Visuals/Show Outside Circles": true
             }
+          },
+          "0,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Module 0/backgroundColor",
+              "_title": "Module 0/backgroundColor",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "1,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Module 0/RootSpeed/x",
+              "_title": "Module 0/RootSpeed/x",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "0,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Module 0/RootSpeed/y",
+              "_title": "Module 0/RootSpeed/y",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "1,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Module 0/RootSpeed/Speed/angle",
+              "_title": "Module 0/RootSpeed/Speed/angle",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
           }
         }
       }
@@ -138,6 +190,6 @@
     "x": 0.0,
     "y": 25.0,
     "width": 1440.0,
-    "height": 804.0
+    "height": 801.0
   }
 }

@@ -161,7 +161,7 @@ public class Climb extends PIDSubsystem {
     }
 
     private boolean isHighCurrent() {
-        if ((climber.getTorqueCurrent().asSupplier().get()) > 5) {
+        if ((climber.getTorqueCurrent().asSupplier().get()) > 10) {
             return true;
         } else {
             return false;
