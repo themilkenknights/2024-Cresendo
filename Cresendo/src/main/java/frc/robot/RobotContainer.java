@@ -16,7 +16,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -25,7 +24,6 @@ import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.IntakeElevator;
 import frc.robot.subsystems.Intakes;
-import frc.robot.subsystems.LED;
 //import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Climb.Positions;
 
@@ -80,7 +78,6 @@ public class RobotContainer {
     private final Intakes s_Intakes = new Intakes(elevator);
     private final Climb s_Climb = new Climb();
 
-    private final LED led = new LED();
 
     //auto
     private final SendableChooser<Command> autoChooser;
@@ -96,7 +93,7 @@ public class RobotContainer {
         SmartDashboard.putData("intake",s_Intakes);
         SmartDashboard.putData("climb",s_Climb);
         //SmartDashboard.putData("swerve",s_Swerve);
-        CommandScheduler.getInstance().schedule(led.setAllianceColorLed());
+
         //limelight periodic
 
 ///////////////////////////////////////////////////// 
