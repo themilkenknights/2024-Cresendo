@@ -152,7 +152,9 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   public void onReEnable() {
 
     LeftElevator.setPosition(0);
+    this.m_controller.reset(0);
     setGoal(0);
+    sim.setState(0, 0);
 
   }
 }

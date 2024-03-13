@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.subsystems.IntakeElevator.Positions;
 
 public class Intakes extends SubsystemBase {
 
@@ -168,6 +169,12 @@ public class Intakes extends SubsystemBase {
 
   public Command AmpOuttake() {
     return new SequentialCommandGroup(setTopIntakeState(state.OUT), setBottomIntakeState(state.OFF),
+        TopOutakeByBeambreak(), waitSeconds(0.1))
+        .withName("Amp Outtake");
+  }
+
+  public Command AutoAmpOuttake() {
+    return new SequentialCommandGroup(intakeElevator.gotoHeight(Positions.AMP),setTopIntakeState(state.OUT), setBottomIntakeState(state.OFF),
         TopOutakeByBeambreak(), waitSeconds(0.1))
         .withName("Amp Outtake");
   }
