@@ -101,7 +101,7 @@ public class RobotContainer {
 ///////////////////////////////////////////////////// 
 
         NamedCommands.registerCommand("Apriltags",getTagCommand());
-        NamedCommands.registerCommand("Outtake", s_Intakes.AmpOuttake());
+        NamedCommands.registerCommand("Outtake", s_Intakes.AutoAmpOuttake());
         NamedCommands.registerCommand("GoDown", s_Intakes.GoDown());
         NamedCommands.registerCommand("HPInktake",s_Intakes.AutoHPin());
         NamedCommands.registerCommand("GoUp", s_Intakes.goUp());
