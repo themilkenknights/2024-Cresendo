@@ -150,10 +150,16 @@ public class Intakes extends SubsystemBase {
     return (frontIR.get());
   }
 
-  public Command AutoHPin() {
+  public Command HPin() {
     return new SequentialCommandGroup(setTopIntakeState(state.INHP), setBottomIntakeState(state.OFF),
         TopIntakeByBeambreak());
-    // intakeElevator.gotoHeight(Positions.GROUND)).withName("HP");
+  
+  }
+
+  public Command AutoHPin() {
+    return new SequentialCommandGroup(intakeElevator.gotoHeight(Positions.GROUND),setTopIntakeState(state.INHP), setBottomIntakeState(state.OFF),
+        TopIntakeByBeambreak());
+  
   }
 
   public Command TopIntakeByBeambreak() {
@@ -220,7 +226,7 @@ public class Intakes extends SubsystemBase {
     commandlLayout.add("out", TopOutakeByBeambreak());
     commandlLayout.add("in", TopIntakeByBeambreak());
     commandlLayout.add("Ground", AutoGroundPickUP());
-    commandlLayout.add("HP", AutoHPin());
+    commandlLayout.add("HP", HPin());
 
   }
 

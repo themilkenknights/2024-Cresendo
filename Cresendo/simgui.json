@@ -36,12 +36,20 @@
           "open": true
         }
       }
+    },
+    "PWM Outputs": {
+      "window": {
+        "visible": true
+      }
     }
   },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
       "/Pose": "Field2d",
+      "/Shuffleboard/Autos/Note": "String Chooser",
+      "/Shuffleboard/Autos/Positons": "String Chooser",
+      "/Shuffleboard/Autos/Type": "String Chooser",
       "/Shuffleboard/Climb/Climb": "Mechanism2d",
       "/Shuffleboard/Climb/Motor": "Motor Controller",
       "/Shuffleboard/Climb/PID Controller": "PIDController",

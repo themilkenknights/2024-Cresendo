@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.5,
-      "y": 7.0
+      "x": 0.4933377783422236,
+      "y": 7.079449242231818
     },
     "rotation": 0
   },
@@ -15,6 +15,12 @@
           "type": "path",
           "data": {
             "pathName": "Top"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "GoUp"
           }
         },
         {

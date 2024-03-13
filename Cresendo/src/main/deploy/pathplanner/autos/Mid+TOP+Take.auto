@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.55,
-      "y": 7.2
+      "x": 0.49,
+      "y": 3.5
     },
     "rotation": 0
   },
@@ -14,19 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Mid"
+            "pathName": "Mid Avoider"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Outtake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "GoDown"
           }
         },
         {
