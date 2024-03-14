@@ -13,4 +13,12 @@ public class Align{
     public static Command AMPAlign(){
       return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("Amp aligner"),pathConstraints);
     }
+
+    public static Command RightHPAlign(){
+      return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("HP a aligner"),pathConstraints);
+    }
+
+    public static Command LeftHPAlign(){
+      return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("HP b aligner"),pathConstraints);
+    }
  }

@@ -26,6 +26,7 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.autos.AutoOptions;
+import frc.robot.commands.Align;
 import frc.robot.commands.AprilTagCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climb;
@@ -217,13 +218,14 @@ public class RobotContainer {
                                 .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
                 joystick.b().whileTrue(s_Intakes.setTopIntakeState(Intakes.state.HP))
                                 .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
-                joystick.rightTrigger()
+               /*  joystick.rightTrigger()
                                 .whileTrue(new RepeatCommand(s_Intakes.setBottomIntakeState(Intakes.state.GROUND)))
                                 .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
                 joystick.leftTrigger()
                                 .whileTrue(new RepeatCommand(s_Intakes.setBottomIntakeState(Intakes.state.GROUNDOUT)))
-                                .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
-
+                                .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));*/
+                joystick.leftTrigger().whileTrue(Align.LeftHPAlign());
+                joystick.rightTrigger().whileTrue(Align.RightHPAlign());
                 joystick.rightBumper().whileTrue(s_Intakes.Flashorange());
                 joystick.leftBumper().whileTrue(s_Intakes.FlashBlue());
 
