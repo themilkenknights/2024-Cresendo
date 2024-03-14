@@ -32,9 +32,8 @@ public class AprilTagCommand extends Command {
                         .getEntry("botpose_wpiblue").getDoubleArray(new double[7]);
                 Pose2d visionMeasurement2d = new Pose2d(botpose[0], botpose[1], new Rotation2d(3));
                 SmartDashboard.putNumberArray("vision", botpose);
-
-                drivetrain.addVisionMeasurement(visionMeasurement2d, Timer.getFPGATimestamp() - (botpose[6] / 1000.0));
-            feild.setRobotPose(visionMeasurement2d);
+                drivetrain.addVisionMeasurement(visionMeasurement2d, (Timer.getFPGATimestamp() - (botpose[6] / 1000.0))*1000);
+            //feild.setRobotPose(visionMeasurement2d);
 
      }
      SmartDashboard.putBoolean("Tag", seen);
