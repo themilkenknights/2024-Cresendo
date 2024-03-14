@@ -243,7 +243,7 @@ public class Intakes extends SubsystemBase {
     stage.setLength((intakeElevator.getMeasurement() / Math.PI) / 40);// +0.3);
 
     if (!ledOveride) {
-      if (!getNotFrontIR()) {
+      if (!getFrontIR()) {
 
         for (var i = 0; i < ledBuffer.getLength(); i++) {
           // Sets the specified LED to the RGB values for red
