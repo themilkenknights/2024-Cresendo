@@ -127,7 +127,7 @@ public class RobotContainer {
                 drivetrain = TunerConstants.DriveTrain;
 
                 CommandScheduler.getInstance()
-                                .schedule(Commands.repeatingSequence(new AprilTagCommand(drivetrain).ignoringDisable(true), waitSeconds(2).ignoringDisable(true)));
+                                .schedule(Commands.repeatingSequence(new AprilTagCommand(drivetrain).ignoringDisable(true), waitSeconds(5).ignoringDisable(true)));
                 // Configure the button bindings
                 configureButtonBindings();
 
@@ -210,10 +210,19 @@ public class RobotContainer {
                                 .whileTrue(drivetrain.applyRequest(
                                                 () -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
                 joystick.pov(0)
-                                .onTrue(new SequentialCommandGroup(s_Climb.unlockClimb(),
-                                                s_Climb.goToClimberPosition(Positions.TOP)));
-                joystick.pov(180).onTrue(new SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM),
-                                s_Climb.lockClimb(), new InstantCommand(() -> s_Climb.disable())));
+                //                 .onTrue(new SequentialCommandGroup(
+                //                     s_Climb.unlockClimb(),
+                //                     s_Climb.goToClimberPosition(Positions.TOP)
+                //                 ));
+                                .onTrue(new SequentialCommandGroup(
+                                    s_Climb.unlockClimb(),
+                                    s_Climb.goToClimberPosition(Positions.TOP),
+                                    s_Climb.lockClimb()
+                                ));
+                // joystick.pov(180).onTrue(new SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM),
+                //                 s_Climb.lockClimb(), new InstantCommand(() -> s_Climb.disable())));
+                joystick.pov(180).onTrue(new SequentialCommandGroup(
+                                s_Climb.goToClimberPosition(Positions.BOTTOM)));
                 joystick.x().whileTrue(s_Intakes.setTopIntakeState(Intakes.state.OUT))
                                 .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
                 joystick.b().whileTrue(s_Intakes.setTopIntakeState(Intakes.state.HP))

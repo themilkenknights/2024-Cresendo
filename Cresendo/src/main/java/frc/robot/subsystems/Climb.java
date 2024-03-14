@@ -110,12 +110,12 @@ public class Climb extends PIDSubsystem {
         return new SequentialCommandGroup(runOnce(() -> {
             switch (state) {
                 case TOP:
-                    setSetpoint(72);// inchestorotations(20));
+                    setSetpoint(70);// inchestorotations(20));
                     m_controller.setP(0.9);
-                    locker.set(0.3);
+                    locker.set(0.4);
                     break;
                 case BOTTOM:
-                    setSetpoint(1);
+                    setSetpoint(-1);
                     m_controller.setP(2.25);
                     break;
 
