@@ -33,6 +33,7 @@ public class AprilTagCommand extends Command {
 
 
      }
+     SmartDashboard.putBoolean("Tag", seen);
 
     }
     @Override

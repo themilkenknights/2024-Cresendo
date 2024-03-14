@@ -126,7 +126,7 @@ public class RobotContainer {
                 drivetrain = TunerConstants.DriveTrain;
 
                 CommandScheduler.getInstance()
-                                .schedule(Commands.repeatingSequence(new AprilTagCommand(drivetrain), waitSeconds(5)));
+                                .schedule(Commands.repeatingSequence(new AprilTagCommand(drivetrain).ignoringDisable(true), waitSeconds(5).ignoringDisable(true)));
                 // Configure the button bindings
                 configureButtonBindings();
 
