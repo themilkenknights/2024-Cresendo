@@ -17,6 +17,7 @@ public final class AutoOptions{
     public static enum Types{
         SINGLE,
         TAKE,
-        DOUBLE_TAKE
+        DOUBLE_TAKE,
+        DEFENCE
     }
 }

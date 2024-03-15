@@ -150,6 +150,7 @@ public class RobotContainer {
                 AutoTypeChooser.addOption("SINGLE", AutoOptions.Types.SINGLE);
                 AutoTypeChooser.addOption("TAKE", AutoOptions.Types.TAKE);
                 AutoTypeChooser.addOption("Double Take", AutoOptions.Types.DOUBLE_TAKE);
+                AutoTypeChooser.addOption("Defend", AutoOptions.Types.DEFENCE);
 
                 AutoTypeChooser.setDefaultOption("TAKE", AutoOptions.Types.TAKE);
 
@@ -308,6 +309,8 @@ public class RobotContainer {
                         case DOUBLE_TAKE:
                                 return AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "+"
                                                 + AutoNoteChooser.getSelected().toString() + "+Take");
+                        case DEFENCE:
+                                return AutoBuilder.buildAuto("DEFENCE");
                         default:
                                 return new InstantCommand();
                 }

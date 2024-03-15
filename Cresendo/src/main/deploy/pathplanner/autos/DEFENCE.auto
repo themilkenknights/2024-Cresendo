@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.3527597576522163,
-      "y": 7.178271039006534
+      "x": 2,
+      "y": 2
     },
     "rotation": 0
   },
@@ -14,18 +14,12 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Top"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Outtake"
+            "pathName": "defense"
           }
         }
       ]
     }
   },
-  "folder": "SingleActionAuto",
+  "folder": null,
   "choreoAuto": false
 }
