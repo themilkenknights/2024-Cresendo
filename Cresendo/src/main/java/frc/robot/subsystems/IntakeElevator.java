@@ -12,8 +12,6 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-//import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
@@ -38,7 +36,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   private final TalonFX RightElevator = new TalonFX(Constants.ElevatorRightCANID);
 
   private static final TrapezoidProfile.Constraints ProfileConstraints = new TrapezoidProfile.Constraints(
-      inchestorotations(30), (inchestorotations(30)));
+      inchestorotations(35), (inchestorotations(50)));
   // private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0,
   // 0.43, 2.83, 0.07);
 
