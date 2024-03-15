@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import com.pathplanner.lib.auto.AutoBuilder;
-import com.pathplanner.lib.path.PathConstraints;
 import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.wpilibj2.command.Command;
@@ -9,7 +8,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 
 public class Align{
- // private static final PathConstraints pathConstraints = new PathConstraints(2, 2, 540, 5scccsxsssssssxx40);
+ // private static final PathConstraints pathConstraints = new PathConstraints(2, 2, 540, 540);
     public static Command AMPAlign(){
       return AutoBuilder.followPath(PathPlannerPath.fromPathFile("Amp aligner"));
     }

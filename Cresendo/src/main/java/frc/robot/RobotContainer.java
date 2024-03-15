@@ -28,7 +28,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.autos.AutoOptions;
 import frc.robot.commands.Align;
 import frc.robot.commands.AprilTagCommand;
-import frc.robot.commands.Blind;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.IntakeElevator;
@@ -166,7 +165,7 @@ public class RobotContainer {
                 Shuffleboard.getTab("Autos").add("Note", AutoNoteChooser).withSize(2, 1)
                                 .withWidget(BuiltInWidgets.kSplitButtonChooser);
                 //lightLime
-                new Blind(drivetrain.getRotation3d()::getAngle);
+               // new Blind(drivetrain.getRotation3d()::getAngle);
 
         }
 
@@ -238,6 +237,8 @@ public class RobotContainer {
                                 .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));*/
                 joystick.leftTrigger().whileTrue(Align.LeftHPAlign());
                 joystick.rightTrigger().whileTrue(Align.RightHPAlign());
+                joystick.a().whileTrue(Align.AMPAlign());
+
                 joystick.rightBumper().whileTrue(s_Intakes.Flashorange());
                 joystick.leftBumper().whileTrue(s_Intakes.FlashBlue());
 
