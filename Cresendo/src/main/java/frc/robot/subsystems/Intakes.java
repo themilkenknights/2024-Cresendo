@@ -70,7 +70,8 @@ public class Intakes extends SubsystemBase {
 
   private final double elevatorspeed = .6;
   private final double groundspeed = 1;
-  private final double waittime = 0.025;
+  private final double waittime = 0.055;
+  private final double waittimeGround = 0.1;
 
   public Command Flashorange(){
     return new RepeatCommand(new SequentialCommandGroup(new RunCommand(()->{
@@ -180,8 +181,8 @@ public class Intakes extends SubsystemBase {
   }
 
   public Command AutoAmpOuttake() {
-    return new SequentialCommandGroup(intakeElevator.gotoHeight(Positions.AMP),setTopIntakeState(state.OUT), setBottomIntakeState(state.OFF),
-        TopOutakeByBeambreak(), waitSeconds(0.1))
+    return new SequentialCommandGroup(intakeElevator.gotoHeight(Positions.AMP),
+        TopOutakeByBeambreak(),intakeElevator.STOW())
         .withName("Amp Outtake");
   }
 
@@ -203,7 +204,7 @@ public class Intakes extends SubsystemBase {
     return new SequentialCommandGroup(setTopIntakeState(state.OFF), setBottomIntakeState(state.OFF),
         intakeElevator.gotoHeight(IntakeElevator.Positions.GROUND),
         setBottomIntakeState(state.GROUND), setTopIntakeState(state.GROUND),
-        waitUntil(this::getFrontIR), waitSeconds(waittime),
+        waitUntil(this::getFrontIR), waitSeconds(waittimeGround),
         setBottomIntakeState(state.OFF)).withName("GroundPickup");
   }
 

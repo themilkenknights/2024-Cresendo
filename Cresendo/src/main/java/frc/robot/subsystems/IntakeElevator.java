@@ -24,6 +24,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   private static final double kD = 0;
 
   private static final double HPSetpoint = 3.6;
+    private static final double AUTOSetpoint = 3.7;
   private static final double AMPSetpoint = 3.1;
   private static final double spoolsize = 0.5 * Math.PI;
   private static final double reduction = 25;
@@ -34,9 +35,8 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
 
   private final TalonFX LeftElevator = new TalonFX(Constants.ElevatorLeftCANID);
   private final TalonFX RightElevator = new TalonFX(Constants.ElevatorRightCANID);
-
   private static final TrapezoidProfile.Constraints ProfileConstraints = new TrapezoidProfile.Constraints(
-      inchestorotations(35), (inchestorotations(50)));
+      inchestorotations(50), (inchestorotations(35)));
   // private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0,
   // 0.43, 2.83, 0.07);
 
@@ -45,7 +45,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
       0);
 
   public static enum Positions {
-    GROUND, HP, AMP, STOW
+    GROUND, HP, AMP, STOW, AUTO
   }
 
   /*
@@ -139,6 +139,9 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
             .until(this.m_controller::atGoal);
       case HP:
         return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(HPSetpoint), this::useOutput, this)
+            .until(this.m_controller::atGoal);
+      case AUTO:
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(AUTOSetpoint), this::useOutput, this)
             .until(this.m_controller::atGoal);
       default:
         return new ProfiledPIDCommand(m_controller, this::getMeasurement, 0, this::useOutput, this);
