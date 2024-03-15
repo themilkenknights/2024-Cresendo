@@ -9,16 +9,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 
 public class Align{
-  private static final PathConstraints pathConstraints = new PathConstraints(2, 2, 540, 540);
+ // private static final PathConstraints pathConstraints = new PathConstraints(2, 2, 540, 5scccsxsssssssxx40);
     public static Command AMPAlign(){
-      return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("Amp aligner"),pathConstraints);
+      return AutoBuilder.followPath(PathPlannerPath.fromPathFile("Amp aligner"));
     }
 
     public static Command RightHPAlign(){
-      return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("HP a aligner"),pathConstraints);
+      return AutoBuilder.followPath(PathPlannerPath.fromPathFile("HP a aligner"));
     }
 
     public static Command LeftHPAlign(){
-      return AutoBuilder.pathfindThenFollowPath(PathPlannerPath.fromPathFile("HP b aligner"),pathConstraints);
+      return AutoBuilder.followPath(PathPlannerPath.fromPathFile("HP b aligner"));
     }
  }
