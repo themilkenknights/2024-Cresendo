@@ -81,18 +81,6 @@
       "/SmartDashboard/Module 2": "Mechanism2d",
       "/SmartDashboard/Module 3": "Mechanism2d",
       "/SmartDashboard/intake": "Subsystem"
-    },
-    "windows": {
-      "/FMSInfo": {
-        "window": {
-          "visible": true
-        }
-      },
-      "/SmartDashboard/Auto Chooser": {
-        "window": {
-          "visible": true
-        }
-      }
     }
   },
   "NetworkTables": {
@@ -106,5 +94,8 @@
   },
   "NetworkTables Info": {
     "visible": true
+  },
+  "NetworkTables View": {
+    "visible": false
   }
 }
