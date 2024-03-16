@@ -24,13 +24,19 @@
           }
         },
         {
-          "type": "sequential",
+          "type": "parallel",
           "data": {
             "commands": [
               {
                 "type": "named",
                 "data": {
                   "name": "GoDown"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "mobility path"
                 }
               }
             ]
