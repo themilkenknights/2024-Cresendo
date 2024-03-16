@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.4933377783422236,
+      "y": 7.079449242231818
+    },
+    "rotation": 0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Top"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "GoDown"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Pickup after start"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ground"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "1_take AUTOs",
+  "choreoAuto": false
+}

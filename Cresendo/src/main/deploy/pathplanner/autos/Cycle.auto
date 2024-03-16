@@ -6,21 +6,33 @@
     "data": {
       "commands": [
         {
-          "type": "named",
-          "data": {
-            "name": "Apriltags"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "Cycleback"
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "HPInktake"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "Cycle a"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "GoDown"
           }
         }
       ]

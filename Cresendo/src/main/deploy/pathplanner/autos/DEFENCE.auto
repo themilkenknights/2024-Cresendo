@@ -1,6 +1,12 @@
 {
   "version": 1.0,
-  "startingPose": null,
+  "startingPose": {
+    "position": {
+      "x": 1.7631246636900852,
+      "y": 8.034216637153653
+    },
+    "rotation": 0
+  },
   "command": {
     "type": "sequential",
     "data": {
@@ -8,13 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "AutoScoreInAmpFromLeft"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "AutoGetNote"
+            "pathName": "defense"
           }
         }
       ]

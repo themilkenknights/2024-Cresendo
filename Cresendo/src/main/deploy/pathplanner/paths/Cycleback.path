@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.8509834288187097,
-        "y": 7.5811284678124915
+        "x": 1.7631246636900852,
+        "y": 8.034216637153653
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.9456485950029228,
-        "y": 7.478927953221293
+        "x": 3.8577898298742994,
+        "y": 7.9320161225624535
       },
       "isLocked": false,
       "linkedName": "Amp"
@@ -48,12 +48,12 @@
     },
     {
       "anchor": {
-        "x": 14.912577376082709,
-        "y": 0.7094057799176865
+        "x": 14.865366795548406,
+        "y": 0.7004387388404414
       },
       "prevControl": {
-        "x": 14.317902214510164,
-        "y": 0.8952194987673465
+        "x": 14.270691633975861,
+        "y": 0.8862524576901014
       },
       "nextControl": null,
       "isLocked": false,
@@ -62,10 +62,28 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "GoDown"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 3.5,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },

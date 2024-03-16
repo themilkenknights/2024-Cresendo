@@ -1,0 +1,84 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.360620161055137,
+        "y": 6.9978551068213255
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.292684432591088,
+        "y": 7.212113942746404
+      },
+      "isLocked": false,
+      "linkedName": "TopAutoNote"
+    },
+    {
+      "anchor": {
+        "x": 1.7631246636900852,
+        "y": 8.034216637153653
+      },
+      "prevControl": {
+        "x": 1.896383207984952,
+        "y": 8.01907362075651
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Amp"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.2,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "GoUp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Outtake"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Auto aditional note paths",
+  "previewStartingState": null,
+  "useDefaultConstraints": false
+}

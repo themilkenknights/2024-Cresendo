@@ -11,21 +11,26 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
 import frc.lib.util.COTSTalonFXSwerveConstants;
 import frc.lib.util.SwerveModuleConstants;
-import frc.robot.subsystems.Intakes.state;
 
 
 public final class Constants {
-    public static final double stickDeadband = 0.1;
+   
+   
+   
+        public static final double stickDeadband = 0.1;
 
 
     //CANIDs and portsfor intakes
-    public static final int ElevatorLeftCANID = 20;// TODO: set properly
-    public static final int ElevatorRightCANID = 21;// TODO: set properly
-    public static final int topIntakeCANID = 22;// TODO: set properly
-    public static final int bottomIntakeIntakeCANID = 23;// TODO: set properly
+    public static final int ElevatorLeftCANID = 20;
+    public static final int ElevatorRightCANID = 21;
+    public static final int topIntakeCANID = 22;
+    public static final int midIntakeCANID = 27;
+    public static final int bottomIntakeIntakeCANID = 23;
 
-    public static final int backIRPORT = 0;// TODO: set properly
-    public static final int frontIRPORT = 1;// TODO: set properly
+    public static final int backIRPORT = 0;
+    public static final int frontIRPORT = 1;
+    public static final int ledPORT = 2;// TODO: set properly
+    public static final int blinkenPWMPORT = 3;//TODO: set
 
 
 

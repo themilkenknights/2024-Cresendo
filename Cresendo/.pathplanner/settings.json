@@ -1,15 +1,22 @@
 {
-  "robotWidth": 0.9,
-  "robotLength": 0.9,
+  "robotWidth": 0.7,
+  "robotLength": 0.8,
   "holonomicMode": true,
   "pathFolders": [
+    "Auto start paths",
+    "Auto aditional note paths",
     "teleop"
   ],
   "autoFolders": [
+    "1_take AUTOs",
+    "Bottom_1_Take AUTOs",
+    "Mid_1_Take AUTOs",
+    "SingleActionAuto",
+    "TOP_1_Take AUTOs",
     "teleop"
   ],
-  "defaultMaxVel": 4.0,
-  "defaultMaxAccel": 4.0,
+  "defaultMaxVel": 3.5,
+  "defaultMaxAccel": 3.5,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "maxModuleSpeed": 4.5

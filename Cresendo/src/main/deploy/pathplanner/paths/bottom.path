@@ -3,25 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.4933377783422236,
-        "y": 7.079449242231818
+        "x": 0.38977142306136486,
+        "y": 2.2066641031430216
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.7978344104836361,
-        "y": 7.5397375563269655
+        "x": 1.6942680552027807,
+        "y": 2.66695241723817
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.8509834288187097,
-        "y": 7.5811284678124915
+        "x": 2.0132215495912473,
+        "y": 4.8300283869086265
       },
       "prevControl": {
-        "x": 1.2709762086190841,
-        "y": 7.372748685312186
+        "x": 1.8009696885891135,
+        "y": 3.6789345482433973
+      },
+      "nextControl": {
+        "x": 2.2170881193614234,
+        "y": 5.935646737034215
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.7631246636900852,
+        "y": 8.034216637153653
+      },
+      "prevControl": {
+        "x": 1.8100383223322174,
+        "y": 7.672268853072898
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,8 +46,8 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.05,
-      "rotationDegrees": 5.0,
+      "waypointRelativePos": 0.1,
+      "rotationDegrees": 2.37794928278232,
       "rotateFast": false
     }
   ],
@@ -56,7 +72,7 @@
     },
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.3,
+      "waypointRelativePos": 0.6,
       "command": {
         "type": "parallel",
         "data": {
@@ -66,7 +82,7 @@
     },
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.8,
+      "waypointRelativePos": 1.6,
       "command": {
         "type": "parallel",
         "data": {
@@ -83,8 +99,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 3.5,
+    "maxAcceleration": 3.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -94,7 +110,7 @@
     "rotateFast": true
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Auto start paths",
   "previewStartingState": null,
   "useDefaultConstraints": true
 }

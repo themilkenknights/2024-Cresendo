@@ -1,48 +1,52 @@
 package frc.robot.subsystems;
 
+import java.util.Map;
+
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
-
-import static edu.wpi.first.units.Units.*;
-
-import edu.wpi.first.math.controller.ElevatorFeedforward;
 
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.system.plant.DCMotor;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-//import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj2.command.Command;
-
+import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.Constants;
 
 public class IntakeElevator extends ProfiledPIDSubsystem {
+  // intake constants
+  private static final double kP = 0.5;
+  private static final double kI = 0;
+  private static final double kD = 0;
 
+  private static final double HPSetpoint = 3.6;
+  private static final double AMPSetpoint = 3.1;
+  private static final double AUTOSetpoint = 3.35;
   private static final double spoolsize = 0.5 * Math.PI;
-  private static final double reduction = 9;
+  private static final double reduction = 25;
 
   private static double inchestorotations(double inches) {
     return spoolsize * inches * reduction;
   }
-
-
+  
   private final TalonFX LeftElevator = new TalonFX(Constants.ElevatorLeftCANID);
   private final TalonFX RightElevator = new TalonFX(Constants.ElevatorRightCANID);
-
   private static final TrapezoidProfile.Constraints ProfileConstraints = new TrapezoidProfile.Constraints(
-      MetersPerSecond.of(4), MetersPerSecondPerSecond.of(1));
-  private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
- // private static final ElevatorSim sim = new ElevatorSim(DCMotor.getFalcon500(1), reduction, 6, spoolsize/37, 0, 3, false, 0);
+      inchestorotations(50), (inchestorotations(35)));
+  // private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0,
+  // 0.43, 2.83, 0.07);
+
+  private static final ElevatorSim sim = new ElevatorSim(DCMotor.getFalcon500(1), reduction, 6, spoolsize, 0, 500,
+      false,
+      0);
+
   public static enum Positions {
-    GROUND, HP, AMP
+    GROUND, HP, AMP, STOW, AUTO
   }
-
-
 
   /*
    * private static class stage {
@@ -61,45 +65,41 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
    * DO NOT CALL DIRECTLY. Use Intakes subsystem insted
    */
   public IntakeElevator() {
-    super(new ProfiledPIDController(0.5, 0, 0, ProfileConstraints));
-    RightElevator.setInverted(true);
+    super(new ProfiledPIDController(kP, kI, kD, ProfileConstraints));
+
     RightElevator.setControl(new Follower(LeftElevator.getDeviceID(), false));
     LeftElevator.setPosition(0);
-
+    m_controller.setTolerance(5);
+    setDefaultCommand(new ProfiledPIDCommand(m_controller, this::getMeasurement, m_controller::getGoal, this::useOutput, this));
     setGoal(0);
   }
 
   public void initSendable(SendableBuilder builder) {
-    // Shuffleboard.getTab("intakes").add("ElevatorPID",m_controller);
+    super.initSendable(builder);
+    Shuffleboard.getTab("intakes").add("ElevatorPID", m_controller);
+    Shuffleboard.getTab("intakes").add("Elevator Motor", this.LeftElevator);
+    Shuffleboard.getTab("intakes").addDouble("Encoder", this::getMeasurement).withWidget(BuiltInWidgets.kNumberBar)
+        .withProperties(Map.of("min", -10, "max", 1000, "Orientation", "VERTICAL"));
+    
+    Shuffleboard.getTab("intakes").addDouble("goal",()->m_controller.getSetpoint().position);
   }
 
   @Override
   public void useOutput(double output, TrapezoidProfile.State setpoint) {
     // Calculate the feedforward from the sepoint
-    if (getMeasurement() > inchestorotations(25.25)) {// TODO: set all of the stage encoder poses for feed forward
-                                                      // properly, and put
-      // in kv,kg,ks, etc
-      // note: this may need to be moved
-      elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
-    } else if (getMeasurement() > inchestorotations(14)) {
-      // in kv,kg,ks, etc
-      // note: this may need to be moved
-      elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
-    } else if (getMeasurement() > inchestorotations(8)) {
-      elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
-    } else {
-      elevatorFeedforward = new ElevatorFeedforward(0, 0.43, 2.83, 0.07);
-    }
 
-    double feedforward = elevatorFeedforward.calculate(setpoint.position, setpoint.velocity);
+    // double feedforward = elevatorFeedforward.calculate(setpoint.position,
+    // setpoint.velocity);
     // Add the feedforward to the PID output to get the motor output
-    LeftElevator.setVoltage(output + feedforward);
+    LeftElevator.setVoltage(output);// + feedforward);
 
   }
 
   @Override
   public double getMeasurement() {
-    return LeftElevator.getPosition().getValueAsDouble();
+    return LeftElevator.getPosition().getValueAsDouble();// (Robot.isReal()) ?
+                                                         // LeftElevator.getPosition().getValueAsDouble() :
+                                                         // m_controller.getSetpoint().position;
   }
 
   public boolean atSetpoint() {
@@ -107,43 +107,55 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   }
 
   public Command setDown() {
-    return runOnce(() -> setGoal(1));
+    return runOnce(() -> setGoal(0));
   }
 
-  public Command setUp() {
-    // TODO: set properly
-    return runOnce(() -> setGoal(inchestorotations(25)));
+  public Command setAMP() {
+    return runOnce(() -> setGoal(inchestorotations(AMPSetpoint)));
+  }
+
+  public Command STOW() {
+    return runOnce(() -> setGoal(inchestorotations(0)));
   }
 
   @Override
   public void simulationPeriodic() {
-   // sim.setInput((LeftElevator.getMotorVoltage().getValueAsDouble()));
+    sim.setInput((LeftElevator.getMotorVoltage().getValueAsDouble()));
 
-   // sim.update(0.02);
-    LeftElevator.getSimState().addRotorPosition(this.m_controller.getSetpoint().position);
+    sim.update(0.02);
+    // LeftElevator.setPosition(sim.getPositionMeters());
+    LeftElevator.setPosition(m_controller.getSetpoint().position);
   }
 
   public Command gotoHeight(Positions height) {
     // sequence: first, set based off of the height param, then only finish when it
     // reaches the setpoint
-    return new SequentialCommandGroup(runOnce(() -> {
-      switch (height) {
-        case GROUND:
-          setGoal(0);
-          break;
-        case AMP:
-          setGoal(inchestorotations(20));// TODO: set properly
-          break;
-        case HP:
-          setGoal(inchestorotations(25));// MAX 26
-          // TODO: set properly
-          break;
-      }
-    }),
-        run(() -> {
-        }).until(this::atSetpoint)
+    switch (height) {
+      case GROUND:
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, 0, this::useOutput, this)
+            .until(this.m_controller::atGoal);
+      case AMP:
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(AMPSetpoint), this::useOutput, this)
+            .until(this.m_controller::atGoal);
+      case HP:
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(HPSetpoint), this::useOutput, this)
+            .until(this.m_controller::atGoal);
+      case AUTO:
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(AUTOSetpoint), this::useOutput, this)
+            .until(this.m_controller::atGoal);
+      default:
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, 0, this::useOutput, this);
 
-    );
+    }
+
   }
 
+  public void onReEnable() {
+
+    LeftElevator.setPosition(0);
+    this.m_controller.reset(0);
+    setGoal(0);
+    sim.setState(0, 0);
+
+  }
 }

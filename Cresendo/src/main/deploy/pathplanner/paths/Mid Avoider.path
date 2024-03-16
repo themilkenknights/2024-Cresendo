@@ -1,0 +1,148 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 0.49,
+        "y": 3.5
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.4847599695199392,
+        "y": 3.477371024186493
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.2296511491171134,
+        "y": 3.0116193473127693
+      },
+      "prevControl": {
+        "x": 2.571708498772086,
+        "y": 3.2443112173577933
+      },
+      "nextControl": {
+        "x": 4.116556834965522,
+        "y": 2.6979510625687926
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 4.550300332082146,
+        "y": 3.7501234724691677
+      },
+      "prevControl": {
+        "x": 4.570781328324344,
+        "y": 2.8946686275567233
+      },
+      "nextControl": {
+        "x": 4.518529689837157,
+        "y": 5.077126783883198
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.394502182522884,
+        "y": 6.1643359768201025
+      },
+      "prevControl": {
+        "x": 4.053045242664561,
+        "y": 5.680705890636319
+      },
+      "nextControl": {
+        "x": 2.735959122381208,
+        "y": 6.647966063003886
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 1.7631246636900852,
+        "y": 8.034216637153653
+      },
+      "prevControl": {
+        "x": 1.8311791609101906,
+        "y": 7.237218899639659
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Amp"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.2,
+      "rotationDegrees": 5.0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Apriltags"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 1.2,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": []
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 3.2,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "Apriltags"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.5,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 90.0,
+    "rotateFast": true
+  },
+  "reversed": false,
+  "folder": "Auto start paths",
+  "previewStartingState": null,
+  "useDefaultConstraints": true
+}

@@ -6,7 +6,7 @@
       }
     },
     "Other Devices": {
-      "Talon FX (v6)[20]": {
+      "Pigeon 2 (v6)[0]": {
         "header": {
           "open": true
         }
@@ -16,23 +16,43 @@
           "open": true
         }
       },
-      "Talon FX (v6)[22]": {
+      "Talon FX (v6)[21]/Rotor Sensor": {
         "header": {
           "open": true
         }
       },
-      "Talon FX (v6)[23]": {
+      "Talon FX (v6)[24]": {
         "header": {
           "open": true
         }
+      },
+      "Talon FX (v6)[24]/Rotor Sensor": {
+        "header": {
+          "open": true
+        }
+      },
+      "Talon FX (v6)[7]": {
+        "header": {
+          "open": true
+        }
+      }
+    },
+    "PWM Outputs": {
+      "window": {
+        "visible": true
       }
     }
   },
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
+      "/Pose": "Field2d",
+      "/Shuffleboard/Autos/Note": "String Chooser",
+      "/Shuffleboard/Autos/Positons": "String Chooser",
+      "/Shuffleboard/Autos/Type": "String Chooser",
+      "/Shuffleboard/Climb/Climb": "Mechanism2d",
+      "/Shuffleboard/Climb/Motor": "Motor Controller",
       "/Shuffleboard/Climb/PID Controller": "PIDController",
-      "/Shuffleboard/Climb/ProfiledPIDController[2]": "ProfiledPIDController",
       "/Shuffleboard/Climb/bottom": "Command",
       "/Shuffleboard/Climb/lock": "Command",
       "/Shuffleboard/Climb/top": "Command",
@@ -40,32 +60,39 @@
       "/Shuffleboard/intakes/BottomIntake": "Motor Controller",
       "/Shuffleboard/intakes/DigitalInput[0]": "Digital Input",
       "/Shuffleboard/intakes/DigitalInput[1]": "Digital Input",
+      "/Shuffleboard/intakes/Elevator Motor": "Motor Controller",
       "/Shuffleboard/intakes/ElevatorPID": "ProfiledPIDController",
       "/Shuffleboard/intakes/IntakeCommands/Ground": "Command",
       "/Shuffleboard/intakes/IntakeCommands/HP": "Command",
       "/Shuffleboard/intakes/IntakeCommands/in": "Command",
       "/Shuffleboard/intakes/IntakeCommands/out": "Command",
+      "/Shuffleboard/intakes/Mech": "Mechanism2d",
       "/Shuffleboard/intakes/TopIntake": "Motor Controller",
+      "/Shuffleboard/intakes/other": "Motor Controller",
+      "/Shuffleboard/swerve/Module 0": "Mechanism2d",
+      "/Shuffleboard/swerve/Module 1": "Mechanism2d",
+      "/Shuffleboard/swerve/Module 2": "Mechanism2d",
+      "/Shuffleboard/swerve/Module 3": "Mechanism2d",
       "/SmartDashboard/Auto Chooser": "String Chooser",
-      "/SmartDashboard/DigitalInput[0]": "Digital Input",
-      "/SmartDashboard/Eleator": "Subsystem",
-      "/SmartDashboard/Elevator": "Subsystem",
-      "/SmartDashboard/ElevatorPID": "ProfiledPIDController",
+      "/SmartDashboard/Climb": "Mechanism2d",
       "/SmartDashboard/Field": "Field2d",
-      "/SmartDashboard/climb": "ProfiledPIDController",
+      "/SmartDashboard/Module 0": "Mechanism2d",
+      "/SmartDashboard/Module 1": "Mechanism2d",
+      "/SmartDashboard/Module 2": "Mechanism2d",
+      "/SmartDashboard/Module 3": "Mechanism2d",
       "/SmartDashboard/intake": "Subsystem"
     }
   },
+  "NetworkTables": {
+    "retained": {
+      "SmartDashboard": {
+        "Auto Chooser": {
+          "open": false
+        }
+      }
+    }
+  },
   "NetworkTables Info": {
-    "Connections": {
-      "open": true
-    },
-    "Server": {
-      "Publishers": {
-        "open": true
-      },
-      "open": true
-    },
     "visible": true
   },
   "NetworkTables View": {
