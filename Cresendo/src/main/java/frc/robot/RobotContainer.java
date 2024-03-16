@@ -1,28 +1,29 @@
 package frc.robot;
 
-import static edu.wpi.first.wpilibj2.command.Commands.runOnce;
 import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
 
-import java.util.Map;
+import java.util.List;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardComponent;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.autos.AutoOptions;
@@ -30,10 +31,10 @@ import frc.robot.commands.Align;
 import frc.robot.commands.AprilTagCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climb;
-import frc.robot.subsystems.IntakeElevator;
-import frc.robot.subsystems.Intakes;
 //import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Climb.Positions;
+import frc.robot.subsystems.IntakeElevator;
+import frc.robot.subsystems.Intakes;
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -92,7 +93,7 @@ public class RobotContainer {
         private final Climb s_Climb = new Climb();
 
         // auto
-        private final SendableChooser<Command> autoChooser;
+        //private final SendableChooser<Command> autoChooser;
 
         private final SendableChooser<AutoOptions.StartingPostions> StartingPostionsChooser = new SendableChooser<>();
         private final SendableChooser<AutoOptions.Types> AutoTypeChooser = new SendableChooser<>();
@@ -133,7 +134,7 @@ public class RobotContainer {
 
                 // Build an auto chooser. This will use Commands.none() as the default option.
 
-                autoChooser = AutoBuilder.buildAutoChooser();
+                //autoChooser = AutoBuilder.buildAutoChooser();
 
                 StartingPostionsChooser.addOption("TOP", AutoOptions.StartingPostions.TOP);
                 StartingPostionsChooser.addOption("MID", AutoOptions.StartingPostions.MID);
@@ -305,12 +306,14 @@ public class RobotContainer {
                                 return AutoBuilder
                                                 .buildAuto(StartingPostionsChooser.getSelected().toString() + "Single");
                         case TAKE:
-                                return AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "+OUT");
+                                return AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "_OUT");
                         case DOUBLE_TAKE:
-                                return AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "+"
-                                                + AutoNoteChooser.getSelected().toString() + "+Take");
+                                return AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "_"
+                                                + AutoNoteChooser.getSelected().toString() + "_Take");
                         case DEFENCE:
                                 return AutoBuilder.buildAuto("DEFENCE");
+                        case STRAIGHT:
+                                return AutoBuilder.followPath(new PathPlannerPath((List<Translation2d>) new Translation2d(2.5, 0), new PathConstraints(3, 3, 500, 500), new GoalEndState(0, new Rotation2d())));
                         default:
                                 return new InstantCommand();
                 }

@@ -18,6 +18,7 @@ public final class AutoOptions{
         SINGLE,
         TAKE,
         DOUBLE_TAKE,
-        DEFENCE
+        DEFENCE,
+        STRAIGHT
     }
 }

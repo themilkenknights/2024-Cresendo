@@ -69,7 +69,7 @@ public class Intakes extends SubsystemBase {
   }
 
   private final double elevatorspeed = .6;
-  private final double groundspeed = 1;
+  private final double groundspeed = 0.8;
   private final double waittime = 0.055;
   private final double waittimeGround = 0.1;
 
@@ -181,7 +181,7 @@ public class Intakes extends SubsystemBase {
   }
 
   public Command AutoAmpOuttake() {
-    return new SequentialCommandGroup(intakeElevator.gotoHeight(Positions.AMP),
+    return new SequentialCommandGroup(setTopIntakeState(state.OFF), setBottomIntakeState(state.OFF),intakeElevator.gotoHeight(Positions.AUTO),
         TopOutakeByBeambreak(),intakeElevator.STOW())
         .withName("Amp Outtake");
   }

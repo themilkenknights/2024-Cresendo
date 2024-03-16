@@ -1,9 +1,5 @@
 package frc.robot.commands;
 
-import java.util.function.BooleanSupplier;
-
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Climb.Positions;

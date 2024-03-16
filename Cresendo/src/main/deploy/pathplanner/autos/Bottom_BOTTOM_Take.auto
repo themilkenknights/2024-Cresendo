@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.4933377783422236,
-      "y": 7.079449242231818
+      "x": 0.38977142306136486,
+      "y": 2.2066641031430216
     },
     "rotation": 0
   },
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Top"
+            "pathName": "bottom avoider"
           }
         },
         {
@@ -32,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "GetTopNote"
+            "pathName": "GetBottomNote"
           }
         },
         {
@@ -44,7 +44,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ScoreTopNote"
+            "pathName": "ScoreBottomNote"
           }
         },
         {
@@ -68,6 +68,6 @@
       ]
     }
   },
-  "folder": "TOP+1+Take AUTOs",
+  "folder": "Bottom_1_Take AUTOs",
   "choreoAuto": false
 }

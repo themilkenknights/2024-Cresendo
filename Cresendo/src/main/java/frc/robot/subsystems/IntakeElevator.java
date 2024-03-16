@@ -24,15 +24,15 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   private static final double kD = 0;
 
   private static final double HPSetpoint = 3.6;
-    private static final double AUTOSetpoint = 3.7;
   private static final double AMPSetpoint = 3.1;
+  private static final double AUTOSetpoint = 3.35;
   private static final double spoolsize = 0.5 * Math.PI;
   private static final double reduction = 25;
 
   private static double inchestorotations(double inches) {
     return spoolsize * inches * reduction;
   }
-
+  
   private final TalonFX LeftElevator = new TalonFX(Constants.ElevatorLeftCANID);
   private final TalonFX RightElevator = new TalonFX(Constants.ElevatorRightCANID);
   private static final TrapezoidProfile.Constraints ProfileConstraints = new TrapezoidProfile.Constraints(

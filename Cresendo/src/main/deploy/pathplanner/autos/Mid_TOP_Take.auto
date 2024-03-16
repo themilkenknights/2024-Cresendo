@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.38977142306136486,
-      "y": 2.2066641031430216
+      "x": 0.49,
+      "y": 3.5
     },
     "rotation": 0
   },
@@ -14,19 +14,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "bottom avoider"
+            "pathName": "Mid Avoider"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Outtake"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "GoDown"
           }
         },
         {
@@ -68,6 +62,6 @@
       ]
     }
   },
-  "folder": "Bottom+1+Take AUTOs",
+  "folder": "Mid_1_Take AUTOs",
   "choreoAuto": false
 }

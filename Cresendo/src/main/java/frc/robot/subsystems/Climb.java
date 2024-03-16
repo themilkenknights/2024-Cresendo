@@ -26,16 +26,16 @@ public class Climb extends PIDSubsystem {
     private Mechanism2d mech = new Mechanism2d(1, 2);
     private MechanismLigament2d rooLigament2d = mech.getRoot("root", 0.4, 0.1)
             .append(new MechanismLigament2d("climb", 154, 90));
-    private static final double spoolsize = 1 * Math.PI;
+   // private static final double spoolsize = 1 * Math.PI;
     private static final double reduction = 15.34;
 
     public static enum Positions {
         TOP, BOTTOM
     }
 
-    private static double inchestorotations(double inches) {
+    /*private static double inchestorotations(double inches) {
         return spoolsize * inches * reduction;
-    }
+    }*/
 
     // private final TalonFXConfigurator config = new TalonFXConfigurator(climb);
     private TalonFX climber = new TalonFX(Constants.ClimbCANID, "rio");

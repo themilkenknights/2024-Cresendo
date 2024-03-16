@@ -6,8 +6,11 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
+import com.ctre.phoenix6.mechanisms.swerve.SwerveModule;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
@@ -92,6 +95,7 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        updateFalconSettings();
     }
 
     public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, SwerveModuleConstants... modules) {
@@ -100,6 +104,18 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         if (Utils.isSimulation()) {
             startSimThread();
         }
+        updateFalconSettings();
+    }
+
+    public void updateFalconSettings() {
+       // var config = new TalonFXConfiguration();
+       //CurrentLimitsConfigs Drivonfig = new CurrentLimitsConfigs().withStatorCurrentLimit(30);
+       CurrentLimitsConfigs config = new CurrentLimitsConfigs().withStatorCurrentLimit(30);
+        for (int i = 0; i < 4; i++) {
+            getModule(i).getDriveMotor().getConfigurator().refresh(config);
+            getModule(i).getSteerMotor().getConfigurator().refresh(config);
+        }
+        
     }
 
     private void configurePathPlanner() {

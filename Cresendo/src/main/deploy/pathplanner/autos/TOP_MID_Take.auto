@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.49,
-      "y": 3.5
+      "x": 0.4933377783422236,
+      "y": 7.079449242231818
     },
     "rotation": 0
   },
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Mid Avoider"
+            "pathName": "Top"
           }
         },
         {
@@ -24,16 +24,33 @@
           }
         },
         {
-          "type": "sequential",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "GoDown"
-                }
-              }
-            ]
+            "name": "GoDown"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "GetMidNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ground"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ScoreMidNote"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Outtake"
           }
         },
         {
@@ -51,6 +68,6 @@
       ]
     }
   },
-  "folder": "1+take AUTOs",
+  "folder": "TOP_1_Take AUTOs",
   "choreoAuto": false
 }

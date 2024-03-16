@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.49,
-      "y": 3.5
+      "x": 0.38977142306136486,
+      "y": 2.2066641031430216
     },
     "rotation": 0
   },
@@ -14,7 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Mid Avoider"
+            "pathName": "bottom avoider"
           }
         },
         {
@@ -24,9 +24,15 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "GoDown"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "GetTopNote"
+            "pathName": "GetMidNote"
           }
         },
         {
@@ -38,7 +44,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ScoreTopNote"
+            "pathName": "ScoreMidNote"
           }
         },
         {
@@ -62,6 +68,6 @@
       ]
     }
   },
-  "folder": "Mid+1+Take AUTOs",
+  "folder": "Bottom_1_Take AUTOs",
   "choreoAuto": false
 }

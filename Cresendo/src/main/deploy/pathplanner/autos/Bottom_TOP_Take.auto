@@ -32,7 +32,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "GetMidNote"
+            "pathName": "GetTopNote"
           }
         },
         {
@@ -44,7 +44,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ScoreMidNote"
+            "pathName": "ScoreTopNote"
           }
         },
         {
@@ -68,6 +68,6 @@
       ]
     }
   },
-  "folder": "Bottom+1+Take AUTOs",
+  "folder": "Bottom_1_Take AUTOs",
   "choreoAuto": false
 }
