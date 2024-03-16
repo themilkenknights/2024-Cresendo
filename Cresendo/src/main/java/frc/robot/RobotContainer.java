@@ -1,7 +1,6 @@
 package frc.robot;
 
-import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
-
+import java.util.ArrayList;
 import java.util.List;
 
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
@@ -31,7 +30,6 @@ import frc.robot.commands.Align;
 import frc.robot.commands.AprilTagCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climb;
-//import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Climb.Positions;
 import frc.robot.subsystems.IntakeElevator;
 import frc.robot.subsystems.Intakes;
@@ -128,7 +126,7 @@ public class RobotContainer {
                 drivetrain = TunerConstants.DriveTrain;
 
                 CommandScheduler.getInstance()
-                                .schedule(Commands.repeatingSequence(new AprilTagCommand(drivetrain).ignoringDisable(true), waitSeconds(5).ignoringDisable(true)));
+                                .schedule(Commands.repeatingSequence(new AprilTagCommand(drivetrain).ignoringDisable(true), Commands.waitSeconds(5).ignoringDisable(true)));
                 // Configure the button bindings
                 configureButtonBindings();
 
@@ -144,7 +142,6 @@ public class RobotContainer {
                 AutoNoteChooser.addOption("TOP", AutoOptions.Notes.TOP);
                 AutoNoteChooser.addOption("MID", AutoOptions.Notes.MID);
                 AutoNoteChooser.addOption("BOTTOM", AutoOptions.Notes.BOTTOM);
-
                 AutoNoteChooser.setDefaultOption("TOP", AutoOptions.Notes.TOP);
                 ;
 
@@ -152,15 +149,16 @@ public class RobotContainer {
                 AutoTypeChooser.addOption("TAKE", AutoOptions.Types.TAKE);
                 AutoTypeChooser.addOption("Double Take", AutoOptions.Types.DOUBLE_TAKE);
                 AutoTypeChooser.addOption("Defend", AutoOptions.Types.DEFENCE);
+                AutoTypeChooser.addOption("Straigh", AutoOptions.Types.STRAIGHT);
 
-                AutoTypeChooser.setDefaultOption("TAKE", AutoOptions.Types.TAKE);
+                AutoTypeChooser.setDefaultOption("SINGLE", AutoOptions.Types.SINGLE);
 
                 // Another option that allows you to specify the default auto by its name
                 // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
 
                 // SmartDashboard.putData("Auto Chooser", autoChooser);
 
-                Shuffleboard.getTab("Autos").add("Positons", StartingPostionsChooser).withSize(2, 1)
+                Shuffleboard.getTab("Autos").add("Positons", StartingPostionsChooser).withSize(5, 1)
                                 .withWidget(BuiltInWidgets.kSplitButtonChooser);
                 Shuffleboard.getTab("Autos").add("Type", AutoTypeChooser).withSize(2, 1)
                                 .withWidget(BuiltInWidgets.kSplitButtonChooser);
@@ -300,7 +298,11 @@ public class RobotContainer {
          */
         public Command getAutonomousCommand() {
                 // An ExampleCommand will run in autonomous
-
+               List<Translation2d> fwdpath = new ArrayList<Translation2d> (); 
+               fwdpath.add(new Translation2d(0, 0));
+               fwdpath.add(new Translation2d(0, 0));
+               fwdpath.add(new Translation2d(0, 0));
+               fwdpath.add(new Translation2d(3, 0));
                 switch (AutoTypeChooser.getSelected()) {
                         case SINGLE:
                                 return AutoBuilder
@@ -313,7 +315,7 @@ public class RobotContainer {
                         case DEFENCE:
                                 return AutoBuilder.buildAuto("DEFENCE");
                         case STRAIGHT:
-                                return AutoBuilder.followPath(new PathPlannerPath((List<Translation2d>) new Translation2d(2.5, 0), new PathConstraints(3, 3, 500, 500), new GoalEndState(0, new Rotation2d())));
+                                return drivetrain.applyRequest(()->forwardStraight.withVelocityX(2)).withTimeout(2);
                         default:
                                 return new InstantCommand();
                 }
