@@ -3,41 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.7631246636900852,
+        "x": 1.76,
         "y": 8.034216637153653
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0743776084659933,
-        "y": 7.946676746438925
+        "x": 1.4421450643881513,
+        "y": 7.742417001427215
       },
       "isLocked": false,
       "linkedName": "Amp"
     },
     {
       "anchor": {
-        "x": 2.5218037165932152,
-        "y": 8.034216637153653
+        "x": 0.7904592112534119,
+        "y": 7.664603765232023
       },
       "prevControl": {
-        "x": 1.8020312817828192,
-        "y": 8.228749727646498
-      },
-      "nextControl": {
-        "x": 2.8241771943862926,
-        "y": 7.952494075586466
-      },
-      "isLocked": false,
-      "linkedName": null
-    },
-    {
-      "anchor": {
-        "x": 6.188752472291675,
-        "y": 7.907770128336465
-      },
-      "prevControl": {
-        "x": 6.033125999903722,
-        "y": 7.946676746431629
+        "x": 0.9408046399095904,
+        "y": 7.682100548098424
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,11 +39,11 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -2.6630007660053345,
-    "rotateFast": false
+    "rotation": 90.0,
+    "rotateFast": true
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Auto start paths",
   "previewStartingState": {
     "rotation": 90.0,
     "velocity": 0

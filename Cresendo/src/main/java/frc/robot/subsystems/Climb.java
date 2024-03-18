@@ -106,7 +106,7 @@ public class Climb extends PIDSubsystem {
                 case TOP:
                     setSetpoint(70);// inchestorotations(20));
                     m_controller.setP(0.9);
-                    locker.set(0.4);
+                    locker.set(0.01);
                     break;
                 case BOTTOM:
                     setSetpoint(-1);

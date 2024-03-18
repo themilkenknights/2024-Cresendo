@@ -46,7 +46,7 @@ import frc.robot.subsystems.Intakes;
 public class RobotContainer {
         // private Field2d field = new Field2d();
         private double MaxSpeed = TunerConstants.kSpeedAt12VoltsMps; // kSpeedAt12VoltsMps desired top speed
-        private double MaxAngularRate = 1.5 * Math.PI; // 3/4 of a rotation per second max angular velocity
+        private double MaxAngularRate = 3 * Math.PI; // 3/4 of a rotation per second max angular velocity
 
         /* Setting up bindings for necessary control of the swerve drive platform */
         private final CommandXboxController joystick = new CommandXboxController(0); // My joystick
@@ -88,7 +88,7 @@ public class RobotContainer {
         // private final Swerve s_Swerve = new Swerve();
         private final IntakeElevator elevator = new IntakeElevator();
         private final Intakes s_Intakes = new Intakes(elevator);
-        private final Climb s_Climb = new Climb();
+        public final Climb s_Climb = new Climb();
 
         // auto
         //private final SendableChooser<Command> autoChooser;
@@ -123,6 +123,7 @@ public class RobotContainer {
                 NamedCommands.registerCommand("HPInktake", s_Intakes.AutoHPin());
                 NamedCommands.registerCommand("GoUp", s_Intakes.goUp());
                 NamedCommands.registerCommand("ground", s_Intakes.AutoGroundPickUP());
+                 NamedCommands.registerCommand("delay10", Commands.waitSeconds(10));
                 drivetrain = TunerConstants.DriveTrain;
 
                 CommandScheduler.getInstance()
@@ -305,8 +306,7 @@ public class RobotContainer {
                fwdpath.add(new Translation2d(3, 0));
                 switch (AutoTypeChooser.getSelected()) {
                         case SINGLE:
-                                return AutoBuilder
-                                                .buildAuto(StartingPostionsChooser.getSelected().toString() + "Single");
+                                return AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "Single");
                         case TAKE:
                                 return AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "_OUT");
                         case DOUBLE_TAKE:

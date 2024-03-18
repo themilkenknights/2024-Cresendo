@@ -108,10 +108,13 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     public void updateFalconSettings() {
        // var config = new TalonFXConfiguration();
        //CurrentLimitsConfigs Drivonfig = new CurrentLimitsConfigs().withStatorCurrentLimit(30);
-       CurrentLimitsConfigs config = new CurrentLimitsConfigs().withStatorCurrentLimit(30);
+       CurrentLimitsConfigs config = new CurrentLimitsConfigs();
+       config.StatorCurrentLimit = 80;
+       config.StatorCurrentLimitEnable = true;
+       
         for (int i = 0; i < 4; i++) {
-            getModule(i).getDriveMotor().getConfigurator().refresh(config);
-            getModule(i).getSteerMotor().getConfigurator().refresh(config);
+            getModule(i).getDriveMotor().getConfigurator().apply(config);
+            getModule(i).getSteerMotor().getConfigurator().apply(config);
         }
         
     }
