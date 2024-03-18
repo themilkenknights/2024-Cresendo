@@ -89,8 +89,8 @@ public class RobotContainer {
         /* Subsystems */
         // private final Swerve s_Swerve = new Swerve();
         private final IntakeElevator elevator = new IntakeElevator();
-        private final Intakes s_Intakes = new Intakes(elevator);
-        private final Climb s_Climb = new Climb();
+        public final Intakes s_Intakes = new Intakes(elevator);
+        public final Climb s_Climb = new Climb();
 
         // auto
         //private final SendableChooser<Command> autoChooser;

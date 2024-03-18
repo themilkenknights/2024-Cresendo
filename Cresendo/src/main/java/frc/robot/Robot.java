@@ -26,7 +26,7 @@ public class Robot extends LoggedRobot {
 
   private RobotContainer m_robotContainer;
 
-  private CommandSwerveDrivetrain SwerveStuff = TunerConstants.DriveTrain;
+  //private CommandSwerveDrivetrain SwerveStuff = TunerConstants.DriveTrain;
 
   @Override
   public void robotInit() {
@@ -54,9 +54,32 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     CommandScheduler.getInstance().run();
-    Logger.recordOutput("pose",SwerveStuff.getPose());
+
+    // Position
+    Logger.recordOutput("pose",m_robotContainer.drivetrain.getPose());
+
+    // Note stuff
+    Logger.recordOutput("note inside",m_robotContainer.s_Intakes.getFrontIR());
+
+    // Elevator
+    Logger.recordOutput("elevator setpoint",m_robotContainer.s_Intakes.getElevator().getController().getSetpoint().position);
+    Logger.recordOutput("elevator measurement",m_robotContainer.s_Intakes.getElevator().getMeasurement());
+
+    // Intake
+    //Logger.recordOutput("intake rotation velocity",m_robotContainer.s_Intakes);
+
+
+    // Climber
+    Logger.recordOutput("climber setpoint",m_robotContainer.s_Climb.getController().getSetpoint());
+    Logger.recordOutput("climber measurement",m_robotContainer.s_Climb.getMeasurement());
+
+    // Limelight
+    Logger.recordOutput("april tag detected",LimelightHelpers.getTV("limelight-knights"));
+
+    
+    //Logger.recordOutput("pose",m_robotContainer.drivetrain.getPose());
     // add update with estimatedPosition, + Timer.getFPGATimeStamp()
-    SwerveStuff.addVisionMeasurement(SwerveStuff.getPose(), Timer.getFPGATimestamp());
+    //SwerveStuff.addVisionMeasurement(SwerveStuff.getPose()  , Timer.getFPGATimestamp());
   }
 
   @Override
