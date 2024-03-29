@@ -7,7 +7,9 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
-
+import com.pathplanner.lib.path.GoalEndState;
+import com.pathplanner.lib.path.PathConstraints;
+import com.pathplanner.lib.path.PathPlannerPath;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -217,13 +219,13 @@ public class RobotContainer {
                 //                 ));
                                 .onTrue(new SequentialCommandGroup(
                                     s_Climb.unlockClimb(),
-                                    s_Climb.goToClimberPosition(Positions.TOP),
-                                    s_Climb.lockClimb()
+                                    s_Climb.goToClimberPosition(Positions.TOP)
                                 ));
                 // joystick.pov(180).onTrue(new SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM),
                 //                 s_Climb.lockClimb(), new InstantCommand(() -> s_Climb.disable())));
                 joystick.pov(180).onTrue(new SequentialCommandGroup(
-                                s_Climb.goToClimberPosition(Positions.BOTTOM)));
+                                s_Climb.goToClimberPosition(Positions.BOTTOM),
+                                s_Climb.lockClimb()));
                 joystick.x().whileTrue(s_Intakes.setTopIntakeState(Intakes.state.OUT))
                                 .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
                 joystick.b().whileTrue(s_Intakes.setTopIntakeState(Intakes.state.HP))
