@@ -4,7 +4,7 @@ import java.util.function.DoubleSupplier;
 
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.lib.util.LimelightHelpers;
+import frc.robot.LimelightHelpers;
 
 public class Blind extends Command{
     DoubleSupplier heading;
