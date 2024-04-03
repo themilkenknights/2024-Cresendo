@@ -205,7 +205,7 @@ public class Intakes extends SubsystemBase {
         intakeElevator.gotoHeight(IntakeElevator.Positions.GROUND),
         setBottomIntakeState(state.GROUND), setTopIntakeState(state.GROUND),
         waitUntil(this::getFrontIR), waitSeconds(waittimeGround),
-        setBottomIntakeState(state.OFF)).withName("GroundPickup");
+        setBottomIntakeState(state.OFF),setTopIntakeState(state.OFF)).withName("GroundPickup");
   }
 
   @Override
