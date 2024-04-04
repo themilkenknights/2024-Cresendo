@@ -236,6 +236,7 @@ public class RobotContainer {
                                 .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));*/
                 joystick.leftTrigger().whileTrue(Align.LeftHPAlign());
                 joystick.rightTrigger().whileTrue(Align.RightHPAlign());
+                joystick.leftTrigger().and(joystick.rightTrigger()).whileTrue(Align.MidHPAlign());
                 joystick.a().whileTrue(Align.AMPAlign());
 
                 joystick.rightBumper().whileTrue(s_Intakes.Flashorange());

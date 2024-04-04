@@ -20,4 +20,8 @@ public class Align{
     public static Command LeftHPAlign(){
       return AutoBuilder.followPath(PathPlannerPath.fromPathFile("HP b aligner"));
     }
+//todo: make path
+    public static Command MidHPAlign(){
+      return AutoBuilder.followPath(PathPlannerPath.fromPathFile("HP m aligner"));
+    }
  }
