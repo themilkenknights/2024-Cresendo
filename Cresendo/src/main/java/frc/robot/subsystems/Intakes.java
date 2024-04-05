@@ -69,7 +69,7 @@ public class Intakes extends SubsystemBase {
   }
 
   private final double elevatorspeed = .6;
-  private final double groundspeed = 0.7;
+  private final double groundspeed = 0.6;
   private final double waittime = 0.05;
   private final double waittimeGround = 0.2;
 
