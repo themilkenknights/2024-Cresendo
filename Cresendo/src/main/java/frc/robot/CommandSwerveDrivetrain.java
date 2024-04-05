@@ -6,7 +6,6 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
-import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
@@ -27,6 +26,7 @@ import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants.limits;
 import frc.robot.generated.TunerConstants;
 
 /**
@@ -105,17 +105,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         updateFalconSettings();
     }
 
-    public void updateFalconSettings() {
-       // var config = new TalonFXConfiguration();
-       //CurrentLimitsConfigs Drivonfig = new CurrentLimitsConfigs().withStatorCurrentLimit(30);
-       CurrentLimitsConfigs config = new CurrentLimitsConfigs();
-       config.StatorCurrentLimit = 80;
-       config.StatorCurrentLimitEnable = true;
-
-       
+    public void updateFalconSettings() {       
         for (int i = 0; i < 4; i++) {
-            getModule(i).getDriveMotor().getConfigurator().apply(config);
-            getModule(i).getSteerMotor().getConfigurator().apply(config);
+            getModule(i).getDriveMotor().getConfigurator().apply(limits.DriveLimits);
+            getModule(i).getSteerMotor().getConfigurator().apply(limits.TurnLimits);
         }
         
     }

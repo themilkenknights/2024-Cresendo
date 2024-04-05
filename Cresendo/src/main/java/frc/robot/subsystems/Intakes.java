@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.limits;
 import frc.robot.subsystems.IntakeElevator.Positions;
 
 public class Intakes extends SubsystemBase {
@@ -54,10 +55,17 @@ public class Intakes extends SubsystemBase {
   /** Setup the Intakes. */
   public Intakes(IntakeElevator elevator) {
     this.intakeElevator = elevator;
+
+    topIntake.getConfigurator().apply(limits.IntakeLimits);
+    midIntake.getConfigurator().apply(limits.IntakeLimits);
+    bottomIntake.getConfigurator().apply(limits.IntakeLimits);
+    //defulting
     final ParallelCommandGroup defultCommandGroup = new ParallelCommandGroup(setBottomIntakeState(state.OFF),
         setTopIntakeState(state.OFF));
     defultCommandGroup.addRequirements(this);
     setDefaultCommand(defultCommandGroup);
+    
+    //advantagescope
     stage.setColor(new Color8Bit(Color.kSilver));
     stage.append(new MechanismLigament2d("Intake", -0.31, 90));
 
