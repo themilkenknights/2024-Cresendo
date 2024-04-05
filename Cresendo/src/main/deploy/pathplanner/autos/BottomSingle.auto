@@ -14,32 +14,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "bottom avoider"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Outtake"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "GoDown"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "mobility path"
-                }
-              }
-            ]
+            "pathName": "Mobility path bottom"
           }
         }
       ]
