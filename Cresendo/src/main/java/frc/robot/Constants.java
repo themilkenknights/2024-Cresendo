@@ -1,5 +1,7 @@
 package frc.robot;
 
+import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
+
 public final class Constants {
 
         public static final double stickDeadband = 0.1;
@@ -20,5 +22,29 @@ public final class Constants {
         public static final int ClimbCANID = 24;
 
         public static final int ClimbServoPORT = 0;
+
+        // current limits
+
+        public static double DriveLimitAmps = 80;
+        public static double TurnLimitAmps = 70;
+
+        public static double ElevatorLimitAmps = 70;
+        public static double IntakeLimitAmps = 70;
+
+       public  static class limits {
+
+                public static CurrentLimitsConfigs DriveLimits = new CurrentLimitsConfigs()
+                                .withStatorCurrentLimit(DriveLimitAmps)
+                                .withStatorCurrentLimitEnable(true);
+                public static CurrentLimitsConfigs TurnLimits = new CurrentLimitsConfigs()
+                                .withStatorCurrentLimit(TurnLimitAmps)
+                                .withStatorCurrentLimitEnable(true);
+                public static CurrentLimitsConfigs ElevatorLimits = new CurrentLimitsConfigs()
+                                .withStatorCurrentLimit(ElevatorLimitAmps)
+                                .withStatorCurrentLimitEnable(true);
+                public static CurrentLimitsConfigs IntakeLimits = new CurrentLimitsConfigs()
+                                .withStatorCurrentLimit(IntakeLimitAmps)
+                                .withStatorCurrentLimitEnable(true);
+        }
 
 }

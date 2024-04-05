@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDCommand;
 import edu.wpi.first.wpilibj2.command.ProfiledPIDSubsystem;
 import frc.robot.Constants;
+import frc.robot.Constants.limits;
 
 public class IntakeElevator extends ProfiledPIDSubsystem {
   // intake constants
@@ -67,9 +68,19 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   public IntakeElevator() {
     super(new ProfiledPIDController(kP, kI, kD, ProfileConstraints));
 
+    //current limits
+    RightElevator.getConfigurator().apply(limits.ElevatorLimits);
+    LeftElevator.getConfigurator().apply(limits.ElevatorLimits);
+
+    //follow
     RightElevator.setControl(new Follower(LeftElevator.getDeviceID(), false));
+    //zero
     LeftElevator.setPosition(0);
+
+    //tolerence
     m_controller.setTolerance(5);
+
+    //defulting
     setDefaultCommand(new ProfiledPIDCommand(m_controller, this::getMeasurement, m_controller::getGoal, this::useOutput, this));
     setGoal(0);
   }
