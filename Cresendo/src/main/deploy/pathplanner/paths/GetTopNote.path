@@ -16,28 +16,28 @@
     },
     {
       "anchor": {
-        "x": 1.8798445179828744,
-        "y": 6.88647140327456
+        "x": 1.7631246636900852,
+        "y": 6.985103093013204
       },
       "prevControl": {
-        "x": 2.1327375356172515,
-        "y": 6.6043984220669865
+        "x": 1.538777792542104,
+        "y": 6.991148732918093
       },
       "nextControl": {
-        "x": 1.6269515003484973,
-        "y": 7.168544384482133
+        "x": 2.1418275806074405,
+        "y": 6.9748979073785735
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.058615131448272,
-        "y": 6.88647140327456
+        "x": 4.001010909289989,
+        "y": 6.985103093013204
       },
       "prevControl": {
-        "x": 3.9175786408444853,
-        "y": 7.027507893878346
+        "x": 3.7772978552288103,
+        "y": 6.9559231294400075
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,41 +55,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "ground"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "New Event Marker",
-      "waypointRelativePos": 0,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "GoDown"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "New Event Marker",
-      "waypointRelativePos": 1.2,
+      "waypointRelativePos": 0.85,
       "command": {
         "type": "parallel",
         "data": {
