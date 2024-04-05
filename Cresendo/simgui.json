@@ -81,6 +81,13 @@
       "/SmartDashboard/Module 2": "Mechanism2d",
       "/SmartDashboard/Module 3": "Mechanism2d",
       "/SmartDashboard/intake": "Subsystem"
+    },
+    "windows": {
+      "/Shuffleboard/Autos/Type": {
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables": {

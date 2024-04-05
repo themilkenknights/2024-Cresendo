@@ -1,4 +1,9 @@
 {
+  "Keyboard 0 Settings": {
+    "window": {
+      "visible": true
+    }
+  },
   "System Joysticks": {
     "window": {
       "visible": false
@@ -16,10 +21,15 @@
           "incKey": 83
         },
         {
-          "decayRate": 0.0,
-          "keyRate": 0.009999999776482582
+          "decayRate": 1.0,
+          "incKey": 50,
+          "keyRate": 1.0
         },
-        {},
+        {
+          "decayRate": 1.0,
+          "incKey": 49,
+          "keyRate": 1.0
+        },
         {},
         {
           "decKey": 82,
@@ -40,7 +50,6 @@
         {
           "key0": 56,
           "key135": 323,
-          "key180": 50,
           "key225": 321,
           "key270": 324,
           "key315": 327,
