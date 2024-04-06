@@ -26,10 +26,10 @@ public final class Constants {
         // current limits
 
         public static double DriveLimitAmps = 80;
-        public static double TurnLimitAmps = 70;
+        public static double TurnLimitAmps = 60;
 
-        public static double ElevatorLimitAmps = 70;
-        public static double IntakeLimitAmps = 70;
+        public static double ElevatorLimitAmps = 50;
+        public static double IntakeLimitAmps = 80;
 
        public  static class limits {
 

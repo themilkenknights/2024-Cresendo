@@ -20,7 +20,7 @@ import frc.robot.Constants.limits;
 
 public class IntakeElevator extends ProfiledPIDSubsystem {
   // intake constants
-  private static final double kP = 0.4;
+  private static final double kP = 1.3;
   private static final double kI = 0;
   private static final double kD = 0;
 

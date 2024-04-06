@@ -1,5 +1,7 @@
 package frc.robot;
 
+import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -142,9 +144,9 @@ public class RobotContainer {
                 AutoNoteChooser.addOption("MID", AutoOptions.Notes.MID);
                 AutoNoteChooser.addOption("BOTTOM", AutoOptions.Notes.BOTTOM);
                 AutoNoteChooser.setDefaultOption("TOP", AutoOptions.Notes.TOP);
-                ;
 
                 AutoTypeChooser.addOption("SINGLE", AutoOptions.Types.SINGLE);
+                AutoTypeChooser.addOption("SINGLE_DELAY", AutoOptions.Types.SINGLE_DELAY);
                 AutoTypeChooser.addOption("TAKE", AutoOptions.Types.TAKE);
                 AutoTypeChooser.addOption("Double Take", AutoOptions.Types.DOUBLE_TAKE);
                 AutoTypeChooser.addOption("Defend", AutoOptions.Types.DEFENCE);
@@ -159,9 +161,9 @@ public class RobotContainer {
 
                 Shuffleboard.getTab("Autos").add("Positons", StartingPostionsChooser).withSize(5, 1)
                                 .withWidget(BuiltInWidgets.kSplitButtonChooser);
-                Shuffleboard.getTab("Autos").add("Type", AutoTypeChooser).withSize(2, 1)
+                Shuffleboard.getTab("Autos").add("Type", AutoTypeChooser).withSize(5, 1)
                                 .withWidget(BuiltInWidgets.kSplitButtonChooser);
-                Shuffleboard.getTab("Autos").add("Note", AutoNoteChooser).withSize(2, 1)
+                Shuffleboard.getTab("Autos").add("Note", AutoNoteChooser).withSize(5, 1)
                                 .withWidget(BuiltInWidgets.kSplitButtonChooser);
                 //lightLime
                // new Blind(drivetrain.getRotation3d()::getAngle);
@@ -304,7 +306,9 @@ public class RobotContainer {
                fwdpath.add(new Translation2d(3, 0));
                 switch (AutoTypeChooser.getSelected()) {
                         case SINGLE:
-                                return AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "Single");
+                                return new SequentialCommandGroup(AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "Single"));
+                        case SINGLE_DELAY:
+                                return new SequentialCommandGroup(waitSeconds(9), AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "Single"));
                         case TAKE:
                                 return AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "_OUT");
                         case DOUBLE_TAKE:
