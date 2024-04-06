@@ -9,6 +9,7 @@ import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
@@ -36,7 +37,6 @@ public class Intakes extends SubsystemBase {
   private AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(90);
   private boolean ledOveride = false;
   String ledState = "None";
-  
 
   public static enum state {
     GROUND, OUT, IN, INFORFUCKSSAKE, INHP, HP, GROUNDOUT, OFF
@@ -59,13 +59,13 @@ public class Intakes extends SubsystemBase {
     topIntake.getConfigurator().apply(limits.IntakeLimits);
     midIntake.getConfigurator().apply(limits.IntakeLimits);
     bottomIntake.getConfigurator().apply(limits.IntakeLimits);
-    //defulting
+    // defulting
     final ParallelCommandGroup defultCommandGroup = new ParallelCommandGroup(setBottomIntakeState(state.OFF),
         setTopIntakeState(state.OFF));
     defultCommandGroup.addRequirements(this);
     setDefaultCommand(defultCommandGroup);
-    
-    //advantagescope
+
+    // advantagescope
     stage.setColor(new Color8Bit(Color.kSilver));
     stage.append(new MechanismLigament2d("Intake", -0.31, 90));
 
@@ -81,20 +81,19 @@ public class Intakes extends SubsystemBase {
   private final double waittime = 0.05;
   private final double waittimeGround = 0.24;
 
-  public Command Flashorange(){
-    return new RepeatCommand(new SequentialCommandGroup(new RunCommand(()->{
-      ledOveride=true;
+  public Command Flashorange() {
+    return new RepeatCommand(new SequentialCommandGroup(new RunCommand(() -> {
+      ledOveride = true;
       ledState = "orange";
-    }).withTimeout(0.25),waitSeconds(0.25)));
+    }).withTimeout(0.25), waitSeconds(0.25)));
   }
 
-  public Command FlashBlue(){
-    return new RepeatCommand(new SequentialCommandGroup(new RunCommand(()->{
-      ledOveride=true;
+  public Command FlashBlue() {
+    return new RepeatCommand(new SequentialCommandGroup(new RunCommand(() -> {
+      ledOveride = true;
       ledState = "BLUE";
-    }).withTimeout(0.25),waitSeconds(0.25)));
+    }).withTimeout(0.25), waitSeconds(0.25)));
   }
-
 
   public Command setTopIntakeState(Intakes.state intakeState) {
 
@@ -162,13 +161,14 @@ public class Intakes extends SubsystemBase {
   public Command HPin() {
     return new SequentialCommandGroup(setTopIntakeState(state.INHP), setBottomIntakeState(state.OFF),
         TopIntakeByBeambreak());
-  
+
   }
 
   public Command AutoHPin() {
-    return new SequentialCommandGroup(intakeElevator.gotoHeight(Positions.GROUND),setTopIntakeState(state.INHP), setBottomIntakeState(state.OFF),
+    return new SequentialCommandGroup(intakeElevator.gotoHeight(Positions.GROUND), setTopIntakeState(state.INHP),
+        setBottomIntakeState(state.OFF),
         TopIntakeByBeambreak());
-  
+
   }
 
   public Command TopIntakeByBeambreak() {
@@ -189,8 +189,9 @@ public class Intakes extends SubsystemBase {
   }
 
   public Command AutoAmpOuttake() {
-    return new SequentialCommandGroup(setTopIntakeState(state.OFF), setBottomIntakeState(state.OFF),intakeElevator.gotoHeight(Positions.AUTO),
-        TopOutakeByBeambreak(),intakeElevator.STOW())
+    return new SequentialCommandGroup(setTopIntakeState(state.OFF), setBottomIntakeState(state.OFF),
+        intakeElevator.gotoHeight(Positions.AUTO),
+        TopOutakeByBeambreak(), intakeElevator.STOW())
         .withName("Amp Outtake");
   }
 
@@ -213,7 +214,7 @@ public class Intakes extends SubsystemBase {
         intakeElevator.gotoHeight(IntakeElevator.Positions.GROUND),
         setBottomIntakeState(state.GROUND), setTopIntakeState(state.GROUND),
         waitUntil(this::getFrontIR), waitSeconds(waittimeGround),
-        setBottomIntakeState(state.OFF),setTopIntakeState(state.OFF)).withName("GroundPickup");
+        setBottomIntakeState(state.OFF), setTopIntakeState(state.OFF)).withName("GroundPickup");
   }
 
   @Override
@@ -251,40 +252,77 @@ public class Intakes extends SubsystemBase {
 
     stage.setLength((intakeElevator.getMeasurement() / Math.PI) / 40);// +0.3);
 
-    if (!ledOveride) {
-      if (!getFrontIR()) {
+    if (RobotState.isEnabled()) {
+      if (!ledOveride) {
 
+        if (!getFrontIR()) {
+
+          for (var i = 0; i < ledBuffer.getLength(); i++) {
+            // Sets the specified LED to the RGB values for red
+            ledBuffer.setRGB(i, 255, 0, 0);
+            ledState = "RED";
+          }
+        } else {
+          for (var i = 0; i < ledBuffer.getLength(); i++) {
+            // Sets the specified LED to the RGB values for red
+            ledBuffer.setRGB(i, 0, 255, 0);
+            ledState = "GREEN";
+          }
+
+        }
+
+      } else if (ledState == "orange") {
+        ledOveride = false;
         for (var i = 0; i < ledBuffer.getLength(); i++) {
           // Sets the specified LED to the RGB values for red
-
-          ledBuffer.setRGB(i, 255, 0, 0);
-          ledState = "RED";
+          ledBuffer.setRGB(i, 255, 165, 0);
         }
       } else {
         for (var i = 0; i < ledBuffer.getLength(); i++) {
           // Sets the specified LED to the RGB values for red
-          ledBuffer.setRGB(i, 0, 255, 0);
-          ledState = "GREEN";
+          ledBuffer.setRGB(i, 0, 0, 255);
+          ledOveride = false;
+        }
+      }
+
+      
+
+    }else{
+      if (!ledOveride) {
+
+        if (!getFrontIR()) {
+
+          for (var i = 0; i < ledBuffer.getLength(); i++) {
+            // Sets the specified LED to the RGB values for red
+
+            ledBuffer.setRGB(i, 10, 0, 0);
+            ledState = "RED";
+          }
+        } else {
+          for (var i = 0; i < ledBuffer.getLength(); i++) {
+            // Sets the specified LED to the RGB values for red
+            ledBuffer.setRGB(i, 0, 10, 0);
+            ledState = "GREEN";
+          }
+
         }
 
-      }
-      
-    }else if (ledState == "orange"){
-      ledOveride = false;
-      for (var i = 0; i < ledBuffer.getLength(); i++) {
-        // Sets the specified LED to the RGB values for red
-        ledBuffer.setRGB(i, 255, 165, 0);
-      }
-    }else{
-      for (var i = 0; i < ledBuffer.getLength(); i++) {
-        // Sets the specified LED to the RGB values for red
-        ledBuffer.setRGB(i, 0, 0, 255);
+      } else if (ledState == "orange") {
         ledOveride = false;
+        for (var i = 0; i < ledBuffer.getLength(); i++) {
+          // Sets the specified LED to the RGB values for red
+          ledBuffer.setRGB(i, 10, 7, 0);
+        }
+      } else {
+        for (var i = 0; i < ledBuffer.getLength(); i++) {
+          // Sets the specified LED to the RGB values for red
+          ledBuffer.setRGB(i, 0, 0, 10);
+          ledOveride = false;
+        }
       }
-    }
 
+    }
     leds.setData(ledBuffer);
-    
   }
 
   @Override
