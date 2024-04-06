@@ -79,7 +79,7 @@ public class Intakes extends SubsystemBase {
   private final double elevatorspeed = .6;
   private final double groundspeed = 0.6;
   private final double waittime = 0.05;
-  private final double waittimeGround = 0.2;
+  private final double waittimeGround = 0.24;
 
   public Command Flashorange(){
     return new RepeatCommand(new SequentialCommandGroup(new RunCommand(()->{
