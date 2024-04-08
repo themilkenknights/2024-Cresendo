@@ -11,19 +11,20 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.CommandSwerveDrivetrain;
 import frc.robot.LimelightHelpers;
 
-
 public class AprilTagCommand extends Command {
     boolean seen = false;
     Field2d feild = new Field2d();
     Timer timer = new Timer();
+    String llname = "limelight-knights";
 
     CommandSwerveDrivetrain drivetrain;
+
     public AprilTagCommand(CommandSwerveDrivetrain sw) {
 
         seen = false;
-        drivetrain=sw;
+        drivetrain = sw;
         SmartDashboard.putData(feild);
-        
+
     }
 
     @Override
@@ -32,29 +33,35 @@ public class AprilTagCommand extends Command {
     }
 
     @Override
-    public void execute(){
-        
-        if (LimelightHelpers.getTV("limelight-knights")!=false){
-                seen = true;
-  
-                // use network tables to get limelight botpose (array: x,y,z,roll,pitch, yaw,latency)
-                double[] botpose = NetworkTableInstance.getDefault().getTable("limelight-knights")
-                        .getEntry("botpose_wpiblue").getDoubleArray(new double[7]);
-                Pose2d visionMeasurement2d = new Pose2d(botpose[0], botpose[1], new Rotation2d(3));
-                SmartDashboard.putNumberArray("vision", botpose);
-                //drivetrain.addVisionMeasurement(visionMeasurement2d, (Timer.getFPGATimestamp() - (botpose[6] / 1000.0))*1000);
-                //drivetrain.setVisionMeasurementStdDevs(VecBuilder.fill);
-                
+    public void execute() {
+        if (LimelightHelpers.getTV(llname) != false) {
+            seen = true;
 
-                drivetrain.addVisionMeasurement(visionMeasurement2d, (Timer.getFPGATimestamp() - (botpose[6] / 1000.0)),VecBuilder.fill(.7,.7,9999999));
-            //feild.setRobotPose(visionMeasurement2d);
+            boolean doRejectUpdate = false;
+            LimelightHelpers.SetRobotOrientation(llname, drivetrain.getState().Pose.getRotation().getDegrees(), 0, 0, 0,
+                    0, 0);
+            LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2(llname);
+            if (Math.abs(drivetrain.getPigeon2().getRate()) > 720) // if our angular velocity is greater than 720
+                                                                   // degrees per second, ignore vision updates
+            {
+                doRejectUpdate = true;
+            }
+            if (mt2.tagCount == 0) {
+                doRejectUpdate = true;
+            }
+            if (!doRejectUpdate) {
+                drivetrain.addVisionMeasurement(
+                        mt2.pose,
+                        mt2.timestampSeconds, VecBuilder.fill(.6, .6, 9999999));
+            }
 
-     }
-     SmartDashboard.putBoolean("Tag", seen);
+        }
+        SmartDashboard.putBoolean("Tag", seen);
 
     }
+
     @Override
-    public boolean isFinished(){
-        return (seen&timer.hasElapsed(1));
+    public boolean isFinished() {
+        return (seen & timer.hasElapsed(1));
     }
 }
