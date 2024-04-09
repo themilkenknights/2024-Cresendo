@@ -14,10 +14,15 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
+import com.pathplanner.lib.util.PathPlannerLogging;
 import com.pathplanner.lib.util.ReplanningConfig;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
+import edu.wpi.first.networktables.DoubleArrayPublisher;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
@@ -34,6 +39,13 @@ import frc.robot.generated.TunerConstants;
  * subsystem so it can be used in command-based projects easily.
  */
 public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsystem {
+
+    // pp telem
+    private static final DoubleArrayPublisher posePub = NetworkTableInstance.getDefault()
+            .getDoubleArrayTopic("/PathPlanner/currentPose").publish();
+    private static final DoubleArrayPublisher targetPub = NetworkTableInstance.getDefault()
+            .getDoubleArrayTopic("/PathPlanner/currentPose").publish();
+
     private static final double kSimLoopPeriod = 0.005; // 5 ms
     private Notifier m_simNotifier = null;
     private double m_lastSimTime;
@@ -48,8 +60,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
 
     private final SwerveRequest.ApplyChassisSpeeds AutoRequest = new SwerveRequest.ApplyChassisSpeeds();
     private final SwerveRequest.SysIdSwerveTranslation TranslationCharacterization = new SwerveRequest.SysIdSwerveTranslation();
-   // private final SwerveRequest.SysIdSwerveRotation RotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
-   // private final SwerveRequest.SysIdSwerveSteerGains SteerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
+    // private final SwerveRequest.SysIdSwerveRotation RotationCharacterization =
+    // new SwerveRequest.SysIdSwerveRotation();
+    // private final SwerveRequest.SysIdSwerveSteerGains SteerCharacterization = new
+    // SwerveRequest.SysIdSwerveSteerGains();
 
     /* Use one of these sysidroutines for your particular test */
     private SysIdRoutine SysIdRoutineTranslation = new SysIdRoutine(
@@ -63,31 +77,34 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
                     null,
                     this));
 
-    /*private final SysIdRoutine SysIdRoutineRotation = new SysIdRoutine(
-            new SysIdRoutine.Config(
-                    null,
-                    Volts.of(4),
-                    null,
-                    (state) -> SignalLogger.writeString("state", state.toString())),
-            new SysIdRoutine.Mechanism(
-                    (volts) -> setControl(RotationCharacterization.withVolts(volts)),
-                    null,
-                    this));
-    private final SysIdRoutine SysIdRoutineSteer = new SysIdRoutine(
-            new SysIdRoutine.Config(
-                    null,
-                    Volts.of(7),
-                    null,
-                    (state) -> SignalLogger.writeString("state", state.toString())),
-            new SysIdRoutine.Mechanism(
-                    (volts) -> setControl(SteerCharacterization.withVolts(volts)),
-                    null,
-                    this));
-
-    /* Change this to the sysid routine you want to test */
+    /*
+     * private final SysIdRoutine SysIdRoutineRotation = new SysIdRoutine(
+     * new SysIdRoutine.Config(
+     * null,
+     * Volts.of(4),
+     * null,
+     * (state) -> SignalLogger.writeString("state", state.toString())),
+     * new SysIdRoutine.Mechanism(
+     * (volts) -> setControl(RotationCharacterization.withVolts(volts)),
+     * null,
+     * this));
+     * private final SysIdRoutine SysIdRoutineSteer = new SysIdRoutine(
+     * new SysIdRoutine.Config(
+     * null,
+     * Volts.of(7),
+     * null,
+     * (state) -> SignalLogger.writeString("state", state.toString())),
+     * new SysIdRoutine.Mechanism(
+     * (volts) -> setControl(SteerCharacterization.withVolts(volts)),
+     * null,
+     * this));
+     * 
+     * /* Change this to the sysid routine you want to test
+     */
     private final SysIdRoutine RoutineToApply = SysIdRoutineTranslation;
 
-    public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency, SwerveModuleConstants... modules) {
+    public CommandSwerveDrivetrain(SwerveDrivetrainConstants driveTrainConstants, double OdometryUpdateFrequency,
+            SwerveModuleConstants... modules) {
         super(driveTrainConstants, OdometryUpdateFrequency, modules);
         configurePathPlanner();
         if (Utils.isSimulation()) {
@@ -105,12 +122,12 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         updateFalconSettings();
     }
 
-    public void updateFalconSettings() {       
+    public void updateFalconSettings() {
         for (int i = 0; i < 4; i++) {
             getModule(i).getDriveMotor().getConfigurator().apply(limits.DriveLimits);
             getModule(i).getSteerMotor().getConfigurator().apply(limits.TurnLimits);
         }
-        
+
     }
 
     private void configurePathPlanner() {
@@ -118,9 +135,10 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         for (var moduleLocation : m_moduleLocations) {
             driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
         }
-
+        PathPlannerLogging.setLogCurrentPoseCallback((pose)->posePub.set(new double[] {pose.getX(), pose.getY(), pose.getRotation().getDegrees()}));
+        PathPlannerLogging.setLogTargetPoseCallback((pose)->targetPub.set(new double[] {pose.getX(), pose.getY(), pose.getRotation().getDegrees()}));
         AutoBuilder.configureHolonomic(
-            ()->this.getState().Pose, // Supplier of current robot pose
+            ()->this.getState().Pose.transformBy(new Transform2d(new Translation2d(0.88265/2,0), new Rotation2d())), // Supplier of current robot pose
             this::seedFieldRelative,  // Consumer for seeding pose against auto
             this::getCurrentRobotChassisSpeeds,
             (speeds)->this.setControl(AutoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
@@ -185,10 +203,22 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
     @Override
     public void periodic() {
         /* Periodically try to apply the operator perspective */
-        /* If we haven't applied the operator perspective before, then we should apply it regardless of DS state */
-        /* This allows us to correct the perspective in case the robot code restarts mid-match */
-        /* Otherwise, only check and apply the operator perspective if the DS is disabled */
-        /* This ensures driving behavior doesn't change until an explicit disable event occurs during testing*/
+        /*
+         * If we haven't applied the operator perspective before, then we should apply
+         * it regardless of DS state
+         */
+        /*
+         * This allows us to correct the perspective in case the robot code restarts
+         * mid-match
+         */
+        /*
+         * Otherwise, only check and apply the operator perspective if the DS is
+         * disabled
+         */
+        /*
+         * This ensures driving behavior doesn't change until an explicit disable event
+         * occurs during testing
+         */
         if (!hasAppliedOperatorPerspective || DriverStation.isDisabled()) {
             DriverStation.getAlliance().ifPresent((allianceColor) -> {
                 this.setOperatorPerspectiveForward(
