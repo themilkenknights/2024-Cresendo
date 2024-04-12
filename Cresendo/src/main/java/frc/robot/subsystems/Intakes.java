@@ -195,7 +195,7 @@ public class Intakes extends SubsystemBase {
   }
 
   public Command AutoHPin() {
-    return new SequentialCommandGroup(intakeElevator.gotoHeight(Positions.GROUND), setTopIntakeState(state.INHP),
+    return new SequentialCommandGroup(intakeElevator.gotoHeight(Positions.HP), setTopIntakeState(state.INHP),
         setBottomIntakeState(state.OFF),
         TopIntakeByBeambreak());
 

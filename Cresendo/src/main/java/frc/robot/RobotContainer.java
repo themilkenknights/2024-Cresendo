@@ -2,16 +2,12 @@ package frc.robot;
 
 import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -27,12 +23,12 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.autos.AutoOptions;
 import frc.robot.commands.Align;
 import frc.robot.commands.AprilTagCommand;
+import frc.robot.commands.turnnshoot;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Climb.Positions;
 import frc.robot.subsystems.IntakeElevator;
 import frc.robot.subsystems.Intakes;
-
 
 /**
  * This class is where the bulk of the robot should be declared. Since
@@ -91,7 +87,7 @@ public class RobotContainer {
         public final Climb s_Climb = new Climb();
 
         // auto
-        //private final SendableChooser<Command> autoChooser;
+        // private final SendableChooser<Command> autoChooser;
 
         private final SendableChooser<AutoOptions.StartingPostions> StartingPostionsChooser = new SendableChooser<>();
         private final SendableChooser<AutoOptions.Types> AutoTypeChooser = new SendableChooser<>();
@@ -123,17 +119,19 @@ public class RobotContainer {
                 NamedCommands.registerCommand("HPInktake", s_Intakes.AutoHPin());
                 NamedCommands.registerCommand("GoUp", s_Intakes.goUp());
                 NamedCommands.registerCommand("ground", s_Intakes.AutoGroundPickUP());
-                 NamedCommands.registerCommand("delay10", Commands.waitSeconds(10));
+                NamedCommands.registerCommand("delay10", Commands.waitSeconds(10));
                 drivetrain = TunerConstants.DriveTrain;
 
                 CommandScheduler.getInstance()
-                                .schedule(Commands.repeatingSequence(new AprilTagCommand(drivetrain).ignoringDisable(true), Commands.waitSeconds(5).ignoringDisable(true)));
+                                .schedule(Commands.repeatingSequence(
+                                                new AprilTagCommand(drivetrain).ignoringDisable(true),
+                                                Commands.waitSeconds(5).ignoringDisable(true)));
                 // Configure the button bindings
                 configureButtonBindings();
 
                 // Build an auto chooser. This will use Commands.none() as the default option.
 
-                //autoChooser = AutoBuilder.buildAutoChooser();
+                // autoChooser = AutoBuilder.buildAutoChooser();
 
                 StartingPostionsChooser.addOption("TOP", AutoOptions.StartingPostions.TOP);
                 StartingPostionsChooser.addOption("MID", AutoOptions.StartingPostions.MID);
@@ -165,8 +163,8 @@ public class RobotContainer {
                                 .withWidget(BuiltInWidgets.kSplitButtonChooser);
                 Shuffleboard.getTab("Autos").add("Note", AutoNoteChooser).withSize(5, 1)
                                 .withWidget(BuiltInWidgets.kSplitButtonChooser);
-                //lightLime
-               // new Blind(drivetrain.getRotation3d()::getAngle);
+                // lightLime
+                // new Blind(drivetrain.getRotation3d()::getAngle);
 
         }
 
@@ -213,16 +211,16 @@ public class RobotContainer {
                                 .whileTrue(drivetrain.applyRequest(
                                                 () -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
                 joystick.pov(0)
-                //                 .onTrue(new SequentialCommandGroup(
-                //                     s_Climb.unlockClimb(),
-                //                     s_Climb.goToClimberPosition(Positions.TOP)
-                //                 ));
+                                // .onTrue(new SequentialCommandGroup(
+                                // s_Climb.unlockClimb(),
+                                // s_Climb.goToClimberPosition(Positions.TOP)
+                                // ));
                                 .onTrue(new SequentialCommandGroup(
-                                    s_Climb.unlockClimb(),
-                                    s_Climb.goToClimberPosition(Positions.TOP)
-                                ));
-                // joystick.pov(180).onTrue(new SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM),
-                //                 s_Climb.lockClimb(), new InstantCommand(() -> s_Climb.disable())));
+                                                s_Climb.unlockClimb(),
+                                                s_Climb.goToClimberPosition(Positions.TOP)));
+                // joystick.pov(180).onTrue(new
+                // SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM),
+                // s_Climb.lockClimb(), new InstantCommand(() -> s_Climb.disable())));
                 joystick.pov(180).onTrue(new SequentialCommandGroup(
                                 s_Climb.goToClimberPosition(Positions.BOTTOM),
                                 s_Climb.lockClimb()));
@@ -230,12 +228,16 @@ public class RobotContainer {
                                 .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
                 joystick.b().whileTrue(s_Intakes.setTopIntakeState(Intakes.state.HP))
                                 .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
-               /*  joystick.rightTrigger()
-                                .whileTrue(new RepeatCommand(s_Intakes.setBottomIntakeState(Intakes.state.GROUND)))
-                                .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
-                joystick.leftTrigger()
-                                .whileTrue(new RepeatCommand(s_Intakes.setBottomIntakeState(Intakes.state.GROUNDOUT)))
-                                .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));*/
+                /*
+                 * joystick.rightTrigger()
+                 * .whileTrue(new
+                 * RepeatCommand(s_Intakes.setBottomIntakeState(Intakes.state.GROUND)))
+                 * .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
+                 * joystick.leftTrigger()
+                 * .whileTrue(new
+                 * RepeatCommand(s_Intakes.setBottomIntakeState(Intakes.state.GROUNDOUT)))
+                 * .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
+                 */
                 joystick.leftTrigger().whileTrue(Align.LeftHPAlign());
                 joystick.rightTrigger().whileTrue(Align.RightHPAlign());
                 joystick.a().whileTrue(Align.AMPAlign());
@@ -261,7 +263,8 @@ public class RobotContainer {
                                 .onTrue(s_Intakes.AutoGroundPickUP());
                 op.leftBumper().onTrue(s_Intakes.HPin());
                 op.rightBumper().onTrue(s_Intakes.AmpOuttake());
-
+                //autoShooting binding
+                //joystick.button(7).onTrue(new turnnshoot(drivetrain, s_Intakes,true,true,true));
                 if (Robot.isSimulation()) {
                         op.button(5).onTrue(s_Intakes.goUp());
                         op.button(6).onTrue(s_Intakes.GoDown());
@@ -298,17 +301,14 @@ public class RobotContainer {
          * @return the command to run in autonomous
          */
         public Command getAutonomousCommand() {
-                // An ExampleCommand will run in autonomous
-               List<Translation2d> fwdpath = new ArrayList<Translation2d> (); 
-               fwdpath.add(new Translation2d(0, 0));
-               fwdpath.add(new Translation2d(0, 0));
-               fwdpath.add(new Translation2d(0, 0));
-               fwdpath.add(new Translation2d(3, 0));
+                // custom auto choser
                 switch (AutoTypeChooser.getSelected()) {
                         case SINGLE:
-                                return new SequentialCommandGroup(AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "Single"));
+                                return new SequentialCommandGroup(AutoBuilder.buildAuto(
+                                                StartingPostionsChooser.getSelected().toString() + "Single"));
                         case SINGLE_DELAY:
-                                return new SequentialCommandGroup(waitSeconds(9), AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "Single"));
+                                return new SequentialCommandGroup(waitSeconds(9), AutoBuilder.buildAuto(
+                                                StartingPostionsChooser.getSelected().toString() + "Single"));
                         case TAKE:
                                 return AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "_OUT");
                         case DOUBLE_TAKE:
@@ -317,7 +317,7 @@ public class RobotContainer {
                         case DEFENCE:
                                 return AutoBuilder.buildAuto("DEFENCE");
                         case STRAIGHT:
-                                return drivetrain.applyRequest(()->forwardStraight.withVelocityX(2)).withTimeout(2);
+                                return drivetrain.applyRequest(() -> forwardStraight.withVelocityX(2)).withTimeout(2);
                         default:
                                 return new InstantCommand();
                 }
