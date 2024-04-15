@@ -28,10 +28,6 @@ import frc.robot.autos.AutoOptions;
 import frc.robot.commands.Align;
 import frc.robot.commands.AprilTagCommand;
 import frc.robot.generated.TunerConstants;
-import frc.robot.subsystems.Climb;
-import frc.robot.subsystems.Climb.Positions;
-import frc.robot.subsystems.IntakeElevator;
-import frc.robot.subsystems.Intakes;
 
 
 /**
@@ -86,9 +82,6 @@ public class RobotContainer {
 
         /* Subsystems */
         // private final Swerve s_Swerve = new Swerve();
-        private final IntakeElevator elevator = new IntakeElevator();
-        private final Intakes s_Intakes = new Intakes(elevator);
-        public final Climb s_Climb = new Climb();
 
         // auto
         //private final SendableChooser<Command> autoChooser;
@@ -107,8 +100,6 @@ public class RobotContainer {
         public RobotContainer() {
 
                 // field.setRobotPose(drivetrain)
-                SmartDashboard.putData("intake", s_Intakes);
-                SmartDashboard.putData("climb", s_Climb);
                 // SmartDashboard.putData("swerve",s_Swerve);
 
                 // limelight periodic
@@ -118,11 +109,6 @@ public class RobotContainer {
                 /////////////////////////////////////////////////////
 
                 NamedCommands.registerCommand("Apriltags", getTagCommand());
-                NamedCommands.registerCommand("Outtake", s_Intakes.AutoAmpOuttake());
-                NamedCommands.registerCommand("GoDown", s_Intakes.GoDown());
-                NamedCommands.registerCommand("HPInktake", s_Intakes.AutoHPin());
-                NamedCommands.registerCommand("GoUp", s_Intakes.goUp());
-                NamedCommands.registerCommand("ground", s_Intakes.AutoGroundPickUP());
                  NamedCommands.registerCommand("delay10", Commands.waitSeconds(10));
                 drivetrain = TunerConstants.DriveTrain;
 
@@ -145,14 +131,10 @@ public class RobotContainer {
                 AutoNoteChooser.addOption("BOTTOM", AutoOptions.Notes.BOTTOM);
                 AutoNoteChooser.setDefaultOption("TOP", AutoOptions.Notes.TOP);
 
-                AutoTypeChooser.addOption("SINGLE", AutoOptions.Types.SINGLE);
-                AutoTypeChooser.addOption("SINGLE_DELAY", AutoOptions.Types.SINGLE_DELAY);
-                AutoTypeChooser.addOption("TAKE", AutoOptions.Types.TAKE);
-                AutoTypeChooser.addOption("Double Take", AutoOptions.Types.DOUBLE_TAKE);
-                AutoTypeChooser.addOption("Defend", AutoOptions.Types.DEFENCE);
-                AutoTypeChooser.addOption("Straigh", AutoOptions.Types.STRAIGHT);
+                AutoTypeChooser.addOption("NONE", AutoOptions.Types.NONE);
+                AutoTypeChooser.addOption("STRAIGHT", AutoOptions.Types.STRAIGHT);
 
-                AutoTypeChooser.setDefaultOption("SINGLE", AutoOptions.Types.SINGLE);
+                AutoTypeChooser.setDefaultOption("NONE", AutoOptions.Types.NONE);
 
                 // Another option that allows you to specify the default auto by its name
                 // autoChooser = AutoBuilder.buildAutoChooser("My Default Auto");
@@ -212,24 +194,7 @@ public class RobotContainer {
                 joystick.pov(270)
                                 .whileTrue(drivetrain.applyRequest(
                                                 () -> forwardStraight.withVelocityX(-0.5).withVelocityY(0)));
-                joystick.pov(0)
-                //                 .onTrue(new SequentialCommandGroup(
-                //                     s_Climb.unlockClimb(),
-                //                     s_Climb.goToClimberPosition(Positions.TOP)
-                //                 ));
-                                .onTrue(new SequentialCommandGroup(
-                                    s_Climb.unlockClimb(),
-                                    s_Climb.goToClimberPosition(Positions.TOP)
-                                ));
-                // joystick.pov(180).onTrue(new SequentialCommandGroup(s_Climb.goToClimberPosition(Positions.BOTTOM),
-                //                 s_Climb.lockClimb(), new InstantCommand(() -> s_Climb.disable())));
-                joystick.pov(180).onTrue(new SequentialCommandGroup(
-                                s_Climb.goToClimberPosition(Positions.BOTTOM),
-                                s_Climb.lockClimb()));
-                joystick.x().whileTrue(s_Intakes.setTopIntakeState(Intakes.state.OUT))
-                                .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
-                joystick.b().whileTrue(s_Intakes.setTopIntakeState(Intakes.state.HP))
-                                .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
+
                /*  joystick.rightTrigger()
                                 .whileTrue(new RepeatCommand(s_Intakes.setBottomIntakeState(Intakes.state.GROUND)))
                                 .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
@@ -238,34 +203,16 @@ public class RobotContainer {
                                 .onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));*/
                 joystick.leftTrigger().whileTrue(Align.LeftHPAlign());
                 joystick.rightTrigger().whileTrue(Align.RightHPAlign());
-                joystick.a().whileTrue(Align.AMPAlign());
-
-                joystick.rightBumper().whileTrue(s_Intakes.Flashorange());
-                joystick.leftBumper().whileTrue(s_Intakes.FlashBlue());
 
                 /////////////////////////////////////////////////////
                 // OP CONTROL //
                 /////////////////////////////////////////////////////
                 // op
-                op.y().onTrue(s_Intakes.goUp());
-                op.a().onTrue(s_Intakes.GoDown());
                 // op.leftTrigger().whileTrue(new SequentialCommandGroup(new
                 // InstantCommand(()->s_Intakes.getCurrentCommand().cancel()),//s_Intakes.setTopIntakeState(Intakes.state.OUT))).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
 
                 // op.rightTrigger().whileTrue(s_Intakes.setTopIntakeState(Intakes.state.HP)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
-                op.x()
-                                .onTrue(s_Intakes.getElevator().gotoHeight(IntakeElevator.Positions.AMP));
                 // .onTrue(s_Intakes.AutoHPin());
-
-                op.b()
-                                .onTrue(s_Intakes.AutoGroundPickUP());
-                op.leftBumper().onTrue(s_Intakes.HPin());
-                op.rightBumper().onTrue(s_Intakes.AmpOuttake());
-
-                if (Robot.isSimulation()) {
-                        op.button(5).onTrue(s_Intakes.goUp());
-                        op.button(6).onTrue(s_Intakes.GoDown());
-                }
 
                 // op.rightBumper().onTrue(s_Intakes.goUp());
                 // op.leftBumper() .onTrue(s_Intakes.GoDown());
@@ -286,9 +233,6 @@ public class RobotContainer {
         }
 
         public void reEnable() {
-                s_Climb.resetMesurement();
-                s_Climb.setSetpoint(0);
-                s_Intakes.getElevator().onReEnable();
                 // CommandScheduler.getInstance().cancelAll();
         }
 
@@ -305,17 +249,6 @@ public class RobotContainer {
                fwdpath.add(new Translation2d(0, 0));
                fwdpath.add(new Translation2d(3, 0));
                 switch (AutoTypeChooser.getSelected()) {
-                        case SINGLE:
-                                return new SequentialCommandGroup(AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "Single"));
-                        case SINGLE_DELAY:
-                                return new SequentialCommandGroup(waitSeconds(9), AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "Single"));
-                        case TAKE:
-                                return AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "_OUT");
-                        case DOUBLE_TAKE:
-                                return AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "_"
-                                                + AutoNoteChooser.getSelected().toString() + "_Take");
-                        case DEFENCE:
-                                return AutoBuilder.buildAuto("DEFENCE");
                         case STRAIGHT:
                                 return drivetrain.applyRequest(()->forwardStraight.withVelocityX(2)).withTimeout(2);
                         default:
