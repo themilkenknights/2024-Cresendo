@@ -28,6 +28,7 @@ import frc.robot.autos.AutoOptions;
 import frc.robot.commands.Align;
 import frc.robot.commands.AprilTagCommand;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.shooter;
 
 
 /**
@@ -89,6 +90,7 @@ public class RobotContainer {
         private final SendableChooser<AutoOptions.StartingPostions> StartingPostionsChooser = new SendableChooser<>();
         private final SendableChooser<AutoOptions.Types> AutoTypeChooser = new SendableChooser<>();
         private final SendableChooser<AutoOptions.Notes> AutoNoteChooser = new SendableChooser<>();
+        private final shooter Shooter= new shooter();
 
         public AprilTagCommand getTagCommand() {
                 return new AprilTagCommand(drivetrain);
@@ -229,6 +231,7 @@ public class RobotContainer {
                 // op.povLeft().onTrue(s_Climb.AutoZero());
 
                 // op.leftTrigger().whileTrue(s_Climb.manualDown(op::getLeftTriggerAxis));
+                op.button(1).onTrue(Shooter.shoot());
 
         }
 
