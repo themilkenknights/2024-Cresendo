@@ -7,7 +7,6 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
 import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.RobotState;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
@@ -95,11 +94,13 @@ public class Intakes extends SubsystemBase {
       ledState = "BLUE";
     }).withTimeout(0.25), waitSeconds(0.25)));
   }
+
   public Command rainbowReady() {
-    return new SequentialCommandGroup(new InstantCommand(()->ledBuffer.setRainbow(0, 100, 100)),new RepeatCommand(new SequentialCommandGroup(new RunCommand(() -> {
-      ledOveride = true;
-      ledState = "RAIN";
-    }))));
+    return new SequentialCommandGroup(new InstantCommand(() -> ledBuffer.setRainbow(0, 100, 100)),
+        new RepeatCommand(new SequentialCommandGroup(new RunCommand(() -> {
+          ledOveride = true;
+          ledState = "RAIN";
+        }))));
   }
 
   public Command setTopIntakeState(Intakes.state intakeState) {
@@ -172,9 +173,10 @@ public class Intakes extends SubsystemBase {
   }
 
   public Command AutoHPin() {
-    return new ParallelCommandGroup(rainbowReady().until(this::getFrontIR),new SequentialCommandGroup(intakeElevator.gotoHeight(Positions.GROUND), setTopIntakeState(state.INHP),
-        setBottomIntakeState(state.OFF),
-        TopIntakeByBeambreak()));
+    return new ParallelCommandGroup(rainbowReady().until(this::getFrontIR),
+        new SequentialCommandGroup(intakeElevator.gotoHeight(Positions.GROUND), setTopIntakeState(state.INHP),
+            setBottomIntakeState(state.OFF),
+            TopIntakeByBeambreak()));
 
   }
 
@@ -264,36 +266,25 @@ public class Intakes extends SubsystemBase {
 
         if (!getFrontIR()) {
 
-          for (var i = 0; i < ledBuffer.getLength(); i++) {
-            // Sets the specified LED to the RGB values for red
-            ledBuffer.setHSV(i, 0, 100, 100);
-            ledState = "RED";
-          }
+          ledBuffer.setSolidHSV(0, 100, 100);
+          ledState = "RED";
         } else {
-          for (var i = 0; i < ledBuffer.getLength(); i++) {
-            // Sets the specified LED to the RGB values for red
-            ledBuffer.setHSV(i, 120, 100, 100);
-            ledState = "GREEN";
-          }
+
+          ledBuffer.setSolidHSV(120, 100, 100);
+          ledState = "GREEN";
 
         }
 
       } else if (ledState == "orange") {
         ledOveride = false;
-        for (var i = 0; i < ledBuffer.getLength(); i++) {
-          // Sets the specified LED to the RGB values for red
-          ledBuffer.setHSV(i, 39, 100, 100);
-        }
-      }else if (ledState == "RAIN") {
+        ledBuffer.setSolidHSV(39, 100, 100);
+      } else if (ledState == "RAIN") {
         ledOveride = false;
         ledBuffer.UpdateRainbow();
-        }
-       else {
-        for (var i = 0; i < ledBuffer.getLength(); i++) {
-          // Sets the specified LED to the RGB values for red
-          ledBuffer.setHSV(i, 240, 100, 100);
-          ledOveride = false;
-        }
+      } else {
+
+        ledBuffer.setSolidHSV(240, 100, 100);
+        ledOveride = false;
       }
 
     } else {
@@ -301,24 +292,18 @@ public class Intakes extends SubsystemBase {
 
         if (!getFrontIR()) {
 
-          for (var i = 0; i < ledBuffer.getLength(); i++) {
-            // Sets the specified LED to the RGB values for red
-
-            ledBuffer.setHSV(i, 0, 100, 20);
-            ledState = "RED";
-          }
-        } else {
-          for (var i = 0; i < ledBuffer.getLength(); i++) {
-            // Sets the specified LED to the RGB values for red
-            ledBuffer.setHSV(i, 120, 100, 50);
-            ledState = "GREEN";
-          }
-
+          ledBuffer.setSolidHSV(0, 100, 20);
+          ledState = "RED";
         }
+      } else {
 
-      } 
+        ledBuffer.setSolidHSV(120, 100, 50);
+        ledState = "GREEN";
+
+      }
 
     }
+
     leds.setData(ledBuffer);
   }
 
