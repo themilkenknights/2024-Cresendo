@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.RepeatCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.util.LEDBUFFER_EX;
 import frc.robot.Constants;
 import frc.robot.Constants.limits;
 import frc.robot.subsystems.IntakeElevator.Positions;
@@ -34,7 +35,7 @@ public class Intakes extends SubsystemBase {
   // leds
   private AddressableLED leds = new AddressableLED(Constants.ledPORT);
   // Making the buffer with length 60
-  private AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(90);
+  private LEDBUFFER_EX ledBuffer = new LEDBUFFER_EX(90);
   private boolean ledOveride = false;
   String ledState = "None";
 
@@ -93,6 +94,12 @@ public class Intakes extends SubsystemBase {
       ledOveride = true;
       ledState = "BLUE";
     }).withTimeout(0.25), waitSeconds(0.25)));
+  }
+  public Command rainbowReady() {
+    return new SequentialCommandGroup(new InstantCommand(()->ledBuffer.setRainbow(0, 100, 100)),new RepeatCommand(new SequentialCommandGroup(new RunCommand(() -> {
+      ledOveride = true;
+      ledState = "RAIN";
+    }))));
   }
 
   public Command setTopIntakeState(Intakes.state intakeState) {
@@ -165,9 +172,9 @@ public class Intakes extends SubsystemBase {
   }
 
   public Command AutoHPin() {
-    return new SequentialCommandGroup(intakeElevator.gotoHeight(Positions.GROUND), setTopIntakeState(state.INHP),
+    return new ParallelCommandGroup(rainbowReady().until(this::getFrontIR),new SequentialCommandGroup(intakeElevator.gotoHeight(Positions.GROUND), setTopIntakeState(state.INHP),
         setBottomIntakeState(state.OFF),
-        TopIntakeByBeambreak());
+        TopIntakeByBeambreak()));
 
   }
 
@@ -277,7 +284,11 @@ public class Intakes extends SubsystemBase {
           // Sets the specified LED to the RGB values for red
           ledBuffer.setHSV(i, 39, 100, 100);
         }
-      } else {
+      }else if (ledState == "RAIN") {
+        ledOveride = false;
+        ledBuffer.UpdateRainbow();
+        }
+       else {
         for (var i = 0; i < ledBuffer.getLength(); i++) {
           // Sets the specified LED to the RGB values for red
           ledBuffer.setHSV(i, 240, 100, 100);

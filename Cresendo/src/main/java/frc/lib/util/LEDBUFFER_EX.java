@@ -9,6 +9,7 @@ public class LEDBUFFER_EX extends AddressableLEDBuffer {
     public LEDBUFFER_EX(int length){
         super(length);
     }
+    
 
     int rainbowStartHue;
     int rainbowSpeed;
