@@ -259,13 +259,13 @@ public class Intakes extends SubsystemBase {
 
           for (var i = 0; i < ledBuffer.getLength(); i++) {
             // Sets the specified LED to the RGB values for red
-            ledBuffer.setRGB(i, 255, 0, 0);
+            ledBuffer.setHSV(i, 0, 100, 100);
             ledState = "RED";
           }
         } else {
           for (var i = 0; i < ledBuffer.getLength(); i++) {
             // Sets the specified LED to the RGB values for red
-            ledBuffer.setRGB(i, 0, 255, 0);
+            ledBuffer.setHSV(i, 120, 100, 100);
             ledState = "GREEN";
           }
 
@@ -275,19 +275,17 @@ public class Intakes extends SubsystemBase {
         ledOveride = false;
         for (var i = 0; i < ledBuffer.getLength(); i++) {
           // Sets the specified LED to the RGB values for red
-          ledBuffer.setRGB(i, 255, 165, 0);
+          ledBuffer.setHSV(i, 39, 100, 100);
         }
       } else {
         for (var i = 0; i < ledBuffer.getLength(); i++) {
           // Sets the specified LED to the RGB values for red
-          ledBuffer.setRGB(i, 0, 0, 255);
+          ledBuffer.setHSV(i, 240, 100, 100);
           ledOveride = false;
         }
       }
 
-      
-
-    }else{
+    } else {
       if (!ledOveride) {
 
         if (!getFrontIR()) {
@@ -295,31 +293,19 @@ public class Intakes extends SubsystemBase {
           for (var i = 0; i < ledBuffer.getLength(); i++) {
             // Sets the specified LED to the RGB values for red
 
-            ledBuffer.setRGB(i, 10, 0, 0);
+            ledBuffer.setHSV(i, 0, 100, 20);
             ledState = "RED";
           }
         } else {
           for (var i = 0; i < ledBuffer.getLength(); i++) {
             // Sets the specified LED to the RGB values for red
-            ledBuffer.setRGB(i, 0, 10, 0);
+            ledBuffer.setHSV(i, 120, 100, 50);
             ledState = "GREEN";
           }
 
         }
 
-      } else if (ledState == "orange") {
-        ledOveride = false;
-        for (var i = 0; i < ledBuffer.getLength(); i++) {
-          // Sets the specified LED to the RGB values for red
-          ledBuffer.setRGB(i, 10, 7, 0);
-        }
-      } else {
-        for (var i = 0; i < ledBuffer.getLength(); i++) {
-          // Sets the specified LED to the RGB values for red
-          ledBuffer.setRGB(i, 0, 0, 10);
-          ledOveride = false;
-        }
-      }
+      } 
 
     }
     leds.setData(ledBuffer);
