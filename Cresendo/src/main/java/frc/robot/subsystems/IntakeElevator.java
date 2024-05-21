@@ -34,20 +34,25 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   private static final double kI = 0;
   private static final double kD = 0;
 
-  private static final double HPSetpoint = 3.6;
-  private static final double AMPSetpoint = 3.1;
-  private static final double AUTOSetpoint = 3.35;
+  private static final double HPSetpoint =140;// 3.6;
+  private static final double AMPSetpoint = 120;//3.1;
+  private static final double AUTOSetpoint = 130;//3.35;
   private static final double spoolsize = 0.5 * Math.PI;
   private static final double reduction = 25;
 
-  private static double inchestorotations(double inches) {
+  public static double inchestorotationsOld(double inches) {
     return spoolsize * inches * reduction;
   }
+
+  public static double inchestorotationsNew(double inches) {
+    return spoolsize * inches * reduction;
+  }
+  
   
   private final TalonFX LeftElevator = new TalonFX(Constants.ElevatorLeftCANID);
   private final TalonFX RightElevator = new TalonFX(Constants.ElevatorRightCANID);
   private static final TrapezoidProfile.Constraints ProfileConstraints = new TrapezoidProfile.Constraints(
-      inchestorotations(50), (inchestorotations(35)));
+      inchestorotationsOld(50), (inchestorotationsOld(35)));
   // private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0,
   // 0.43, 2.83, 0.07);
   
@@ -151,11 +156,11 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   }
 
   public Command setAMP() {
-    return runOnce(() -> setGoal(inchestorotations(AMPSetpoint)));
+    return runOnce(() -> setGoal(inchestorotationsOld(AMPSetpoint)));
   }
 
   public Command STOW() {
-    return runOnce(() -> setGoal(inchestorotations(0)));
+    return runOnce(() -> setGoal(inchestorotationsOld(0)));
   }
   @Override
   public void periodic() {
@@ -184,13 +189,13 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
         return new ProfiledPIDCommand(m_controller, this::getMeasurement, 0, this::useOutput, this)
             .until(this.m_controller::atGoal);
       case AMP:
-        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(AMPSetpoint), this::useOutput, this)
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotationsOld(AMPSetpoint), this::useOutput, this)
             .until(this.m_controller::atGoal);
       case HP:
-        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(HPSetpoint), this::useOutput, this)
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotationsOld(HPSetpoint), this::useOutput, this)
             .until(this.m_controller::atGoal);
       case AUTO:
-        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotations(AUTOSetpoint), this::useOutput, this)
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotationsOld(AUTOSetpoint), this::useOutput, this)
             .until(this.m_controller::atGoal);
       default:
         return new ProfiledPIDCommand(m_controller, this::getMeasurement, 0, this::useOutput, this);
