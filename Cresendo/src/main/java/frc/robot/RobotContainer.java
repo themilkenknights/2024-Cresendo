@@ -23,7 +23,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.autos.AutoOptions;
 import frc.robot.commands.Align;
 import frc.robot.commands.AprilTagCommand;
-import frc.robot.commands.turnnshoot;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.Climb;
 import frc.robot.subsystems.Climb.Positions;
@@ -89,7 +88,7 @@ public class RobotContainer {
         // auto
         // private final SendableChooser<Command> autoChooser;
 
-        private final SendableChooser<AutoOptions.StartingPostions> StartingPostionsChooser = new SendableChooser<>();
+        private final SendableChooser<AutoOptions.StartingPositions> StartingPositionsChooser = new SendableChooser<>();
         private final SendableChooser<AutoOptions.Types> AutoTypeChooser = new SendableChooser<>();
         private final SendableChooser<AutoOptions.Notes> AutoNoteChooser = new SendableChooser<>();
 
@@ -97,6 +96,21 @@ public class RobotContainer {
                 return new AprilTagCommand(drivetrain);
         }
 
+
+        /**
+         * Register the named commands for PathPlanner
+         */
+        private void registerNamedCommands(){
+                // NAMED COMMANDS //
+
+                NamedCommands.registerCommand("Apriltags", getTagCommand());
+                NamedCommands.registerCommand("Outtake", s_Intakes.AutoAmpOuttake());
+                NamedCommands.registerCommand("GoDown", s_Intakes.GoDown());
+                NamedCommands.registerCommand("HPInktake", s_Intakes.AutoHPin());
+                NamedCommands.registerCommand("GoUp", s_Intakes.goUp());
+                NamedCommands.registerCommand("ground", s_Intakes.AutoGroundPickUP());
+                NamedCommands.registerCommand("delay10", Commands.waitSeconds(10));
+        }
         /**
          * The container for the robot. Contains subsystems, OI devices, and commands.
          */
@@ -107,21 +121,16 @@ public class RobotContainer {
                 SmartDashboard.putData("climb", s_Climb);
                 // SmartDashboard.putData("swerve",s_Swerve);
 
-                // limelight periodic
+                
+                //named commands
+                registerNamedCommands();
 
-                /////////////////////////////////////////////////////
-                // NAMEDCOMMANDS //
-                /////////////////////////////////////////////////////
-
-                NamedCommands.registerCommand("Apriltags", getTagCommand());
-                NamedCommands.registerCommand("Outtake", s_Intakes.AutoAmpOuttake());
-                NamedCommands.registerCommand("GoDown", s_Intakes.GoDown());
-                NamedCommands.registerCommand("HPInktake", s_Intakes.AutoHPin());
-                NamedCommands.registerCommand("GoUp", s_Intakes.goUp());
-                NamedCommands.registerCommand("ground", s_Intakes.AutoGroundPickUP());
-                NamedCommands.registerCommand("delay10", Commands.waitSeconds(10));
+                //get drivetrain object
                 drivetrain = TunerConstants.DriveTrain;
+                
 
+
+                //limelight periodic
                 CommandScheduler.getInstance()
                                 .schedule(Commands.repeatingSequence(
                                                 new AprilTagCommand(drivetrain).ignoringDisable(true),
@@ -129,14 +138,21 @@ public class RobotContainer {
                 // Configure the button bindings
                 configureButtonBindings();
 
+                setUpAutoChooser();
+                // lightLime
+                // new Blind(drivetrain.getRotation3d()::getAngle);
+
+        }
+
+        private void setUpAutoChooser() {
                 // Build an auto chooser. This will use Commands.none() as the default option.
 
                 // autoChooser = AutoBuilder.buildAutoChooser();
 
-                StartingPostionsChooser.addOption("TOP", AutoOptions.StartingPostions.TOP);
-                StartingPostionsChooser.addOption("MID", AutoOptions.StartingPostions.MID);
-                StartingPostionsChooser.addOption("BOTTOM", AutoOptions.StartingPostions.BOTTOM);
-                StartingPostionsChooser.setDefaultOption("TOP", AutoOptions.StartingPostions.TOP);
+                StartingPositionsChooser.addOption("TOP", AutoOptions.StartingPositions.TOP);
+                StartingPositionsChooser.addOption("MID", AutoOptions.StartingPositions.MID);
+                StartingPositionsChooser.addOption("BOTTOM", AutoOptions.StartingPositions.BOTTOM);
+                StartingPositionsChooser.setDefaultOption("TOP", AutoOptions.StartingPositions.TOP);
 
                 AutoNoteChooser.addOption("TOP", AutoOptions.Notes.TOP);
                 AutoNoteChooser.addOption("MID", AutoOptions.Notes.MID);
@@ -147,7 +163,7 @@ public class RobotContainer {
                 AutoTypeChooser.addOption("SINGLE_DELAY", AutoOptions.Types.SINGLE_DELAY);
                 AutoTypeChooser.addOption("TAKE", AutoOptions.Types.TAKE);
                 AutoTypeChooser.addOption("Double Take", AutoOptions.Types.DOUBLE_TAKE);
-                AutoTypeChooser.addOption("Defend", AutoOptions.Types.DEFENCE);
+                AutoTypeChooser.addOption("Defend", AutoOptions.Types.DEFENSE);
                 AutoTypeChooser.addOption("Straigh", AutoOptions.Types.STRAIGHT);
 
                 AutoTypeChooser.setDefaultOption("SINGLE", AutoOptions.Types.SINGLE);
@@ -157,15 +173,12 @@ public class RobotContainer {
 
                 // SmartDashboard.putData("Auto Chooser", autoChooser);
 
-                Shuffleboard.getTab("Autos").add("Positons", StartingPostionsChooser).withSize(5, 1)
+                Shuffleboard.getTab("Autos").add("Positons", StartingPositionsChooser).withSize(5, 1)
                                 .withWidget(BuiltInWidgets.kSplitButtonChooser);
                 Shuffleboard.getTab("Autos").add("Type", AutoTypeChooser).withSize(5, 1)
                                 .withWidget(BuiltInWidgets.kSplitButtonChooser);
                 Shuffleboard.getTab("Autos").add("Note", AutoNoteChooser).withSize(5, 1)
                                 .withWidget(BuiltInWidgets.kSplitButtonChooser);
-                // lightLime
-                // new Blind(drivetrain.getRotation3d()::getAngle);
-
         }
 
         /**
@@ -177,6 +190,53 @@ public class RobotContainer {
          * edu.wpi.first.wpilibj2.command.button.JoystickButton}.
          */
         private void configureButtonBindings() {
+
+                 configureDriverCommands();
+
+                ConfigsOpCommand();
+
+        }
+
+
+        /**
+         * Configure eventloop/triggers for the OP controller
+         */
+        private void ConfigsOpCommand() {
+                /////////////////////////////////////////////////////
+                // OP CONTROL //
+                /////////////////////////////////////////////////////
+                // op
+                op.y().onTrue(s_Intakes.goUp());
+                op.a().onTrue(s_Intakes.GoDown());
+                // op.leftTrigger().whileTrue(new SequentialCommandGroup(new
+                // InstantCommand(()->s_Intakes.getCurrentCommand().cancel()),//s_Intakes.setTopIntakeState(Intakes.state.OUT))).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
+
+                // op.rightTrigger().whileTrue(s_Intakes.setTopIntakeState(Intakes.state.HP)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
+                op.x()
+                                .onTrue(s_Intakes.getElevator().gotoHeight(IntakeElevator.Positions.AMP));
+                // .onTrue(s_Intakes.AutoHPin());
+
+                op.b()
+                                .onTrue(s_Intakes.AutoGroundPickUP());
+                op.leftBumper().onTrue(s_Intakes.HPin());
+                op.rightBumper().onTrue(s_Intakes.AmpOuttake());
+
+                //autoShooting binding
+                //joystick.button(7).onTrue(new turnnshoot(drivetrain, s_Intakes,true,true,true));
+
+                if (Robot.isSimulation()) {
+                        op.button(5).onTrue(s_Intakes.goUp());
+                        op.button(6).onTrue(s_Intakes.GoDown());
+                }
+
+        }
+
+
+        private void configureDriverCommands() {
+                /////////////////////////////////////////////////////
+                // DRIVER CONTROL //
+                /////////////////////////////////////////////////////
+                //drivetrain commands
                 drivetrain.setDefaultCommand( // Drivetrain will execute this command periodically
                                 drivetrain.applyRequest(() -> drive.withVelocityX(-joystick.getLeftY() * MaxSpeed) // Drive
                                                                                                                    // forward
@@ -198,11 +258,11 @@ public class RobotContainer {
                                 .applyRequest(
                                                 () -> point.withModuleDirection(new Rotation2d(joystick.getLeftY(),
                                                                 joystick.getLeftX()))));
-                drivetrain.registerTelemetry(logger::telemeterize);
 
-                /////////////////////////////////////////////////////
-                // DRIVER CONTROL //
-                /////////////////////////////////////////////////////
+                drivetrain.registerTelemetry(logger::telemeterize);
+                
+
+
 
                 joystick.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldRelative()));
                 joystick.pov(90).whileTrue(
@@ -244,48 +304,6 @@ public class RobotContainer {
 
                 joystick.rightBumper().whileTrue(s_Intakes.Flashorange());
                 joystick.leftBumper().whileTrue(s_Intakes.FlashBlue());
-
-                /////////////////////////////////////////////////////
-                // OP CONTROL //
-                /////////////////////////////////////////////////////
-                // op
-                op.y().onTrue(s_Intakes.goUp());
-                op.a().onTrue(s_Intakes.GoDown());
-                // op.leftTrigger().whileTrue(new SequentialCommandGroup(new
-                // InstantCommand(()->s_Intakes.getCurrentCommand().cancel()),//s_Intakes.setTopIntakeState(Intakes.state.OUT))).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
-
-                // op.rightTrigger().whileTrue(s_Intakes.setTopIntakeState(Intakes.state.HP)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
-                op.x()
-                                .onTrue(s_Intakes.getElevator().gotoHeight(IntakeElevator.Positions.AMP));
-                // .onTrue(s_Intakes.AutoHPin());
-
-                op.b()
-                                .onTrue(s_Intakes.AutoGroundPickUP());
-                op.leftBumper().onTrue(s_Intakes.HPin());
-                op.rightBumper().onTrue(s_Intakes.AmpOuttake());
-                //autoShooting binding
-                //joystick.button(7).onTrue(new turnnshoot(drivetrain, s_Intakes,true,true,true));
-                if (Robot.isSimulation()) {
-                        op.button(5).onTrue(s_Intakes.goUp());
-                        op.button(6).onTrue(s_Intakes.GoDown());
-                }
-
-                // op.rightBumper().onTrue(s_Intakes.goUp());
-                // op.leftBumper() .onTrue(s_Intakes.GoDown());
-                // op.rightBumper() .onTrue(s_Intakes.goUp());
-
-                // .until(()->s_Climb.getController().getPositionError()<0.5)
-                // op.leftTrigger().and(op.y()).onTrue(s_Intakes.goUp());
-                // op.leftTrigger().and(op.x()).onTrue(s_Intakes.GoDown());
-                // op.leftTrigger().and(op.x()).onTrue(s_Intakes.setTopIntakeState(Intakes.state.HP)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
-                // op.leftTrigger().and(op.x()).onTrue(s_Intakes.setTopIntakeState(Intakes.state.OUT)).onFalse(s_Intakes.setTopIntakeState(Intakes.state.OFF));
-
-                // op.pov(90).onTrue(s_Climb.goToClimberPosition(Positions.TOP));
-
-                // op.povLeft().onTrue(s_Climb.AutoZero());
-
-                // op.leftTrigger().whileTrue(s_Climb.manualDown(op::getLeftTriggerAxis));
-
         }
 
         public void reEnable() {
@@ -301,20 +319,20 @@ public class RobotContainer {
          * @return the command to run in autonomous
          */
         public Command getAutonomousCommand() {
-                // custom auto choser
+                // custom auto chooser
                 switch (AutoTypeChooser.getSelected()) {
                         case SINGLE:
                                 return new SequentialCommandGroup(AutoBuilder.buildAuto(
-                                                StartingPostionsChooser.getSelected().toString() + "Single"));
+                                                StartingPositionsChooser.getSelected().toString() + "Single"));
                         case SINGLE_DELAY:
                                 return new SequentialCommandGroup(waitSeconds(9), AutoBuilder.buildAuto(
-                                                StartingPostionsChooser.getSelected().toString() + "Single"));
+                                                StartingPositionsChooser.getSelected().toString() + "Single"));
                         case TAKE:
-                                return AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "_OUT");
+                                return AutoBuilder.buildAuto(StartingPositionsChooser.getSelected().toString() + "_OUT");
                         case DOUBLE_TAKE:
-                                return AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "_"
+                                return AutoBuilder.buildAuto(StartingPositionsChooser.getSelected().toString() + "_"
                                                 + AutoNoteChooser.getSelected().toString() + "_Take");
-                        case DEFENCE:
+                        case DEFENSE:
                                 return AutoBuilder.buildAuto("DEFENCE");
                         case STRAIGHT:
                                 return drivetrain.applyRequest(() -> forwardStraight.withVelocityX(2)).withTimeout(2);
