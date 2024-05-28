@@ -2,13 +2,22 @@ package frc.robot.subsystems;
 
 import java.util.Map;
 
+import com.ctre.phoenix6.Utils;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 
+import edu.wpi.first.math.Nat;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.estimator.KalmanFilter;
+import edu.wpi.first.math.numbers.N1;
+import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
+import edu.wpi.first.math.system.plant.LinearSystemId;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.util.sendable.SendableBuilder;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.simulation.ElevatorSim;
@@ -40,10 +49,27 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
       inchestorotations(50), (inchestorotations(35)));
   // private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0,
   // 0.43, 2.83, 0.07);
+  
 
   private static final ElevatorSim sim = new ElevatorSim(DCMotor.getFalcon500(1), reduction, 6, spoolsize, 0, 500,
-      false,
-      0);
+  false,
+  0);
+  //ultrasonic stuff
+  private Ultrasonic ultrasonic = new Ultrasonic( Constants.ultrasonicPing, Constants.ultrasonicEcho);
+  //private final LinearSystem<N2, N1, N1> ultrasonicPlant = LinearSystemId.createElevatorSystem(DCMotor.getFalcon500(2).withReduction(25),10,0.0127,1);
+  private final LinearSystem<N1, N1, N1> m_flywheelPlant =
+  LinearSystemId.createFlywheelSystem(
+      DCMotor.getNEO(2), 1, 1);
+  private final KalmanFilter<N1, N1, N1> m_observer =
+  new KalmanFilter<>(
+      Nat.N1(),
+      Nat.N1(),
+      m_flywheelPlant,
+      VecBuilder.fill(3.0), // How accurate we think our model is
+      VecBuilder.fill(0.01), // How accurate we think our encoder
+      // data is
+      0.020);
+    
 
   public static enum Positions {
     GROUND, HP, AMP, STOW, AUTO
@@ -67,7 +93,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
    */
   public IntakeElevator() {
     super(new ProfiledPIDController(kP, kI, kD, ProfileConstraints));
-
+    ultrasonic.setEnabled(true);
     //current limits
     RightElevator.getConfigurator().apply(limits.ElevatorLimits);
     LeftElevator.getConfigurator().apply(limits.ElevatorLimits);
@@ -128,7 +154,14 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   public Command STOW() {
     return runOnce(() -> setGoal(inchestorotations(0)));
   }
+  @Override
+  public void periodic() {
 
+      super.periodic();
+      if(!Utils.isSimulation() & !DriverStation.isEnabled()){
+        LeftElevator.setPosition(ultrasonic.getRangeInches());
+      }
+  }
   @Override
   public void simulationPeriodic() {
     sim.setInput((LeftElevator.getMotorVoltage().getValueAsDouble()));

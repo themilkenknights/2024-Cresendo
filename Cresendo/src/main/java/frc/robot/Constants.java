@@ -2,6 +2,10 @@ package frc.robot;
 
 import com.ctre.phoenix6.configs.CurrentLimitsConfigs;
 
+import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalOutput;
+import frc.robot.subsystems.Intakes.state;
+
 public final class Constants {
 
         public static final double stickDeadband = 0.1;
@@ -17,6 +21,8 @@ public final class Constants {
         public static final int frontIRPORT = 1;
         public static final int ledPORT = 2;
         // public static final int blinkenPWMPORT = 3;
+        public static final DigitalOutput ultrasonicPing = new DigitalOutput(3);
+        public static final DigitalInput ultrasonicEcho = new DigitalInput(4);
 
         // CANIDs and ports for Climb
         public static final int ClimbCANID = 24;
