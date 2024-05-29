@@ -10,6 +10,7 @@ import edu.wpi.first.math.Nat;
 import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.estimator.KalmanFilter;
+import edu.wpi.first.math.filter.MedianFilter;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.system.LinearSystem;
 import edu.wpi.first.math.system.plant.DCMotor;
@@ -56,19 +57,21 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   0);
   //ultrasonic stuff
   private Ultrasonic ultrasonic = new Ultrasonic( Constants.ultrasonicPing, Constants.ultrasonicEcho);
+  private MedianFilter ultrasonicFilter = new MedianFilter(10);
+
   //private final LinearSystem<N2, N1, N1> ultrasonicPlant = LinearSystemId.createElevatorSystem(DCMotor.getFalcon500(2).withReduction(25),10,0.0127,1);
-  private final LinearSystem<N1, N1, N1> m_flywheelPlant =
-  LinearSystemId.createFlywheelSystem(
-      DCMotor.getNEO(2), 1, 1);
-  private final KalmanFilter<N1, N1, N1> m_observer =
-  new KalmanFilter<>(
-      Nat.N1(),
-      Nat.N1(),
-      m_flywheelPlant,
-      VecBuilder.fill(3.0), // How accurate we think our model is
-      VecBuilder.fill(0.01), // How accurate we think our encoder
-      // data is
-      0.020);
+  //private final LinearSystem<N1, N1, N1> m_flywheelPlant =
+  // LinearSystemId.createFlywheelSystem(
+  //     DCMotor.getNEO(2), 1, 1);
+  // private final KalmanFilter<N1, N1, N1> m_observer =
+  // new KalmanFilter<>(
+  //     Nat.N1(),
+  //     Nat.N1(),
+  //     m_flywheelPlant,
+  //     VecBuilder.fill(3.0), // How accurate we think our model is
+  //     VecBuilder.fill(0.01), // How accurate we think our encoder
+  //     // data is
+  //     0.020);
     
 
   public static enum Positions {
@@ -156,11 +159,13 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   }
   @Override
   public void periodic() {
-
-      super.periodic();
+      ultrasonicFilter.calculate(ultrasonic.getRangeInches());
       if(!Utils.isSimulation() & !DriverStation.isEnabled()){
-        LeftElevator.setPosition(ultrasonic.getRangeInches());
+        LeftElevator.setPosition(inchestorotations(ultrasonicFilter.lastValue()));
       }
+      super.periodic();
+     
+
   }
   @Override
   public void simulationPeriodic() {
