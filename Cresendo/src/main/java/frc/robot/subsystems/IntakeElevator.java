@@ -24,7 +24,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   private static final double kI = 0;
   private static final double kD = 0;
 
-  private static final double HPSetpoint =140;// 3.6;
+  private static final double HPSetpoint =140;// 3.6; about 24.5 inches
   private static final double AMPSetpoint = 120;//3.1;
   private static final double AUTOSetpoint = 130;//3.35;
   private static final double spoolsize = 0.5 * Math.PI;
@@ -35,7 +35,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   }
 
   public static double inchestorotationsNew(double inches) {
-    return spoolsize * inches * reduction;
+    return  inches * 5.714;//Estimated tps
   }
   
   
@@ -45,7 +45,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
       inchestorotationsOld(50), (inchestorotationsOld(35)));
   // private ElevatorFeedforward elevatorFeedforward = new ElevatorFeedforward(0,
   // 0.43, 2.83, 0.07);
-
+  //20=3.5
   private static final ElevatorSim sim = new ElevatorSim(DCMotor.getFalcon500(1), reduction, 6, spoolsize, 0, 500,
       false,
       0);
