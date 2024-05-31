@@ -162,11 +162,11 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
   }
 
   public Command setAMP() {
-    return runOnce(() -> setGoal(inchestorotationsOld(AMPSetpoint)));
+    return runOnce(() -> setGoal(AMPSetpoint));
   }
 
   public Command STOW() {
-    return runOnce(() -> setGoal(inchestorotationsOld(0)));
+    return runOnce(() -> setGoal(0));
   }
   @Override
   public void periodic() {
@@ -195,13 +195,13 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
         return new ProfiledPIDCommand(m_controller, this::getMeasurement, 0, this::useOutput, this)
             .until(this.m_controller::atGoal);
       case AMP:
-        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotationsOld(AMPSetpoint), this::useOutput, this)
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, AMPSetpoint, this::useOutput, this)
             .until(this.m_controller::atGoal);
       case HP:
-        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotationsOld(HPSetpoint), this::useOutput, this)
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, HPSetpoint, this::useOutput, this)
             .until(this.m_controller::atGoal);
       case AUTO:
-        return new ProfiledPIDCommand(m_controller, this::getMeasurement, inchestorotationsOld(AUTOSetpoint), this::useOutput, this)
+        return new ProfiledPIDCommand(m_controller, this::getMeasurement, AUTOSetpoint, this::useOutput, this)
             .until(this.m_controller::atGoal);
       default:
         return new ProfiledPIDCommand(m_controller, this::getMeasurement, 0, this::useOutput, this);
