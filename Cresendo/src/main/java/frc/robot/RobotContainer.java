@@ -2,16 +2,12 @@ package frc.robot;
 
 import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
@@ -299,11 +295,11 @@ public class RobotContainer {
          */
         public Command getAutonomousCommand() {
                 // An ExampleCommand will run in autonomous
-               List<Translation2d> fwdpath = new ArrayList<Translation2d> (); 
-               fwdpath.add(new Translation2d(0, 0));
-               fwdpath.add(new Translation2d(0, 0));
-               fwdpath.add(new Translation2d(0, 0));
-               fwdpath.add(new Translation2d(3, 0));
+        //        List<Translation2d> fwdpath = new ArrayList<Translation2d> (); 
+        //        fwdpath.add(new Translation2d(0, 0));
+        //        fwdpath.add(new Translation2d(0, 0));
+        //        fwdpath.add(new Translation2d(0, 0));
+        //        fwdpath.add(new Translation2d(3, 0));
                 switch (AutoTypeChooser.getSelected()) {
                         case SINGLE:
                                 return new SequentialCommandGroup(AutoBuilder.buildAuto(StartingPostionsChooser.getSelected().toString() + "Single"));
