@@ -290,6 +290,8 @@ public class RobotContainer {
                 s_Climb.setSetpoint(0);
                 s_Intakes.getElevator().onReEnable();
                 // CommandScheduler.getInstance().cancelAll();
+
+                drivetrain.goBreak().ignoringDisable(true).schedule();
         }
 
         /**

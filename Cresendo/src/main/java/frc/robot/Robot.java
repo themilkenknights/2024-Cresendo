@@ -3,6 +3,8 @@
 // the WPILib BSD license file in the root directory of this project.
 
 package frc.robot;
+import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
+
 import edu.wpi.first.wpilibj.DataLogManager;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -28,13 +30,15 @@ public class Robot extends TimedRobot {
   @Override
   public void disabledInit() {
     m_robotContainer.s_Climb.lockClimb();
+    m_robotContainer.drivetrain.goCoast().beforeStarting(waitSeconds(10)).ignoringDisable(true).schedule();
   }
 
   @Override
   public void disabledPeriodic() {}
 
   @Override
-  public void disabledExit() {m_robotContainer.reEnable(); }
+  public void disabledExit() {m_robotContainer.reEnable(); 
+  }
 
   @Override
   public void autonomousInit() {

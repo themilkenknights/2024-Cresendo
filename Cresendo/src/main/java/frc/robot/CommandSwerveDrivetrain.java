@@ -10,6 +10,7 @@ import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrain;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.mechanisms.swerve.SwerveRequest;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
@@ -29,6 +30,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.Constants.limits;
@@ -129,7 +131,25 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         }
 
     }
+    public Command goBreak(){
+        
+        return runOnce(()->{
+            for (int i = 0; i < 4; i++) {
+                getModule(i).getDriveMotor().setNeutralMode(NeutralModeValue.Brake);
+                getModule(i).getSteerMotor().setNeutralMode(NeutralModeValue.Brake);
+            }
+        });
+    }
 
+    public Command goCoast(){
+        
+        return runOnce(()->{
+            for (int i = 0; i < 4; i++) {
+                getModule(i).getDriveMotor().setNeutralMode(NeutralModeValue.Coast);
+                getModule(i).getSteerMotor().setNeutralMode(NeutralModeValue.Coast);
+            }
+        });
+    }
     private void configurePathPlanner() {
         double driveBaseRadius = 0;
         for (var moduleLocation : m_moduleLocations) {
