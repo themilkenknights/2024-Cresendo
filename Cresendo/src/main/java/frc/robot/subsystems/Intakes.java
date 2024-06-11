@@ -3,6 +3,7 @@ package frc.robot.subsystems;
 import static edu.wpi.first.wpilibj2.command.Commands.waitSeconds;
 import static edu.wpi.first.wpilibj2.command.Commands.waitUntil;
 
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
@@ -36,10 +37,9 @@ public class Intakes extends SubsystemBase {
   private AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(90);
   private boolean ledOveride = false;
   String ledState = "None";
-  
 
   public static enum state {
-    GROUND, OUT, IN, INFORFUCKSSAKE, INHP, HP, GROUNDOUT, OFF
+    GROUND, OUT, IN, INPLEASE, INHP, HP, GROUNDOUT, OFF, SHOOT, SLOWSHOOT
   }
 
   ShuffleboardTab tab = Shuffleboard.getTab("intakes");
@@ -51,21 +51,32 @@ public class Intakes extends SubsystemBase {
   private TalonFX midIntake = new TalonFX(Constants.midIntakeCANID);
   private TalonFX bottomIntake = new TalonFX(Constants.bottomIntakeIntakeCANID);
   private DigitalInput frontIR = new DigitalInput(Constants.frontIRPORT);
+  // shooter
+  private TalonFX mainShooter = new TalonFX(Constants.shooter1CANID);
+  private TalonFX chaindedShooter = new TalonFX(Constants.shooter2CANID);
 
   /** Setup the Intakes. */
   public Intakes(IntakeElevator elevator) {
     this.intakeElevator = elevator;
 
+    // current limits
     topIntake.getConfigurator().apply(limits.IntakeLimits);
     midIntake.getConfigurator().apply(limits.IntakeLimits);
     bottomIntake.getConfigurator().apply(limits.IntakeLimits);
-    //defulting
+
+    mainShooter.getConfigurator().apply(limits.ShooterLimits);
+    chaindedShooter.getConfigurator().apply(limits.ShooterLimits);
+
+    // control modes
+    chaindedShooter.setControl(new Follower(Constants.shooter1CANID, false));
+
+    // defulting
     final ParallelCommandGroup defultCommandGroup = new ParallelCommandGroup(setBottomIntakeState(state.OFF),
         setTopIntakeState(state.OFF));
     defultCommandGroup.addRequirements(this);
     setDefaultCommand(defultCommandGroup);
-    
-    //advantagescope
+
+    // advantagescope
     stage.setColor(new Color8Bit(Color.kSilver));
     stage.append(new MechanismLigament2d("Intake", -0.31, 90));
 
@@ -81,20 +92,25 @@ public class Intakes extends SubsystemBase {
   private final double waittime = 0.05;
   private final double waittimeGround = 0.24;
 
-  public Command Flashorange(){
-    return new RepeatCommand(new SequentialCommandGroup(new RunCommand(()->{
-      ledOveride=true;
+  private final double shooterspeed = 0.9;
+  private final double slowshooterspeed = 0.2;
+
+  private final double spinUpTime = 0.2;//TODO: tune
+  private final double waittimeshoot = 0.75;//TODO: tune
+
+  public Command Flashorange() {
+    return new RepeatCommand(new SequentialCommandGroup(new RunCommand(() -> {
+      ledOveride = true;
       ledState = "orange";
-    }).withTimeout(0.25),waitSeconds(0.25)));
+    }).withTimeout(0.25), waitSeconds(0.25)));
   }
 
-  public Command FlashBlue(){
-    return new RepeatCommand(new SequentialCommandGroup(new RunCommand(()->{
-      ledOveride=true;
+  public Command FlashBlue() {
+    return new RepeatCommand(new SequentialCommandGroup(new RunCommand(() -> {
+      ledOveride = true;
       ledState = "BLUE";
-    }).withTimeout(0.25),waitSeconds(0.25)));
+    }).withTimeout(0.25), waitSeconds(0.25)));
   }
-
 
   public Command setTopIntakeState(Intakes.state intakeState) {
 
@@ -113,7 +129,7 @@ public class Intakes extends SubsystemBase {
         topIntake.set(-elevatorspeed);
         midIntake.set(-elevatorspeed);
       });
-    } else if (intakeState == state.INFORFUCKSSAKE) {
+    } else if (intakeState == state.INPLEASE) {
       return runOnce(() -> {
         topIntake.set(.1);
         midIntake.set(-.1);
@@ -151,6 +167,19 @@ public class Intakes extends SubsystemBase {
     }
   }
 
+  public Command setShooterState(Intakes.state intakeState) {
+    switch (intakeState) {
+      case SHOOT:
+        return runOnce(() -> mainShooter.set(shooterspeed));
+      case SLOWSHOOT:
+        return runOnce(() -> mainShooter.set(slowshooterspeed));
+
+      default:
+        return runOnce(() -> mainShooter.set(0));
+    }
+
+  }
+
   public boolean getFrontIR() {
     return !(frontIR.get());
   }
@@ -162,13 +191,14 @@ public class Intakes extends SubsystemBase {
   public Command HPin() {
     return new SequentialCommandGroup(setTopIntakeState(state.INHP), setBottomIntakeState(state.OFF),
         TopIntakeByBeambreak());
-  
+
   }
 
   public Command AutoHPin() {
-    return new SequentialCommandGroup(intakeElevator.gotoHeight(Positions.GROUND),setTopIntakeState(state.INHP), setBottomIntakeState(state.OFF),
+    return new SequentialCommandGroup(intakeElevator.gotoHeight(Positions.HP), setTopIntakeState(state.INHP),
+        setBottomIntakeState(state.OFF),
         TopIntakeByBeambreak());
-  
+
   }
 
   public Command TopIntakeByBeambreak() {
@@ -189,8 +219,9 @@ public class Intakes extends SubsystemBase {
   }
 
   public Command AutoAmpOuttake() {
-    return new SequentialCommandGroup(setTopIntakeState(state.OFF), setBottomIntakeState(state.OFF),intakeElevator.gotoHeight(Positions.AUTO),
-        TopOutakeByBeambreak(),intakeElevator.STOW())
+    return new SequentialCommandGroup(setTopIntakeState(state.OFF), setBottomIntakeState(state.OFF),
+        intakeElevator.gotoHeight(Positions.AUTO),
+        TopOutakeByBeambreak(), intakeElevator.STOW())
         .withName("Amp Outtake");
   }
 
@@ -213,9 +244,14 @@ public class Intakes extends SubsystemBase {
         intakeElevator.gotoHeight(IntakeElevator.Positions.GROUND),
         setBottomIntakeState(state.GROUND), setTopIntakeState(state.GROUND),
         waitUntil(this::getFrontIR), waitSeconds(waittimeGround),
-        setBottomIntakeState(state.OFF),setTopIntakeState(state.OFF)).withName("GroundPickup");
+        setBottomIntakeState(state.OFF), setTopIntakeState(state.OFF)).withName("GroundPickup");
   }
-
+  public Command Shoot(){
+    return new SequentialCommandGroup(setShooterState(state.SHOOT),waitSeconds(spinUpTime),setTopIntakeState(state.INHP), waitUntil(this::getNotFrontIR),waitSeconds(waittimeshoot),turnOffMotors());
+  }
+  public Command turnOffMotors(){
+    return new ParallelCommandGroup(setBottomIntakeState(state.OFF),setTopIntakeState(state.OFF),setShooterState(state.OFF));
+  }
   @Override
   public void initSendable(SendableBuilder builder) {
     ShuffleboardTab tab = Shuffleboard.getTab("intakes");
@@ -268,14 +304,14 @@ public class Intakes extends SubsystemBase {
         }
 
       }
-      
-    }else if (ledState == "orange"){
+
+    } else if (ledState == "orange") {
       ledOveride = false;
       for (var i = 0; i < ledBuffer.getLength(); i++) {
         // Sets the specified LED to the RGB values for red
         ledBuffer.setRGB(i, 255, 165, 0);
       }
-    }else{
+    } else {
       for (var i = 0; i < ledBuffer.getLength(); i++) {
         // Sets the specified LED to the RGB values for red
         ledBuffer.setRGB(i, 0, 0, 255);
@@ -284,7 +320,7 @@ public class Intakes extends SubsystemBase {
     }
 
     leds.setData(ledBuffer);
-    
+
   }
 
   @Override

@@ -26,5 +26,8 @@
     },
   ],
   "java.test.defaultConfig": "WPIlibUnitTests",
-  "java.format.settings.url": "eclipse-formatter.xml"
+  "java.format.settings.url": "eclipse-formatter.xml",
+  "cSpell.words": [
+    "telemeterize"
+  ]
 }

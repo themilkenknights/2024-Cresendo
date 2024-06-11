@@ -63,7 +63,7 @@ public class IntakeElevator extends ProfiledPIDSubsystem {
    */
 
   /**
-   * DO NOT CALL DIRECTLY. Use Intakes subsystem insted
+   * DO NOT CALL DIRECTLY. Use Intakes subsystem instead
    */
   public IntakeElevator() {
     super(new ProfiledPIDController(kP, kI, kD, ProfileConstraints));

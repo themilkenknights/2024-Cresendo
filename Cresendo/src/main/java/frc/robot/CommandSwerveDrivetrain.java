@@ -135,30 +135,39 @@ public class CommandSwerveDrivetrain extends SwerveDrivetrain implements Subsyst
         for (var moduleLocation : m_moduleLocations) {
             driveBaseRadius = Math.max(driveBaseRadius, moduleLocation.getNorm());
         }
-        PathPlannerLogging.setLogCurrentPoseCallback((pose)->posePub.set(new double[] {pose.getX(), pose.getY(), pose.getRotation().getDegrees()}));
-        PathPlannerLogging.setLogTargetPoseCallback((pose)->targetPub.set(new double[] {pose.getX(), pose.getY(), pose.getRotation().getDegrees()}));
+        PathPlannerLogging.setLogCurrentPoseCallback(
+                (pose) -> posePub.set(new double[] { pose.getX(), pose.getY(), pose.getRotation().getDegrees() }));
+        PathPlannerLogging.setLogTargetPoseCallback(
+                (pose) -> targetPub.set(new double[] { pose.getX(), pose.getY(), pose.getRotation().getDegrees() }));
         AutoBuilder.configureHolonomic(
-            ()->this.getState().Pose.transformBy(new Transform2d(new Translation2d(0.88265/2,0), new Rotation2d())), // Supplier of current robot pose
-            this::seedFieldRelative,  // Consumer for seeding pose against auto
-            this::getCurrentRobotChassisSpeeds,
-            (speeds)->this.setControl(AutoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the robot
-            new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
-                                            new PIDConstants(10, 0, 0),
-                                            TunerConstants.kSpeedAt12VoltsMps,
-                                            driveBaseRadius,
-                                            new ReplanningConfig()),
-                                            () -> {
-                                                // Boolean supplier that controls when the path will be mirrored for the red alliance
-                                                // This will flip the path being followed to the red side of the field.
-                                                // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
-                                  
-                                                var alliance = DriverStation.getAlliance();
-                                                if (alliance.isPresent()) {
-                                                  return alliance.get() == DriverStation.Alliance.Red;
-                                                }
-                                                return false;
-                                            },
-            this); // Subsystem for requirements
+                () -> this.getState().Pose,
+                       // .transformBy(new Transform2d(new Translation2d(0.88265 / 2, 0), new Rotation2d())), // Supplier
+                                                                                                            // of
+                                                                                                            // current
+                                                                                                            // robot
+                                                                                                            // pose
+                this::seedFieldRelative, // Consumer for seeding pose against auto
+                this::getCurrentRobotChassisSpeeds,
+                (speeds) -> this.setControl(AutoRequest.withSpeeds(speeds)), // Consumer of ChassisSpeeds to drive the
+                                                                             // robot
+                new HolonomicPathFollowerConfig(new PIDConstants(10, 0, 0),
+                        new PIDConstants(10, 0, 0),
+                        TunerConstants.kSpeedAt12VoltsMps,
+                        driveBaseRadius,
+                        new ReplanningConfig()),
+                () -> {
+                    // Boolean supplier that controls when the path will be mirrored for the red
+                    // alliance
+                    // This will flip the path being followed to the red side of the field.
+                    // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+
+                    var alliance = DriverStation.getAlliance();
+                    if (alliance.isPresent()) {
+                        return alliance.get() == DriverStation.Alliance.Red;
+                    }
+                    return false;
+                },
+                this); // Subsystem for requirements
     }
 
     public Command applyRequest(Supplier<SwerveRequest> requestSupplier) {
