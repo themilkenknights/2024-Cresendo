@@ -25,25 +25,28 @@ public final class Constants {
 
         // current limits
 
-        public static double DriveLimitAmps = 80;
-        public static double TurnLimitAmps = 60;
+        public static double DriveLimitStatorAmps =120;//80;
+        public static double DriveLimitSupplyAmps =70;
+        public static double TurnLimitStatorAmps = 40;//60
 
-        public static double ElevatorLimitAmps = 50;
-        public static double IntakeLimitAmps = 80;
+        public static double ElevatorLimitStatorAmps = 50;
+        public static double IntakeLimitStatorAmps = 40;
 
        public  static class limits {
 
                 public static CurrentLimitsConfigs DriveLimits = new CurrentLimitsConfigs()
-                                .withStatorCurrentLimit(DriveLimitAmps)
+                                .withStatorCurrentLimit(DriveLimitStatorAmps)
+                                .withStatorCurrentLimitEnable(true)
+                                .withSupplyCurrentLimit(DriveLimitSupplyAmps)
                                 .withStatorCurrentLimitEnable(true);
                 public static CurrentLimitsConfigs TurnLimits = new CurrentLimitsConfigs()
-                                .withStatorCurrentLimit(TurnLimitAmps)
+                                .withStatorCurrentLimit(TurnLimitStatorAmps)
                                 .withStatorCurrentLimitEnable(true);
                 public static CurrentLimitsConfigs ElevatorLimits = new CurrentLimitsConfigs()
-                                .withStatorCurrentLimit(ElevatorLimitAmps)
+                                .withStatorCurrentLimit(ElevatorLimitStatorAmps)
                                 .withStatorCurrentLimitEnable(true);
                 public static CurrentLimitsConfigs IntakeLimits = new CurrentLimitsConfigs()
-                                .withStatorCurrentLimit(IntakeLimitAmps)
+                                .withStatorCurrentLimit(IntakeLimitStatorAmps)
                                 .withStatorCurrentLimitEnable(true);
         }
 
