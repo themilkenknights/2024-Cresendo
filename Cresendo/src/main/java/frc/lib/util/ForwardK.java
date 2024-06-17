@@ -4,6 +4,8 @@
 
 package frc.lib.util;
 import java.util.ArrayList;
+import java.util.Arrays;
+
 import edu.wpi.first.math.geometry.Translation3d;
 
 
@@ -13,6 +15,11 @@ public class ForwardK {
     Translation3d base = new Translation3d();
     public ForwardK(Translation3d base,ArrayList<Ligament3d> nodes) {
         this.nodes = nodes;
+        this.base = base;
+    }
+
+    public ForwardK(Translation3d base,Ligament3d... nodes) {
+        this.nodes = new ArrayList<>(Arrays.asList(nodes));
         this.base = base;
     }
 
