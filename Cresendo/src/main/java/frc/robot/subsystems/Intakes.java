@@ -6,13 +6,12 @@ import static edu.wpi.first.wpilibj2.command.Commands.waitUntil;
 import com.ctre.phoenix6.hardware.TalonFX;
 
 import edu.wpi.first.util.sendable.SendableBuilder;
-import edu.wpi.first.wpilibj.AddressableLED;
-import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInLayouts;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardLayout;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
+
 import edu.wpi.first.wpilibj.smartdashboard.Mechanism2d;
 import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.util.Color;
@@ -20,8 +19,7 @@ import edu.wpi.first.wpilibj.util.Color8Bit;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
-import edu.wpi.first.wpilibj2.command.RepeatCommand;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -30,12 +28,7 @@ import frc.robot.subsystems.IntakeElevator.Positions;
 
 public class Intakes extends SubsystemBase {
 
-  // leds
-  private AddressableLED leds = new AddressableLED(Constants.ledPORT);
-  // Making the buffer with length 60
-  private AddressableLEDBuffer ledBuffer = new AddressableLEDBuffer(90);
-  private boolean ledOveride = false;
-  String ledState = "None";
+  
   
 
   public static enum state {
@@ -55,7 +48,7 @@ public class Intakes extends SubsystemBase {
   /** Setup the Intakes. */
   public Intakes(IntakeElevator elevator) {
     this.intakeElevator = elevator;
-
+    
     topIntake.getConfigurator().apply(limits.IntakeLimits);
     midIntake.getConfigurator().apply(limits.IntakeLimits);
     bottomIntake.getConfigurator().apply(limits.IntakeLimits);
@@ -69,11 +62,7 @@ public class Intakes extends SubsystemBase {
     stage.setColor(new Color8Bit(Color.kSilver));
     stage.append(new MechanismLigament2d("Intake", -0.31, 90));
 
-    // leds
-    leds.setLength(ledBuffer.getLength());
-    leds.setData(ledBuffer);
 
-    leds.start();
   }
 
   private final double elevatorspeed = .6;
@@ -81,19 +70,7 @@ public class Intakes extends SubsystemBase {
   private final double waittime = 0.05;
   private final double waittimeGround = 0.24;
 
-  public Command Flashorange(){
-    return new RepeatCommand(new SequentialCommandGroup(new RunCommand(()->{
-      ledOveride=true;
-      ledState = "orange";
-    }).withTimeout(0.25),waitSeconds(0.25)));
-  }
 
-  public Command FlashBlue(){
-    return new RepeatCommand(new SequentialCommandGroup(new RunCommand(()->{
-      ledOveride=true;
-      ledState = "BLUE";
-    }).withTimeout(0.25),waitSeconds(0.25)));
-  }
 
 
   public Command setTopIntakeState(Intakes.state intakeState) {
@@ -225,7 +202,6 @@ public class Intakes extends SubsystemBase {
     tab.add("Mech", mech);
     super.initSendable(builder);
     intakeElevator.initSendable(builder);
-    tab.addString("LED", () -> ledState);
     tab.add("TopIntake", topIntake);
     tab.add("other", midIntake);
     tab.add("BottomIntake", bottomIntake);
@@ -251,39 +227,7 @@ public class Intakes extends SubsystemBase {
 
     stage.setLength((intakeElevator.getMeasurement() / Math.PI) / 40);// +0.3);
 
-    if (!ledOveride) {
-      if (!getFrontIR()) {
-
-        for (var i = 0; i < ledBuffer.getLength(); i++) {
-          // Sets the specified LED to the RGB values for red
-
-          ledBuffer.setRGB(i, 255, 0, 0);
-          ledState = "RED";
-        }
-      } else {
-        for (var i = 0; i < ledBuffer.getLength(); i++) {
-          // Sets the specified LED to the RGB values for red
-          ledBuffer.setRGB(i, 0, 255, 0);
-          ledState = "GREEN";
-        }
-
-      }
-      
-    }else if (ledState == "orange"){
-      ledOveride = false;
-      for (var i = 0; i < ledBuffer.getLength(); i++) {
-        // Sets the specified LED to the RGB values for red
-        ledBuffer.setRGB(i, 255, 165, 0);
-      }
-    }else{
-      for (var i = 0; i < ledBuffer.getLength(); i++) {
-        // Sets the specified LED to the RGB values for red
-        ledBuffer.setRGB(i, 0, 0, 255);
-        ledOveride = false;
-      }
-    }
-
-    leds.setData(ledBuffer);
+   
     
   }
 
